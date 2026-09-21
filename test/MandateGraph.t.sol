@@ -108,7 +108,7 @@ contract MandateGraphTest {
         graph.executePayment(2, _id(2, VENDOR, 1, 1, keccak256("r"), deadline, 2), VENDOR, 1, 1, keccak256("r"), deadline, 2, keccak256("o"));
     }
     function testSubtreeRevocationCascades() public {
-        vm.prank(RESEARCH); graph.revokeMandate(1);
+        vm.prank(HUMAN); graph.revokeTask(taskId);
         vm.prank(TRANSLATOR); vm.expectRevert(abi.encodeWithSelector(MandateGraph.AuthorityRevoked.selector, 1));
         graph.executePayment(2, _id(2, VENDOR, 1, 1, keccak256("r"), deadline, 2), VENDOR, 1, 1, keccak256("r"), deadline, 2, keccak256("o"));
     }
