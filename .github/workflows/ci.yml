@@ -26,6 +26,7 @@ jobs:
       - run: npm ci
       - run: forge build
       - run: forge test -vvv
+      - run: forge coverage --report summary
       - run: npm test
       - run: node --check app/app.js
       - run: node --check scripts/serve.mjs
@@ -38,3 +39,12 @@ jobs:
           persist-credentials: false
       - name: Check Arc mainnet and USDC using read-only RPC calls
         run: node scripts/arc-readonly-preflight.mjs
+
+  arc-testnet-readonly-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Check Arc testnet and USDC using read-only RPC calls
+        run: ARC_NETWORK=testnet node scripts/arc-readonly-preflight.mjs

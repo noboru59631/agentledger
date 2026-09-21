@@ -58,6 +58,12 @@ contract MandateGraphTest {
         vm.prank(RESEARCH); vm.expectRevert(abi.encodeWithSelector(MandateGraph.InvalidExpiry.selector));
         graph.delegate(1, address(0x123), 1, deadline + 1, 1, address(0));
     }
+    function testRejectsChildExpiryBeyondTaskDeadline() public {
+        vm.prank(HUMAN);
+        graph.createTask(keccak256("short-task"), keccak256("m"), 5, uint64(block.timestamp + 10), 1, RESEARCH, address(0), 1);
+        vm.prank(RESEARCH); vm.expectRevert(abi.encodeWithSelector(MandateGraph.InvalidExpiry.selector));
+        graph.delegate(3, TRANSLATOR, 1, deadline, 1, address(0));
+    }
     function testRejectsScopeWidening() public {
         vm.prank(RESEARCH); vm.expectRevert(abi.encodeWithSelector(MandateGraph.ScopeWidened.selector));
         graph.delegate(1, address(0x123), 1, deadline, 7, address(0));
@@ -116,6 +122,22 @@ contract MandateGraphTest {
         vm.prank(TRANSLATOR); graph.executePayment(2, _id(2, VENDOR, 1_000_000, 1, keccak256("r"), deadline, 3), VENDOR, 1_000_000, 1, keccak256("r"), deadline, 3, keccak256("o"));
         vm.prank(TRANSLATOR); vm.expectRevert(abi.encodeWithSelector(MandateGraph.BudgetExceeded.selector));
         graph.executePayment(2, _id(2, VENDOR, 1, 1, keccak256("r"), deadline, 4), VENDOR, 1, 1, keccak256("r"), deadline, 4, keccak256("o"));
+    }
+    function testRecoveredChildCapacityCanBeReallocated() public {
+        vm.prank(TRANSLATOR);
+        graph.executePayment(2, _id(2, VENDOR, 1_000_000, 1, keccak256("spent"), deadline, 31), VENDOR, 1_000_000, 1, keccak256("spent"), deadline, 31, keccak256("outcome"));
+        vm.prank(RESEARCH);
+        graph.delegate(1, address(0x1234), 1_000_000, deadline, 1, address(0));
+        (,,,,,,,,uint256 allocated,,) = graph.mandates(1);
+        require(allocated == 1_000_000, "spent child reservation was not released");
+        (,,uint128 parentSpent,,,,,,,,) = graph.mandates(1);
+        require(parentSpent == 1_000_000, "ancestor spend was not retained");
+    }
+    function testTaskDeadlineExpiresMandateEvenIfMandateExpiryIsLater() public {
+        vm.prank(HUMAN);
+        graph.createTask(keccak256("short-task"), keccak256("m"), 5, uint64(block.timestamp + 10), 1, RESEARCH, address(0), 1);
+        vm.warp(block.timestamp + 11);
+        require(!graph.isAuthorized(3), "mandate live after task deadline");
     }
     function testParentCannotSpendChildAllocationTwice() public {
         usdc.mint(RESEARCH, 4_000_000);
