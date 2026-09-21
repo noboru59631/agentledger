@@ -46,6 +46,7 @@ jobs:
       - run: node --check scripts/run-arc-testnet-lifecycle.mjs
       - run: node --check scripts/arc-mainnet-config.mjs
       - run: node --check scripts/run-arc-mainnet-lifecycle.mjs
+      - run: node --check scripts/deployment-init-code.mjs
 
   arc-readonly-preflight:
     if: github.event_name == 'workflow_dispatch'
@@ -56,3 +57,4 @@ jobs:
           persist-credentials: false
       - name: Check Arc mainnet and USDC using read-only RPC calls
         run: node scripts/arc-readonly-preflight.mjs
+
