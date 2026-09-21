@@ -16,7 +16,7 @@ The MVP focuses on task-bound mandates, multi-hop delegation, monotonic attenuat
 
 This repository contains a local browser simulation and an experimental Solidity contract. **Arc testnet lifecycle: completed.** The deployed MandateGraph contract completed task creation, delegation, USDC approval, a task-bound payment, task revocation, and a read-only retry rejection check. The payment recipient was the sender itself, so this was a self-transfer rehearsal; it is not independent vendor-payment or service-delivery evidence. See [`docs/TESTNET_EVIDENCE.json`](docs/TESTNET_EVIDENCE.json) for transaction hashes and parameters. The browser demo uses fixture data, and the Solidity contract is unaudited.
 
-The Solidity suite currently contains 29 deterministic test functions and 4 stateful invariant properties. Changes from the current source revision have not yet passed Foundry; a test count in source is not evidence that a run passed.
+The Solidity suite currently contains 36 deterministic test functions and 4 stateful invariant properties. Check the latest CI run for the result on the current source revision.
 
 ## Local run
 
@@ -106,7 +106,7 @@ Circle Agent Wallets, Coinbase Agentic Wallets, Crossmint, Safe spending control
 
 ## Limitations
 
-- No Arc deployment, live app, real wallet connection, real service execution, or real USDC payment.
+- No Arc mainnet deployment, live app, real wallet connection, or real service execution. The completed Arc testnet transfer was a self-transfer and does not establish an independent vendor payment.
 - Browser state is deterministic fixture data; no backend, indexer, durable database, or cryptographically verified UI receipt.
 - Outcome hashes are supplied by the caller. The contract only emits and stores the request/outcome hashes; it does not attest service delivery.
 - No audited security review, property-based/fuzz testing, formal verification, signer abstraction, identity, refund handling, or vendor dispute flow.
