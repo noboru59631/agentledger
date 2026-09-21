@@ -1,0 +1,13 @@
+{
+  "name": "agentledger",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test app/policy.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {}
+}
