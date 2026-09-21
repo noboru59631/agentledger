@@ -64,7 +64,8 @@ const forge = process.platform === 'win32' ? 'forge.exe' : 'forge';
 const cast = process.platform === 'win32' ? 'cast.exe' : 'cast';
 
 async function castOutput(args) {
-  return run(cast, [...args, '--rpc-url', rpcUrl]);
+  const rpcSubcommands = new Set(['call']);
+  return run(cast, rpcSubcommands.has(args[0]) ? [...args, '--rpc-url', rpcUrl] : args);
 }
 
 function castInteger(output) {
