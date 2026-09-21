@@ -8,7 +8,7 @@ MandateGraph is experimental, unaudited software. It has not been deployed. The 
 
 - Task owner is immutable; only the owner can revoke the task.
 - Only a mandate's agent can delegate or revoke that mandate.
-- Child budget is reserved from the parent's unspent and unallocated budget; each child payment reduces the parent's reservation by the amount already counted as ancestor spend.
+- Child budget is reserved from the parent's unspent and unallocated budget; as a child spends, its immediate parent's outstanding allocation is reduced by that amount.
 - Delegation cannot extend expiry, widen service bitmap, widen a fixed recipient, or exceed bounded depth.
 - A payment caller must be the mandate agent; request expiry, recipient, service scope, unique request ID, task budget, and each ancestor's available budget are checked.
 - Revocation and expiry are validated over the full ancestry, including the task deadline.
@@ -29,7 +29,7 @@ MandateGraph is experimental, unaudited software. It has not been deployed. The 
 
 ## Review findings addressed
 
-- **Spent delegation reservation remained locked — fixed.** A child's payment was included in each ancestor's `spent` and remained in `allocated`, double-counting that amount and blocking legitimate remaining spend. Each child payment now reduces every ancestor's outstanding reservation by the amount settled.
+- **Spent delegation reservation remained locked — fixed.** A child's payment was included in the immediate parent's `spent` and remained in `allocated`, double-counting that amount. The immediate parent's outstanding allocation now decreases as the child spends, while sibling reservations remain intact.
 - **Child expiry could exceed task deadline — fixed.** Delegation now caps expiry at both parent expiry and task deadline.
 - **Task deadline did not stop live authority — fixed.** Execution and `isAuthorized` now apply the task deadline throughout the ancestry.
 - **Child's own allocation constrained its payment — fixed.** A child cannot pay against budget it has already delegated; ancestor checks retain descendant reservations while the paying node excludes its own reservation.
