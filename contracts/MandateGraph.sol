@@ -88,8 +88,15 @@ contract MandateGraph {
         mandate.revoked = true;
         if (mandate.parentId != 0) {
             Mandate storage parent = mandates[mandate.parentId];
-            parent.allocated -= mandate.budget - mandate.spent;
+            uint128 released = mandate.budget - mandate.spent;
+            parent.allocated -= released;
             parent.activeChildren -= 1;
+            uint256 ancestorId = parent.parentId;
+            while (ancestorId != 0) {
+                Mandate storage ancestor = mandates[ancestorId];
+                ancestor.allocated -= released;
+                ancestorId = ancestor.parentId;
+            }
         }
         emit MandateRevoked(mandateId, mandate.taskId);
     }
@@ -104,7 +111,7 @@ contract MandateGraph {
         if (requestExpiry < block.timestamp || requestExpiry > mandate.expiry || requestExpiry > tasks[mandate.taskId].deadline) revert PaymentExpired();
         if (usedPaymentIds[paymentId]) revert Replay(paymentId);
         if (recipient == address(0) || (mandate.recipient != address(0) && recipient != mandate.recipient)) revert InvalidRecipient();
-        if (amount == 0 || mandate.spent > mandate.budget || mandate.allocated > mandate.budget - mandate.spent || amount > mandate.budget - mandate.spent - mandate.allocated) revert BudgetExceeded();
+        if (amount == 0 || mandate.spent > mandate.budget || amount > mandate.budget - mandate.spent) revert BudgetExceeded();
         if ((serviceClass & mandate.serviceScope) != serviceClass || serviceClass == 0) revert ScopeWidened();
         if (outcomeHash == bytes32(0)) revert InvalidOutcome();
         bytes32 requestHash = keccak256(abi.encode(mandate.taskId, mandateId, recipient, amount, serviceClass, resourceHash, requestExpiry, nonce));
@@ -157,16 +164,12 @@ contract MandateGraph {
     }
 
     function _recordSpendAndReleaseReservations(uint256 mandateId, uint128 amount) internal {
-        mandates[mandateId].spent += amount;
-        uint256 childId = mandateId;
-        uint256 parentId = mandates[childId].parentId;
-        while (parentId != 0) {
-            Mandate storage parent = mandates[parentId];
-            Mandate storage child = mandates[childId];
-            parent.spent += amount;
-            parent.allocated -= amount;
-            childId = parentId;
-            parentId = parent.parentId;
+        uint256 cursor = mandateId;
+        while (cursor != 0) {
+            Mandate storage node = mandates[cursor];
+            node.spent += amount;
+            if (node.parentId != 0) node.allocated -= amount;
+            cursor = node.parentId;
         }
     }
 }
