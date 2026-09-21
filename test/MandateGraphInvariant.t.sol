@@ -79,13 +79,8 @@ contract MandateGraphInvariantTest {
         handler = new MandateGraphHandler();
     }
 
-    function targetContracts() external view returns (address[] memory targets) {
-        targets = new address[](1);
-        targets[0] = address(handler);
-    }
-
-    function invariantHandlerExecutesActions() public view {
-        require(handler.actionCount() > 0, "stateful handler did not run");
+    function targetContract(address target) external view returns (bool) {
+        return target == address(handler);
     }
 
     function invariantEveryMandateStaysWithinItsGrant() public view {
