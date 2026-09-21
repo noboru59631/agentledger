@@ -14,7 +14,7 @@ The MVP focuses on task-bound mandates, multi-hop delegation, monotonic attenuat
 
 ## Current status
 
-This repository contains a local browser simulation and an experimental Solidity contract. **Arc testnet lifecycle: completed. Arc Mainnet: NOT DEPLOYED.** The testnet recipient was the sender itself, so this was a self-transfer rehearsal; it is not independent vendor-payment or service-delivery evidence. See [`docs/TESTNET_EVIDENCE.json`](docs/TESTNET_EVIDENCE.json) for testnet transaction hashes and parameters. The browser demo uses fixture data, and the Solidity contract is unaudited.
+This repository contains a local browser simulation and an experimental Solidity contract. **Arc testnet lifecycle: completed. Arc Mainnet deployment and lifecycle rehearsal: completed successfully.** The mainnet run used a separately controlled demo wallet and is not evidence of an independent vendor relationship or service delivery. See [`docs/MAINNET_EVIDENCE.json`](docs/MAINNET_EVIDENCE.json) for mainnet transaction hashes and parameters, and [`docs/TESTNET_EVIDENCE.json`](docs/TESTNET_EVIDENCE.json) for testnet evidence. The browser demo uses fixture data, and the Solidity contract is unaudited.
 
 The Solidity suite currently contains 36 deterministic test functions and 4 stateful invariant properties. Check the latest CI run for the result on the current source revision.
 
@@ -79,33 +79,21 @@ The fixture depicts a $5 research task. Research Agent delegates up to $1 to Tra
 
 These are code properties, not an independent audit or proof that a deployed system is safe. The contract does not verify the truth or quality of offchain service/outcome data.
 
-## Mainnet Deployment
+## Arc Mainnet Evidence
 
-**STATUS: NOT DEPLOYED.** AgentLedger has no Arc Mainnet contract or mainnet transaction evidence. `docs/MAINNET_EVIDENCE.json` is created only after an actual successful mainnet deployment; testnet evidence remains in `docs/TESTNET_EVIDENCE.json`.
+**Status: deployed; lifecycle rehearsal completed successfully.** Contract: [`0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da`](https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da) on Arc Mainnet (chain ID `5042`), using USDC at `0x3600000000000000000000000000000000000000`.
 
-Official Arc parameters: chain ID `5042`; primary RPC `https://rpc.mainnet.arc.io`; explorer `https://explorer.arc.io`; native gas is USDC with 18-decimal accounting; the ERC-20 interface is Circle USDC at `0x3600000000000000000000000000000000000000` with 6 decimals. Official Arc docs also list Alchemy, Blockdaemon, dRPC, and QuickNode endpoints; this runner intentionally accepts only the official primary RPC. The ERC-20 and native interfaces refer to the same underlying USDC balance.
+- Deployment: [transaction](https://explorer.arc.io/tx/0x7f1287234e0b9049b45aa5ea67857c358ac95fda7b2e1e9ac2516070157d80b8)
+- Task creation: [transaction](https://explorer.arc.io/tx/0x17602976ae236cd73f0c2fb9e0d34e82e8f841a82f7d8c1ff2b33abad9ccb731)
+- Delegation: [transaction](https://explorer.arc.io/tx/0xe8bb539e56eaa8e94321326870f89d5acc8f2c616cd746ab40566373f8b1eb8b)
+- Payment approval: [transaction](https://explorer.arc.io/tx/0x099e17ef1c9ed66450ebb9390bf3653925d3cdf71bbe7c8dc3b2a7800b4f7be3)
+- Payment execution: [transaction](https://explorer.arc.io/tx/0xba0064e2a6cb13daeffafe90e79fc53c94d25ea7ae0a205e58bbee53c46eec6e)
+- Task revocation: [transaction](https://explorer.arc.io/tx/0x7a694807ac98d25f6e4145fd2fc7f715838269544155309ac69602b66c8f65ba)
+- Retry after revocation: `retryBlocked: true`, checked through a read-only call.
 
-The read-only preflight checks the encrypted Foundry keystore signer against the configured sender, the pinned chain and RPC, USDC bytecode and metadata, both displayed balance interfaces, and a live deployment gas estimate. It reserves 1,000,000 gas for lifecycle calls and adds a 50% gas margin. Gas price is the greater of the live `eth_gasPrice` quote and 20 Gwei. The preflight reports a live total; for planning, a 2,000,000-gas deployment at 20 Gwei implies about `0.09 USDC` buffered gas plus `0.01 USDC` for the payment, or `0.10 USDC` total. This is a planning estimate, not a fee quote; use the preflight output immediately before funding.
+The preflight immediately before execution reported adequate native gas/total funding and ERC-20 payment balance, with `transactionsSent: false` at that preflight stage. The lifecycle sent the transactions listed above. The recipient was a separately controlled demo wallet. This evidence demonstrates deployment, task-bound payment execution, delegation, revocation, and blocked retry behavior; it does not demonstrate an independent vendor relationship, service delivery, or service proof. No `outcomeHash` claim is made. Full evidence: [`docs/MAINNET_EVIDENCE.json`](docs/MAINNET_EVIDENCE.json).
 
-Use a second wallet address controlled by you (or a consenting demo participant) as `ARC_MAINNET_RECIPIENT`. The minimal demo payment is `0.01 USDC` (10,000 ERC-20 base units). A separate recipient demonstrates a real token movement, but does not establish a vendor relationship or prove service delivery. No vendor/service evidence is generated.
-
-From WSL, pull the merged code and run **preflight only**:
-
-```bash
-cd /mnt/c/Users/jhjop/Documents/Codex/2026-09-22/referenced-chatgpt-conversation-this-is-an/work/agentledger
-git switch main
-git pull --ff-only origin main
-npm ci
-forge build
-export ARC_MAINNET_ACCOUNT='agentledger-mainnet'
-export ARC_MAINNET_SENDER='0xYourKeystoreAddress'
-export ARC_MAINNET_RECIPIENT='0xYourSeparateDemoWallet'
-npm run lifecycle:arc-mainnet:preflight
-```
-
-The preflight command never broadcasts. Mainnet execution is a separate command and is blocked unless `CONFIRM_ARC_MAINNET=YES` is explicitly set. The execution path rejects raw private-key environment variables, requires an encrypted Foundry keystore account, refuses a self-transfer recipient, verifies all network and token details before its first transaction, and writes distinct evidence. Do not set the confirmation variable for preflight.
-
-Before any real broadcast, require: successful preflight from the execution host; reviewed deployment bytecode and a passing full Foundry suite; the signer address matching its encrypted keystore; the exact current fee estimate funded in native USDC; at least the `0.01 USDC` ERC-20 payment amount (same underlying asset); a recipient under separate control; and explicit owner approval for the deployment and lifecycle transactions. Mainnet deployment and the lifecycle should also receive an independent security review. No such transaction has been sent in preparing this path.
+Arc Mainnet uses chain ID `5042`, primary RPC `https://rpc.mainnet.arc.io`, and explorer `https://explorer.arc.io`. The browser demo remains fixture-based, and the Solidity contract is unaudited.
 
 ## Differentiation
 
@@ -113,7 +101,7 @@ Circle Agent Wallets, Coinbase Agentic Wallets, Crossmint, Safe spending control
 
 ## Limitations
 
-- No Arc mainnet deployment, live app, real wallet connection, or real service execution. The completed Arc testnet transfer was a self-transfer and does not establish an independent vendor payment.
+- No production live app, real wallet connection, independent vendor relationship, or verified service delivery. The Arc Mainnet rehearsal paid a separately controlled demo wallet; the Arc testnet transfer was a self-transfer.
 - Browser state is deterministic fixture data; no backend, indexer, durable database, or cryptographically verified UI receipt.
 - Outcome hashes are supplied by the caller. The contract only emits and stores the request/outcome hashes; it does not attest service delivery.
 - No audited security review, property-based/fuzz testing, formal verification, signer abstraction, identity, refund handling, or vendor dispute flow.
@@ -122,10 +110,9 @@ Circle Agent Wallets, Coinbase Agentic Wallets, Crossmint, Safe spending control
 
 ## Before public submission
 
-- Run `npm run lifecycle:arc-mainnet:preflight` from a network-enabled WSL environment and review its compiled deployment estimate.
 - Run the complete Solidity suite and expand it to all security invariants listed in `SECURITY.md`.
 - Fix all test findings and obtain independent contract review.
-- Deploy and verify the reviewed contract on Arc mainnet with explicit owner approval; publish the verified address and explorer-backed transaction evidence.
+- Obtain an independent security review and verify the deployed contract source if submission requirements call for it.
 - Replace fixture UI with a working read/write flow that labels each state accurately; host it at a public URL.
 - Publish the source repository and a public builder profile; add live app, repo, contract, and 60–90 sec demo links to `SUBMISSION.md`.
 - Confirm the project remains within program eligibility and submit through the Arc House event page.

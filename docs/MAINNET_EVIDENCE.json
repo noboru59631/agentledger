@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "network": "Arc Mainnet",
+  "chainId": 5042,
+  "rpcUrl": "https://rpc.mainnet.arc.io",
+  "token": "0x3600000000000000000000000000000000000000",
+  "sender": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+  "recipient": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+  "contractAddress": "0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da",
+  "paymentAmountBaseUnits": "10000",
+  "retryBlocked": true,
+  "preflight": {
+    "adequateNativeGasAndTotalFunding": true,
+    "adequateErc20PaymentBalance": true,
+    "transactionsSent": false,
+    "phase": "Read-only preflight immediately before separately confirmed execution."
+  },
+  "steps": {
+    "deploy": {
+      "status": "success",
+      "hash": "0x7f1287234e0b9049b45aa5ea67857c358ac95fda7b2e1e9ac2516070157d80b8",
+      "explorerUrl": "https://explorer.arc.io/tx/0x7f1287234e0b9049b45aa5ea67857c358ac95fda7b2e1e9ac2516070157d80b8"
+    },
+    "createTask": {
+      "status": "success",
+      "hash": "0x17602976ae236cd73f0c2fb9e0d34e82e8f841a82f7d8c1ff2b33abad9ccb731",
+      "explorerUrl": "https://explorer.arc.io/tx/0x17602976ae236cd73f0c2fb9e0d34e82e8f841a82f7d8c1ff2b33abad9ccb731"
+    },
+    "delegate": {
+      "status": "success",
+      "hash": "0xe8bb539e56eaa8e94321326870f89d5acc8f2c616cd746ab40566373f8b1eb8b",
+      "explorerUrl": "https://explorer.arc.io/tx/0xe8bb539e56eaa8e94321326870f89d5acc8f2c616cd746ab40566373f8b1eb8b"
+    },
+    "approve": {
+      "status": "success",
+      "hash": "0x099e17ef1c9ed66450ebb9390bf3653925d3cdf71bbe7c8dc3b2a7800b4f7be3",
+      "explorerUrl": "https://explorer.arc.io/tx/0x099e17ef1c9ed66450ebb9390bf3653925d3cdf71bbe7c8dc3b2a7800b4f7be3"
+    },
+    "executePayment": {
+      "status": "success",
+      "hash": "0xba0064e2a6cb13daeffafe90e79fc53c94d25ea7ae0a205e58bbee53c46eec6e",
+      "explorerUrl": "https://explorer.arc.io/tx/0xba0064e2a6cb13daeffafe90e79fc53c94d25ea7ae0a205e58bbee53c46eec6e"
+    },
+    "revokeTask": {
+      "status": "success",
+      "hash": "0x7a694807ac98d25f6e4145fd2fc7f715838269544155309ac69602b66c8f65ba",
+      "explorerUrl": "https://explorer.arc.io/tx/0x7a694807ac98d25f6e4145fd2fc7f715838269544155309ac69602b66c8f65ba"
+    }
+  },
+  "caveat": "Recipient is a separately controlled demo wallet. The rehearsal demonstrates Arc Mainnet deployment, task-bound payment execution, delegation, revocation, and a blocked retry/read-only check. It does not establish an independent vendor relationship or service delivery. No service proof or outcomeHash claim is made."
+}

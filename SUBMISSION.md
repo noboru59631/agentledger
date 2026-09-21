@@ -1,12 +1,12 @@
 # Arc Microgrants Submission Draft
 
-## Status: not ready to submit
+## Status: submission draft; remaining requirements are listed below
 
-Arc Microgrants requires a project already deployed and working on Arc mainnet, a public repo, a short description of what it does and Arc's role, and a public builder profile. AgentLedger currently has no deployment, no public hosted app, and no real payment evidence. Do not submit this draft until the checklist below is complete.
+AgentLedger is deployed on Arc Mainnet and has completed a task-bound payment lifecycle rehearsal. The public repository and explorer-backed evidence are available below. The browser demo is not a live hosted app, and the rehearsal does not establish an independent vendor relationship or service delivery. Confirm all event requirements and remaining submission materials before submitting.
 
 ## Deployment Readiness
 
-This repository has not passed Solidity compilation/tests, live Arc JSON-RPC preflight, independent security review, or testnet lifecycle rehearsal. Deployment scripts are prepared but are not deployment approval. Before deployment, obtain a live fee estimate and explicitly approve the irreversible broadcast. `MIN_USDC_BALANCE` is an optional configurable balance gate, not an estimated deployment cost. Use a Foundry encrypted keystore or interactive signer; never put a raw private key in a command or environment variable.
+The supplied Arc Mainnet evidence records a successful read-only preflight and completed lifecycle rehearsal. The contract remains unaudited; deployment evidence is not a security review. Before deployment, obtain a live fee estimate and explicitly approve the irreversible broadcast. `MIN_USDC_BALANCE` is an optional configurable balance gate, not an estimated deployment cost. Use a Foundry encrypted keystore or interactive signer; never put a raw private key in a command or environment variable.
 
 ## Short description
 
@@ -22,7 +22,7 @@ The repository contains an experimental Solidity contract implementing task-root
 
 ## Arc's role
 
-On a completed deployment, Arc would provide the public settlement and audit layer for USDC payments, and its stablecoin-native gas model would let the same asset fund execution. Arc is a core part of the intended value flow, not merely a branding target. Today, this integration is only contract code and configuration research; there is no live Arc transaction evidence.
+On a completed deployment, Arc would provide the public settlement and audit layer for USDC payments, and its stablecoin-native gas model would let the same asset fund execution. Arc is a core part of the intended value flow, not merely a branding target. The contract has completed a documented Arc Mainnet task-payment rehearsal; see the transaction evidence below. The browser demo does not call the contract.
 
 ## Product distinction
 
@@ -32,7 +32,7 @@ Circle Agent Wallets, Coinbase Agentic Wallets, Crossmint, Safe spending control
 
 - Live Arc app: `TBD — not deployed`
 - Public repository: `TBD — not published`
-- Mainnet contract and explorer evidence: `TBD — no deployment`
+- Mainnet contract and explorer evidence: [contract](https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da) and [evidence JSON](docs/MAINNET_EVIDENCE.json)
 - Public builder profile: `TBD`
 - Demo video (60–90 sec): `TBD`
 - Solidity suite: not yet executed in this environment
@@ -43,12 +43,9 @@ This repository has not passed Solidity compilation/tests, live Arc JSON-RPC pre
 
 ## Before submission
 
-- [ ] Reconcile the stale “testnet only” line in the Arc docs index against the current official mainnet configuration; run read-only RPC and USDC code/metadata/balance checks from a network-enabled environment.
 - [ ] Install a local Solidity toolchain and run all contract tests; add tests for each item in `SECURITY.md`.
 - [ ] Fix findings and obtain an independent contract review.
-- [ ] Test the complete lifecycle on Arc testnet, including a real test USDC settlement and revoke-blocked retry.
-- [ ] Have the user explicitly approve any funded mainnet transaction; deploy and verify source on Arc mainnet.
-- [ ] After deployment, fill the Live Evidence template with actual verified address and transaction hashes; do not use fixture IDs or hashes.
+- [x] Complete a task-bound payment lifecycle rehearsal on Arc Mainnet; see explorer-backed evidence below.
 - [ ] Build a real wallet-connected app and public hosted demo that reads/writes chain state and labels evidence accurately.
 - [ ] Publish the repository and add public builder profile links.
 - [ ] Record a 60–90 sec demo with explorer-backed transaction links.
@@ -59,20 +56,21 @@ This repository has not passed Solidity compilation/tests, live Arc JSON-RPC pre
 - Live app: `TBD`
 - Public repository: `TBD`
 - Verified contract: `TBD`
-- Mainnet transaction evidence: `TBD`
+- Mainnet transaction evidence: [`docs/MAINNET_EVIDENCE.json`](docs/MAINNET_EVIDENCE.json)
 - Builder profile: `TBD`
 - Demo video: `TBD`
 
 ## Live Evidence (fill only from verified Arc mainnet transactions)
 
-- Contract address: `TBD — not deployed`
-- Deployment transaction: `TBD — not deployed`
-- Create task transaction: `TBD — not executed`
-- Delegation transaction: `TBD — not executed`
-- Payment transaction and explicit amount: `TBD — not executed`
-- Outcome receipt transaction: `TBD — not executed`
-- Root revocation transaction: `TBD — not executed`
-- Blocked retry evidence: `TBD — not executed`
-- Explorer base: `https://explorer.arc.io` (official Circle skill)
+- Contract address: [0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da](https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da)
+- Deployment: [explorer](https://explorer.arc.io/tx/0x7f1287234e0b9049b45aa5ea67857c358ac95fda7b2e1e9ac2516070157d80b8)
+- Create task: [explorer](https://explorer.arc.io/tx/0x17602976ae236cd73f0c2fb9e0d34e82e8f841a82f7d8c1ff2b33abad9ccb731)
+- Delegation: [explorer](https://explorer.arc.io/tx/0xe8bb539e56eaa8e94321326870f89d5acc8f2c616cd746ab40566373f8b1eb8b)
+- Payment approval: [explorer](https://explorer.arc.io/tx/0x099e17ef1c9ed66450ebb9390bf3653925d3cdf71bbe7c8dc3b2a7800b4f7be3)
+- Payment execution: [explorer](https://explorer.arc.io/tx/0xba0064e2a6cb13daeffafe90e79fc53c94d25ea7ae0a205e58bbee53c46eec6e), 0.01 USDC
+- Root revocation: [explorer](https://explorer.arc.io/tx/0x7a694807ac98d25f6e4145fd2fc7f715838269544155309ac69602b66c8f65ba)
+- Blocked retry: `retryBlocked: true`, confirmed by a read-only check
+- Scope: deployment, task-bound payment path, delegation, revocation, and retry blocking only; no independent vendor relationship, service delivery, or service proof is claimed. No `outcomeHash` claim is made.
+- Full evidence: [`docs/MAINNET_EVIDENCE.json`](docs/MAINNET_EVIDENCE.json)
 
 The event page currently describes 20 awards of 500 USDC and rolling review, but selection is competitive and no award is guaranteed.
