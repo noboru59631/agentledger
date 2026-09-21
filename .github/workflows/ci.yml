@@ -44,6 +44,8 @@ jobs:
       - run: node --check scripts/serve.mjs
       - run: node --check scripts/run-lifecycle.mjs
       - run: node --check scripts/run-arc-testnet-lifecycle.mjs
+      - run: node --check scripts/arc-mainnet-config.mjs
+      - run: node --check scripts/run-arc-mainnet-lifecycle.mjs
 
   arc-readonly-preflight:
     if: github.event_name == 'workflow_dispatch'
