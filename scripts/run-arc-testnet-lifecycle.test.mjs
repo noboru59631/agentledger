@@ -56,3 +56,9 @@ test('Arc evidence is persisted before and after transaction confirmation', () =
   assert.match(runner, /TESTNET_EVIDENCE\.json/);
   assert.match(runner, /const paymentAmount = 10_000n/);
 });
+
+
+test('local cast encoding commands do not receive RPC flags', () => {
+  assert.match(runner, /const rpcSubcommands = new Set\(\['call'\]\)/);
+  assert.match(runner, /rpcSubcommands\.has\(args\[0\]\) \? \[\.\.\.args, '--rpc-url', rpcUrl\] : args/);
+});
