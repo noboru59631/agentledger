@@ -130,7 +130,7 @@ contract MandateGraphTest {
         graph.delegate(1, address(0x1234), 1_000_000, deadline, 1, address(0));
         (,,,,,,,,uint256 allocated,,) = graph.mandates(1);
         require(allocated == 1_000_000, "spent child reservation was not released");
-        (,,,,,uint128 parentSpent,,,,,) = graph.mandates(1);
+        (,,uint128 parentSpent,,,,,,,,) = graph.mandates(1);
         require(parentSpent == 1_000_000, "ancestor spend was not retained");
     }
     function testTaskDeadlineExpiresMandateEvenIfMandateExpiryIsLater() public {
