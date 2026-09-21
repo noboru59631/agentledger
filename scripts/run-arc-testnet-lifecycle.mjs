@@ -123,7 +123,7 @@ async function main() {
   };
   const deploymentOutput = await run(forge, [
     'create', 'contracts/MandateGraph.sol:MandateGraph',
-    '--rpc-url', rpcUrl, '--account', account, '--constructor-args', token, '--broadcast', '--json',
+    '--rpc-url', rpcUrl, '--account', account, '--broadcast', '--json', '--constructor-args', token,
   ]);
   const deployment = JSON.parse(deploymentOutput);
   const contract = deployment.deployedTo;

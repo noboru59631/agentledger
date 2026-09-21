@@ -25,6 +25,10 @@ test('Arc runner uses encrypted account signing and never broadcasts the revoked
   assert.match(runner, /waitForSuccessfulReceipt\(deploymentHash\)/);
 });
 
+test('Arc deployment places variadic constructor arguments after Forge options', () => {
+  assert.match(runner, /'--broadcast', '--json', '--constructor-args', token/);
+});
+
 test('Arc runner records the required lifecycle evidence and payment amount', () => {
   assert.match(runner, /const paymentAmount = 10_000n/);
   assert.match(runner, /paymentId/);
