@@ -7,8 +7,6 @@ import {MockUSDC} from "../contracts/MockUSDC.sol";
 interface InvariantVm {
     function prank(address) external;
     function warp(uint256) external;
-    struct FuzzSelector { address addr; bytes4[] selectors; }
-    function targetSelector(FuzzSelector calldata) external;
 }
 
 contract MandateGraphHandler {
@@ -23,6 +21,7 @@ contract MandateGraphHandler {
     uint256[] private mandateIds;
     mapping(uint256 => address) private agents;
     uint256 private nonce;
+    uint256 private actions;
 
     constructor() {
         token = new MockUSDC();
@@ -39,6 +38,7 @@ contract MandateGraphHandler {
     }
 
     function step(uint256 seed, uint128 rawAmount, uint8 action) external {
+        ++actions;
         if (block.timestamp >= deadline) vm.warp(uint256(deadline) - 1);
         uint256 parentIndex = seed % mandateIds.length;
         uint256 parentId = mandateIds[parentIndex];
@@ -68,7 +68,7 @@ contract MandateGraphHandler {
 
     function mandateCount() external view returns (uint256) { return mandateIds.length; }
     function mandateIdAt(uint256 index) external view returns (uint256) { return mandateIds[index]; }
-    function actionCount() external view returns (uint256) { return nonce; }
+    function actionCount() external view returns (uint256) { return actions; }
 }
 
 contract MandateGraphInvariantTest {
@@ -77,9 +77,11 @@ contract MandateGraphInvariantTest {
 
     function setUp() public {
         handler = new MandateGraphHandler();
-        bytes4[] memory selectors = new bytes4[](1);
-        selectors[0] = MandateGraphHandler.step.selector;
-        vm.targetSelector(InvariantVm.FuzzSelector(address(handler), selectors));
+    }
+
+    function targetContracts() external view returns (address[] memory targets) {
+        targets = new address[](1);
+        targets[0] = address(handler);
     }
 
     function invariantHandlerExecutesActions() public view {

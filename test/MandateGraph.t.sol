@@ -130,6 +130,7 @@ contract MandateGraphTest {
         graph.executePayment(2, _id(2, VENDOR, 1, 1, keccak256("r"), deadline, 4), VENDOR, 1, 1, keccak256("r"), deadline, 4, keccak256("o"));
     }
     function testParentCannotSpendAfterDelegatingEntireBudget() public {
+        vm.prank(TRANSLATOR); graph.revokeMandate(2);
         vm.prank(RESEARCH); graph.delegate(1, address(0x123), 5_000_000, deadline, 1, address(0));
         usdc.mint(RESEARCH, 1);
         vm.prank(RESEARCH); usdc.approve(address(graph), type(uint256).max);
@@ -137,7 +138,6 @@ contract MandateGraphTest {
         graph.executePayment(1, _id(1, VENDOR, 1, 1, keccak256("entire"), deadline, 40), VENDOR, 1, 1, keccak256("entire"), deadline, 40, keccak256("o"));
     }
     function testPartialReservationLeavesParentRemainder() public {
-        vm.prank(RESEARCH); graph.delegate(1, address(0x123), 1_000_000, deadline, 1, address(0));
         usdc.mint(RESEARCH, 4_000_000);
         vm.prank(RESEARCH); usdc.approve(address(graph), type(uint256).max);
         vm.prank(RESEARCH); graph.executePayment(1, _id(1, VENDOR, 4_000_000, 1, keccak256("remainder"), deadline, 41), VENDOR, 4_000_000, 1, keccak256("remainder"), deadline, 41, keccak256("o"));
@@ -145,11 +145,12 @@ contract MandateGraphTest {
         graph.executePayment(1, _id(1, VENDOR, 1, 1, keccak256("none"), deadline, 42), VENDOR, 1, 1, keccak256("none"), deadline, 42, keccak256("o"));
     }
     function testSiblingDelegationsCannotOversubscribe() public {
-        vm.prank(RESEARCH); graph.delegate(1, address(0x123), 3_000_000, deadline, 1, address(0));
+        vm.prank(RESEARCH); graph.delegate(1, address(0x123), 4_000_000, deadline, 1, address(0));
         vm.prank(RESEARCH); vm.expectRevert(abi.encodeWithSelector(MandateGraph.InvalidBudget.selector));
-        graph.delegate(1, address(0x124), 2_000_001, deadline, 1, address(0));
+        graph.delegate(1, address(0x124), 1_000_001, deadline, 1, address(0));
     }
     function testSiblingChildrenCanBothSpendReservedBudgets() public {
+        vm.prank(TRANSLATOR); graph.revokeMandate(2);
         vm.prank(RESEARCH); graph.delegate(1, address(0x123), 2_000_000, deadline, 1, address(0));
         vm.prank(RESEARCH); graph.delegate(1, address(0x124), 2_000_000, deadline, 1, address(0));
         address sibling = address(0x124);
@@ -162,6 +163,7 @@ contract MandateGraphTest {
         require(rootSpent == 3_000_000 && rootAllocated == 1_000_000, "sibling reservation accounting");
     }
     function testDescendantPaymentConvertsReservationToAncestorSpend() public {
+        vm.prank(TRANSLATOR); graph.revokeMandate(2);
         vm.prank(RESEARCH); graph.delegate(1, address(0x123), 2_000_000, deadline, 1, address(0));
         vm.prank(address(0x123)); graph.delegate(3, address(0x125), 1_000_000, deadline, 1, address(0));
         usdc.mint(address(0x125), 600_000);
@@ -173,6 +175,7 @@ contract MandateGraphTest {
         require(childSpent == 600_000 && childAllocated == 400_000, "child accounting");
     }
     function testRevokingLeafReturnsOnlyUnusedAllocationAndAllowsRedelegation() public {
+        vm.prank(TRANSLATOR); graph.revokeMandate(2);
         vm.prank(RESEARCH); graph.delegate(1, address(0x123), 1_000_000, deadline, 1, address(0));
         usdc.mint(address(0x123), 400_000);
         vm.prank(address(0x123)); usdc.approve(address(graph), type(uint256).max);
@@ -183,6 +186,7 @@ contract MandateGraphTest {
         require(rootSpent == 400_000 && rootAllocated == 600_000, "spent authority resurrected");
     }
     function testRevokingChildWithGrandchildReturnsOnlyItsUncommittedRemainder() public {
+        vm.prank(TRANSLATOR); graph.revokeMandate(2);
         vm.prank(RESEARCH); graph.delegate(1, address(0x123), 2_000_000, deadline, 1, address(0));
         vm.prank(address(0x123)); graph.delegate(3, address(0x125), 1_000_000, deadline, 1, address(0));
         usdc.mint(address(0x125), 400_000);
@@ -199,6 +203,7 @@ contract MandateGraphTest {
         graph.revokeMandate(1);
     }
     function testRevocationThenRedelegationBoundaryAndSpentCannotBeReused() public {
+        vm.prank(TRANSLATOR); graph.revokeMandate(2);
         vm.prank(RESEARCH); graph.delegate(1, address(0x123), 1, deadline, 1, address(0));
         vm.prank(address(0x123)); usdc.mint(address(0x123), 1);
         vm.prank(address(0x123)); usdc.approve(address(graph), type(uint256).max);
@@ -209,6 +214,7 @@ contract MandateGraphTest {
         graph.delegate(1, address(0x126), 1, deadline, 1, address(0));
     }
     function testSubtreeMustBeRevokedLeafFirstThenReturnsOnlyUnused() public {
+        vm.prank(TRANSLATOR); graph.revokeMandate(2);
         vm.prank(RESEARCH); graph.delegate(1, address(0x123), 1_000_000, deadline, 1, address(0));
         vm.prank(address(0x123)); graph.delegate(3, address(0x125), 400_000, deadline, 1, address(0));
         vm.prank(address(0x125)); graph.revokeMandate(4);
