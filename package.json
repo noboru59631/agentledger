@@ -6,6 +6,7 @@
     "start": "node scripts/serve.mjs",
     "lifecycle": "node scripts/run-lifecycle.mjs",
     "lifecycle:arc-testnet": "node scripts/run-arc-testnet-lifecycle.mjs",
+    "lifecycle:arc-testnet:resume": "node scripts/run-arc-testnet-lifecycle.mjs --resume",
     "test": "node --test app/policy.test.mjs scripts/run-arc-testnet-lifecycle.test.mjs"
   },
   "engines": {
