@@ -5,9 +5,8 @@ if (-not $env:ARC_RPC_URL) {
   if ($Network -eq "mainnet") { $env:ARC_RPC_URL = "https://rpc.mainnet.arc.io" }
   else { $env:ARC_RPC_URL = "https://rpc.testnet.arc.io" }
 }
-if (-not $env:USDC_ADDRESS) { $env:USDC_ADDRESS = "0x3600000000000000000000000000000000000000" }
-if ($env:USDC_ADDRESS -notmatch '^0x[0-9a-fA-F]{40}$') { throw "USDC_ADDRESS must be a valid 20-byte USDC contract address." }
-if ($env:USDC_ADDRESS -ine "0x3600000000000000000000000000000000000000") { throw "Arc $Network requires USDC at 0x3600000000000000000000000000000000000000." }
+if (-not $env:USDC_ADDRESS -or $env:USDC_ADDRESS -notmatch '^0x[0-9a-fA-F]{40}$') { throw "Set USDC_ADDRESS to a valid 20-byte USDC contract address." }
+if ($Network -eq "mainnet" -and $env:USDC_ADDRESS -ine "0x3600000000000000000000000000000000000000") { throw "Mainnet requires Arc native USDC at 0x3600000000000000000000000000000000000000." }
 if (-not (Get-Command cast -ErrorAction SilentlyContinue)) { throw "Foundry cast is required for preflight." }
 
 $expected = if ($Network -eq "mainnet") { "5042" } else { "5042002" }

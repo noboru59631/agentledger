@@ -14,9 +14,9 @@ The MVP focuses on task-bound mandates, multi-hop delegation, monotonic attenuat
 
 ## Current status
 
-This repository contains a local browser simulation and an experimental Solidity contract. **Arc mainnet deployment status: NOT DEPLOYED.** No testnet deployment or payment has been run for the current validation stage. The browser demo uses fixture data. The Solidity contract is unaudited. Do not interpret a demo receipt as onchain evidence.
+This repository contains a local browser simulation and an experimental Solidity contract. **Deployment status: NOT DEPLOYED.** It has not made a real payment. The browser demo uses fixture data. The Solidity contract is unaudited. Do not interpret a demo receipt as onchain evidence.
 
-The Solidity suite currently contains 23 test functions. Test results are reported by the GitHub Actions workflow; a test count in source is not evidence that a run passed.
+The Solidity suite currently contains 21 test functions. Test results are reported by the GitHub Actions workflow; a test count in source is not evidence that a run passed.
 
 ## Local run
 
@@ -54,7 +54,7 @@ These are code properties, not an independent audit or proof that a deployed sys
 
 Circle announced Arc public mainnet on September 16, 2026. The Arc documentation index currently remains internally inconsistent: it calls USDC native gas and links mainnet integration pages, but also contains a stale “testnet only” line. Circle's Arc skill lists mainnet chain ID `5042`, RPC `https://rpc.mainnet.arc.io`, explorer `https://explorer.arc.io`, and native USDC at `0x3600000000000000000000000000000000000000`. Official docs describe USDC gas as 18-decimal native units and the ERC-20 predeploy interface as 6-decimal USDC. These are official documentation facts, not successful runtime observations: this environment blocked direct JSON-RPC access, so chain ID, latest block, code, and metadata were not independently queried here. Re-run read-only preflight from a network-enabled environment before funding.
 
-The read-only CI preflight checks chain ID, latest block, bytecode at the documented USDC address, and its `symbol` and `decimals`. Use `ARC_NETWORK=testnet node scripts/arc-readonly-preflight.mjs` for the read-only testnet check. No testnet runtime check was performed in this workspace. The source docs have previously contained inconsistent status text; see the linked official references and confirm them again before deployment.
+The read-only CI preflight checks chain ID, latest block, bytecode at the documented USDC address, and its `symbol` and `decimals`. Official documentation supports these constants, but RPC behavior remains an independently observed runtime fact and must be confirmed by the workflow run. The source docs have previously contained inconsistent status text; see the linked official references and confirm them again before deployment.
 
 The deployment preflight has no default funding threshold. Set `MIN_USDC_BALANCE` to an explicit USDC amount to enable an optional balance gate. It is not a deployment cost estimate. No exact deployment cost is stated because no live estimate of the compiled deployment has been obtained. Deployment scripts require a user-managed Foundry keystore account or an interactive signer. No credentials belong in this repository.
 
@@ -69,7 +69,7 @@ $env:ARC_RPC_URL = '...'
 
 `deploy.ps1` invokes `verify-deploy.ps1` after broadcast and confirms runtime code at the reported contract address. Explorer URLs are selected only for the documented Arc mainnet/testnet chain IDs. Mainnet deployment is an irreversible onchain action and remains an explicit user action. The signer must already be available through Foundry's encrypted keystore or an interactive hardware-wallet flow; do not set a raw private-key environment variable.
 
-See [`docs/TESTNET_EVIDENCE.md`](docs/TESTNET_EVIDENCE.md) for current testnet settings and evidence status and [`docs/LIVE_EVIDENCE.md`](docs/LIVE_EVIDENCE.md) for the mainnet evidence template. Mainnet deployment remains a separately approved step after testnet rehearsal, review, and a live deployment fee estimate.
+See [`docs/LIVE_EVIDENCE.md`](docs/LIVE_EVIDENCE.md) for the evidence template. Mainnet deployment remains a separately approved step after testnet rehearsal, review, and a live deployment fee estimate.
 
 ## Differentiation
 
@@ -80,15 +80,15 @@ Circle Agent Wallets, Coinbase Agentic Wallets, Crossmint, Safe spending control
 - No Arc deployment, live app, real wallet connection, real service execution, or real USDC payment.
 - Browser state is deterministic fixture data; no backend, indexer, durable database, or cryptographically verified UI receipt.
 - Outcome hashes are supplied by the caller. The contract only emits and stores the request/outcome hashes; it does not attest service delivery.
-- No independent audit, Slither run, property-based/fuzz testing, formal verification, signer abstraction, identity, refund handling, or vendor dispute flow. This environment did not have Foundry installed, so local Solidity validation was unavailable.
+- No audited security review, property-based/fuzz testing, formal verification, signer abstraction, identity, refund handling, or vendor dispute flow.
 - The direct agent `transferFrom` model needs the agent to hold and approve USDC; it is not a production wallet architecture.
-- Testnet deployment and E2E lifecycle remain unrun because this environment had no configured signer or funded testnet wallet. Follow `docs/TESTNET_EVIDENCE.md` to obtain test funds and run the staged validation.
+- Arc's currently indexed official docs contain conflicting mainnet/testnet status text. Confirm RPC, token address, gas behavior, and explorer in current official docs before a real transaction.
 
 ## Before public submission
 
 - Confirm current Arc mainnet configuration from official Circle/Arc docs and execute read-only chain/token checks.
 - Run `scripts/preflight.ps1 -Network mainnet` from a network-enabled environment, then obtain a deployment fee estimate for the compiled bytecode before funding.
-- Run the complete Solidity suite in Foundry and add fuzz/invariant checks for the requirements listed in `SECURITY.md`.
+- Run the complete Solidity suite and expand it to all security invariants listed in `SECURITY.md`.
 - Fix all test findings and obtain independent contract review.
 - Deploy and verify the reviewed contract on Arc mainnet with explicit owner approval; publish the verified address and explorer-backed transaction evidence.
 - Replace fixture UI with a working read/write flow that labels each state accurately; host it at a public URL.

@@ -8,33 +8,23 @@ MandateGraph is experimental, unaudited software. It has not been deployed. The 
 
 - Task owner is immutable; only the owner can revoke the task.
 - Only a mandate's agent can delegate or revoke that mandate.
-- Child budget is reserved from the parent's unspent and unallocated budget; each child payment reduces the parent's reservation by the amount already counted as ancestor spend.
+- Child budget is reserved from the parent's unspent and unallocated budget.
 - Delegation cannot extend expiry, widen service bitmap, widen a fixed recipient, or exceed bounded depth.
 - A payment caller must be the mandate agent; request expiry, recipient, service scope, unique request ID, task budget, and each ancestor's available budget are checked.
-- Revocation and expiry are validated over the full ancestry, including the task deadline.
+- Revocation and expiry are validated over the full ancestry.
 - The payment ID is recomputed onchain from request fields, preventing callers from changing fields while reusing an arbitrary ID.
 - Payment effects are committed before external token interaction; the transfer function is guarded against reentrancy.
 - Zero-address or no-code USDC constructor inputs and empty outcome hashes are rejected.
 
 ## Known limits and risks
 
-- This is not an audit. The local review added regression tests, but Foundry, Slither, fuzzing, and invariant testing were unavailable in the current environment.
+- This is not an audit. The contract has not yet run under Foundry, fuzzing, invariant testing, or static analysis in this environment.
 - `outcomeHash` is caller-supplied and is not evidence that a vendor delivered anything.
 - The contract's `IERC20` integration is conventional ERC-20 `transferFrom`; Arc-specific USDC behavior, 6-decimal token units versus 18-decimal native gas units, blocklist behavior, and transfer failure semantics need live documentation and test validation.
 - Mandate ancestry checks are linear in depth. Root depth is capped at 32, which bounds but does not eliminate gas considerations.
 - Direct agent-held USDC and allowances expose operational key and approval risk. A production smart-account or wallet-policy integration is needed.
 - Token blocklisting, malicious tokens, compromised agent keys, owner-key loss, bad task metadata, false service claims, refunds, and vendor disputes are not resolved by this prototype.
-- `createTask` accepts a zero recipient to indicate an unrestricted recipient; it does not currently reject a zero task owner (unreachable for ordinary externally-owned accounts, but possible for contract callers).
-- There is no dedicated invariant harness, property-based fuzz suite, or malicious-token reentrancy test yet.
-
-## Review findings addressed
-
-- **Spent delegation reservation remained locked — fixed.** A child's payment was included in ancestor `spent` and also left in ancestor `allocated`, double-counting the same amount and preventing valid future spending. Each child payment now reduces the immediate parent's reservation by that amount; deeper ancestors track the changed parent reservation through the same accounting path.
-- **Child expiry could exceed task deadline — fixed.** Delegation now caps expiry at both parent expiry and task deadline.
-- **Task deadline did not stop live authority — fixed.** Execution and `isAuthorized` now apply the task deadline throughout the ancestry.
-- **Child's own allocation constrained its payment — fixed.** A child cannot pay against budget it has already delegated; ancestor checks retain descendant reservations while the paying node excludes its own reservation.
-
-Foundry/Slither were not installed in the current workspace, so these edits still require the CI/toolchain validation recorded by the next workflow run. No independent third-party audit has been performed.
+- Contract may need additional hardening around task-root lookup, nonzero owner/recipient policy, event completeness, explicit payment receipt state, and exact Arc token interface before deployment.
 
 ## Required test matrix before deployment
 

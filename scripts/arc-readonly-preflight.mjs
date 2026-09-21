@@ -1,7 +1,4 @@
-const network = process.env.ARC_NETWORK ?? 'mainnet';
-if (!['mainnet', 'testnet'].includes(network)) throw new Error('ARC_NETWORK must be mainnet or testnet.');
-const expectedChainId = network === 'mainnet' ? 5042n : 5042002n;
-const rpcUrl = process.env.ARC_RPC_URL ?? (network === 'mainnet' ? 'https://rpc.mainnet.arc.io' : 'https://rpc.testnet.arc.io');
+const rpcUrl = process.env.ARC_RPC_URL ?? 'https://rpc.mainnet.arc.io';
 const token = '0x3600000000000000000000000000000000000000';
 
 async function rpc(method, params = []) {
@@ -27,7 +24,7 @@ function decodeString(value) {
 }
 
 const chainId = BigInt(await rpc('eth_chainId'));
-if (chainId !== expectedChainId) throw new Error(`Expected Arc ${network} chain ID ${expectedChainId}; received ${chainId}.`);
+if (chainId !== 5042n) throw new Error(`Expected Arc mainnet chain ID 5042; received ${chainId}.`);
 const block = await rpc('eth_blockNumber');
 if (BigInt(block) <= 0n) throw new Error(`Invalid latest block number: ${block}.`);
 const code = await rpc('eth_getCode', [token, 'latest']);
@@ -39,4 +36,4 @@ const [symbolData, decimalsData] = await Promise.all([
 const symbol = decodeString(symbolData);
 const decimals = Number(BigInt(decimalsData));
 if (symbol !== 'USDC' || decimals !== 6) throw new Error(`Unexpected token metadata: symbol=${symbol}, decimals=${decimals}.`);
-console.log(`Read-only Arc ${network} preflight passed: chainId=${chainId} block=${BigInt(block)} USDC=${token} symbol=${symbol} decimals=${decimals}. No transaction sent.`);
+console.log(`Read-only Arc preflight passed: chainId=${chainId} block=${BigInt(block)} USDC=${token} symbol=${symbol} decimals=${decimals}. No transaction sent.`);

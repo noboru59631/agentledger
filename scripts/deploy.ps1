@@ -5,12 +5,12 @@ param(
 $ErrorActionPreference = "Stop"
 
 if (-not (Get-Command forge -ErrorAction SilentlyContinue) -or -not (Get-Command cast -ErrorAction SilentlyContinue)) { throw "Foundry forge and cast are required. Install them from https://getfoundry.sh/" }
-if (-not $env:USDC_ADDRESS) { $env:USDC_ADDRESS = "0x3600000000000000000000000000000000000000" }
+if (-not $env:USDC_ADDRESS) { throw "Set USDC_ADDRESS to the verified token contract for the selected network." }
 if ($env:USDC_ADDRESS -notmatch '^0x[0-9a-fA-F]{40}$') { throw "USDC_ADDRESS must be a 20-byte hexadecimal address." }
 
 if ($Network -eq "testnet") {
   $expectedChainId = "5042002"
-  if (-not $env:ARC_RPC_URL) { $env:ARC_RPC_URL = "https://rpc.testnet.arc.io" }
+  if (-not $env:ARC_RPC_URL) { $env:ARC_RPC_URL = "https://rpc.testnet.arc.network" }
 } else {
   $expectedChainId = "5042"
   if (-not $env:ARC_RPC_URL) { $env:ARC_RPC_URL = "https://rpc.mainnet.arc.io" }
