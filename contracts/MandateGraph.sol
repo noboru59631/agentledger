@@ -88,7 +88,7 @@ contract MandateGraph {
         mandate.revoked = true;
         if (mandate.parentId != 0) {
             Mandate storage parent = mandates[mandate.parentId];
-            parent.allocated -= mandate.budget - mandate.spent - mandate.allocated;
+            parent.allocated -= mandate.budget - mandate.spent;
             parent.activeChildren -= 1;
         }
         emit MandateRevoked(mandateId, mandate.taskId);
@@ -116,7 +116,7 @@ contract MandateGraph {
         uint256 ancestor = mandate.parentId;
         while (ancestor != 0) {
             Mandate storage node = mandates[ancestor];
-            if (node.spent > node.budget || node.allocated > node.budget - node.spent || amount > node.allocated) revert BudgetExceeded();
+            if (node.spent > node.budget || node.allocated > node.budget - node.spent) revert BudgetExceeded();
             ancestor = node.parentId;
         }
         usedPaymentIds[paymentId] = true;
@@ -163,8 +163,14 @@ contract MandateGraph {
         while (parentId != 0) {
             Mandate storage parent = mandates[parentId];
             Mandate storage child = mandates[childId];
+            if (child.budget - child.spent < child.allocated) revert BudgetExceeded();
+            uint128 childFree = child.budget - child.spent - child.allocated;
+            uint128 fromChildFree = amount < childFree ? amount : childFree;
+            uint128 fromChildAllocation = amount - fromChildFree;
+            if (fromChildAllocation > child.allocated) revert BudgetExceeded();
             parent.spent += amount;
             parent.allocated -= amount;
+            child.allocated -= fromChildAllocation;
             childId = parentId;
             parentId = parent.parentId;
         }

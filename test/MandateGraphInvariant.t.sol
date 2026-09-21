@@ -7,7 +7,8 @@ import {MockUSDC} from "../contracts/MockUSDC.sol";
 interface InvariantVm {
     function prank(address) external;
     function warp(uint256) external;
-    function targetContract(address) external;
+    struct FuzzSelector { address addr; bytes4[] selectors; }
+    function targetSelector(FuzzSelector calldata) external;
 }
 
 contract MandateGraphHandler {
@@ -76,7 +77,9 @@ contract MandateGraphInvariantTest {
 
     function setUp() public {
         handler = new MandateGraphHandler();
-        vm.targetContract(address(handler));
+        bytes4[] memory selectors = new bytes4[](1);
+        selectors[0] = MandateGraphHandler.step.selector;
+        vm.targetSelector(InvariantVm.FuzzSelector(address(handler), selectors));
     }
 
     function invariantHandlerExecutesActions() public view {
