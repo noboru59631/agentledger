@@ -14,7 +14,7 @@ The MVP focuses on task-bound mandates, multi-hop delegation, monotonic attenuat
 
 ## Current status
 
-This repository contains a local browser simulation and an experimental Solidity contract. **Arc testnet deployment status: PARTIAL REHEARSAL.** A MandateGraph contract has been deployed on Arc testnet, but the end-to-end payment lifecycle is not yet complete. The browser demo uses fixture data. The Solidity contract is unaudited. Do not interpret a demo receipt as onchain evidence.
+This repository contains a local browser simulation and an experimental Solidity contract. **Arc testnet lifecycle: completed.** The deployed MandateGraph contract completed task creation, delegation, USDC approval, a task-bound payment, task revocation, and a read-only retry rejection check. The payment recipient was the sender itself, so this was a self-transfer rehearsal; it is not independent vendor-payment or service-delivery evidence. See [`docs/TESTNET_EVIDENCE.json`](docs/TESTNET_EVIDENCE.json) for transaction hashes and parameters. The browser demo uses fixture data, and the Solidity contract is unaudited.
 
 The Solidity suite currently contains 29 deterministic test functions and 4 stateful invariant properties. Changes from the current source revision have not yet passed Foundry; a test count in source is not evidence that a run passed.
 
