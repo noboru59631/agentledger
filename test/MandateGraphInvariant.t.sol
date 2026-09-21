@@ -98,7 +98,7 @@ contract MandateGraphInvariantTest {
     }
 
     function invariantTaskSpendMatchesRootSpend() public view {
-        (,,uint128 taskSpent,,,,) = handler.graph().tasks(handler.taskId());
+        (, , uint128 taskSpent, , , ) = handler.graph().tasks(handler.taskId());
         (,,,,,uint128 rootSpent,,,,,,) = handler.graph().mandates(1);
         require(taskSpent == rootSpent, "task and root spend diverged");
     }
@@ -106,8 +106,8 @@ contract MandateGraphInvariantTest {
     function invariantDelegationAttenuationNeverWidens() public view {
         for (uint256 index = 1; index < handler.mandateCount(); ++index) {
             uint256 mandateId = handler.mandateIdAt(index);
-            (,uint256 parentId,,address recipient,,,uint64 expiry,uint8 depth,uint256 scope,,) = handler.graph().mandates(mandateId);
-            (,,,address parentRecipient,,,uint64 parentExpiry,uint8 parentDepth,uint256 parentScope,,) = handler.graph().mandates(parentId);
+            (, uint256 parentId, , address recipient, , , , uint64 expiry, uint8 depth, uint256 scope, , ) = handler.graph().mandates(mandateId);
+            (, , , address parentRecipient, , , , uint64 parentExpiry, uint8 parentDepth, uint256 parentScope, , ) = handler.graph().mandates(parentId);
             require((scope | parentScope) == parentScope, "scope widened");
             require(expiry <= parentExpiry, "expiry widened");
             require(depth < parentDepth, "depth widened");
