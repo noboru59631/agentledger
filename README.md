@@ -16,7 +16,7 @@ The MVP focuses on task-bound mandates, multi-hop delegation, monotonic attenuat
 
 This repository contains a local browser simulation and an experimental Solidity contract. **Deployment status: NOT DEPLOYED.** It has not made a real payment. The browser demo uses fixture data. The Solidity contract is unaudited. Do not interpret a demo receipt as onchain evidence.
 
-The Solidity suite currently contains 21 test functions. Test results are reported by the GitHub Actions workflow; a test count in source is not evidence that a run passed.
+The Solidity suite currently contains 29 deterministic test functions and 4 stateful invariant properties. Changes from the current source revision have not yet passed Foundry; a test count in source is not evidence that a run passed.
 
 ## Local run
 
@@ -34,7 +34,19 @@ Solidity tests use Foundry:
 forge test -vv
 ```
 
-The repository intentionally does not download or install toolchains automatically. Check the Solidity test status in the handoff report before treating the contract as verified.
+The repository intentionally does not download or install toolchains automatically. Check the Solidity test status in the handoff report before treating the contract as verified. The suite includes deterministic accounting cases and stateful budget invariants.
+
+To run the complete lifecycle on local Anvil, start Anvil separately and select an unlocked local account or an encrypted Foundry keystore account:
+
+```powershell
+$env:LIFECYCLE_SENDER = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
+$env:LIFECYCLE_RPC_URL = 'http://127.0.0.1:8545'
+npm run lifecycle
+```
+
+Or set `LIFECYCLE_ACCOUNT` to a Foundry keystore account name and enter its passphrase when prompted. Local mode accepts only the localhost Anvil RPC and adds actual broadcast transaction hashes to `lifecycle-evidence.json`.
+
+The runner also has a separately gated `arc-testnet` mode for later validation. It requires `LIFECYCLE_MODE=arc-testnet`, `LIFECYCLE_RPC_URL`, `LIFECYCLE_ACCOUNT`, and `LIFECYCLE_SENDER`, and verifies chain ID `5042002` plus code at the configured Arc testnet USDC address before starting. It needs a funded testnet account and USDC approval. This mode has not been run.
 
 ## Demo scenario
 

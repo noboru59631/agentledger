@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "start": "node scripts/serve.mjs",
+    "lifecycle": "node scripts/run-lifecycle.mjs",
     "test": "node --test app/policy.test.mjs"
   },
   "engines": {
