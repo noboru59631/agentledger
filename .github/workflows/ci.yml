@@ -25,10 +25,24 @@ jobs:
           cache: npm
       - run: npm ci
       - run: forge build
-      - run: forge test -vvv
+      - run: forge test -vvv --fuzz-runs 256
+      - name: Run full lifecycle against local Anvil
+        shell: bash
+        run: |
+          anvil --silent > /tmp/agentledger-anvil.log 2>&1 &
+          ANVIL_PID=$!
+          trap 'kill "$ANVIL_PID"' EXIT
+          for attempt in {1..30}; do
+            if cast chain-id --rpc-url http://127.0.0.1:8545 >/dev/null 2>&1; then break; fi
+            sleep 1
+          done
+          LIFECYCLE_SENDER=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 LIFECYCLE_RPC_URL=http://127.0.0.1:8545 npm run lifecycle
+          test -s lifecycle-evidence.json
+          node -e "const e=require('./lifecycle-evidence.json'); if(e.transactionHashes.length < 5 || !e.retryBlocked) process.exit(1); console.log('lifecycle tx hashes:', e.transactionHashes.length)"
       - run: npm test
       - run: node --check app/app.js
       - run: node --check scripts/serve.mjs
+      - run: node --check scripts/run-lifecycle.mjs
 
   arc-readonly-preflight:
     runs-on: ubuntu-latest
