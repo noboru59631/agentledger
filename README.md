@@ -14,7 +14,7 @@ The MVP focuses on task-bound mandates, multi-hop delegation, monotonic attenuat
 
 ## Current status
 
-This repository contains a local browser simulation and an experimental Solidity contract. **Deployment status: NOT DEPLOYED.** It has not made a real payment. The browser demo uses fixture data. The Solidity contract is unaudited. Do not interpret a demo receipt as onchain evidence.
+This repository contains a local browser simulation and an experimental Solidity contract. **Arc testnet deployment status: PARTIAL REHEARSAL.** A MandateGraph contract has been deployed on Arc testnet, but the end-to-end payment lifecycle is not yet complete. The browser demo uses fixture data. The Solidity contract is unaudited. Do not interpret a demo receipt as onchain evidence.
 
 The Solidity suite currently contains 29 deterministic test functions and 4 stateful invariant properties. Changes from the current source revision have not yet passed Foundry; a test count in source is not evidence that a run passed.
 
@@ -53,6 +53,17 @@ LIFECYCLE_ACCOUNT=arc-testnet-deployer \
 LIFECYCLE_SENDER=0x03607de69C487BcC460eaD7C4Bdfd25805658b75 \
 npm run lifecycle:arc-testnet
 ```
+
+
+If a testnet transaction is dropped after deployment, resume from the existing `docs/TESTNET_EVIDENCE.json` instead of deploying another contract:
+
+```bash
+LIFECYCLE_ACCOUNT=arc-testnet-deployer \
+LIFECYCLE_SENDER=0x03607de69C487BcC460eaD7C4Bdfd25805658b75 \
+npm run lifecycle:arc-testnet:resume
+```
+
+Resume mode validates the existing contract, reconciles completed lifecycle steps against onchain state, and continues from the first missing step. It never deploys a new contract. Transaction confirmation polls both receipts and transaction presence for up to about three minutes; a sustained disappearance is recorded as dropped and stops the run without an automatic rebroadcast loop.
 
 ## Demo scenario
 
