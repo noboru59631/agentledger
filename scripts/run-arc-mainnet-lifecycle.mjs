@@ -4,6 +4,7 @@ import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { arcMainnet, estimateFunding, formatUsdc18, validateDistinctRecipient, validateMainnetRpc } from './arc-mainnet-config.mjs';
+import { buildDeploymentInitCode } from './deployment-init-code.mjs';
 
 const rpcUrl = validateMainnetRpc(process.env.ARC_MAINNET_RPC_URL ?? arcMainnet.rpcUrl);
 const account = process.env.ARC_MAINNET_ACCOUNT;
@@ -82,8 +83,9 @@ async function preflight() {
 
   await run(forge, ['build'], { capture: false });
   const artifact = JSON.parse(await readFile('out/MandateGraph.sol/MandateGraph.json', 'utf8'));
-  const initCode = `${artifact.bytecode.object}${token.slice(2).toLowerCase().padStart(64, '0')}`;
-  const deploymentGas = BigInt(await rpc('eth_estimateGas', [{ from: sender, data: `0x${initCode}` }]));
+  const constructorArgs = `0x${token.slice(2).toLowerCase().padStart(64, '0')}`;
+  const initCode = buildDeploymentInitCode(artifact.bytecode.object, constructorArgs);
+  const deploymentGas = BigInt(await rpc('eth_estimateGas', [{ from: sender, data: initCode }]));
   const fees = estimateFunding({ deploymentGas, gasPrice: BigInt(gasPrice) });
   const existingNative = BigInt(nativeBalance);
   const existingUsdc = BigInt(tokenBalance);
@@ -204,3 +206,4 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1
     process.exitCode = 1;
   }
 }
+
