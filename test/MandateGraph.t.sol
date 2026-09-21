@@ -140,7 +140,7 @@ contract MandateGraphTest {
         require(!graph.isAuthorized(3), "mandate live after task deadline");
     }
     function testParentCannotSpendChildAllocationTwice() public {
-        usdc.mint(RESEARCH, 4_000_000);
+        usdc.mint(RESEARCH, 5_000_000);
         vm.prank(RESEARCH); usdc.approve(address(graph), type(uint256).max);
         vm.prank(RESEARCH);
         graph.executePayment(1, _id(1, VENDOR, 4_000_000, 1, keccak256("r"), deadline, 20), VENDOR, 4_000_000, 1, keccak256("r"), deadline, 20, keccak256("o"));

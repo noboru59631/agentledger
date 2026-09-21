@@ -118,7 +118,14 @@ contract MandateGraph {
         paymentOutcomeHashes[paymentId] = outcomeHash;
         task.spent += amount;
         _recordAncestorSpend(mandateId, amount);
-        if (mandate.parentId != 0) mandates[mandate.parentId].allocated -= amount;
+        if (mandate.parentId != 0) {
+            uint256 cursor = mandateId;
+            while (mandates[cursor].parentId != 0) {
+                uint256 parentId = mandates[cursor].parentId;
+                mandates[parentId].allocated -= amount;
+                cursor = parentId;
+            }
+        }
         if (!usdc.transferFrom(msg.sender, recipient, amount)) revert UsdcTransferFailed();
         emit PaymentExecuted(paymentId, mandate.taskId, mandateId, recipient, amount, serviceClass, resourceHash, outcomeHash);
     }
