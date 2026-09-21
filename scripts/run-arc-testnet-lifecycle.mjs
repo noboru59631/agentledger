@@ -178,7 +178,7 @@ async function sendStep(evidence, action, target, signature, values = []) {
 
   const output = await run(cast, [
     'send', target, signature, ...values,
-    '--account', account, '--rpc-url', rpcUrl, '--json',
+    '--account', account, '--rpc-url', rpcUrl, '--async', '--json',
   ]);
   const hash = output.match(/0x[\da-fA-F]{64}/)?.[0];
   if (!hash) throw new Error(`Could not read transaction hash from cast send ${signature} output`);
@@ -207,17 +207,17 @@ async function readTask(contract, taskId) {
   const output = await castOutput([
     'call', contract,
     'tasks(bytes32)(address,uint128,uint128,uint64,bytes32,bool)',
-    taskId,
+    taskId, '--json',
   ]);
-  const lines = outputLines(output);
-  if (lines.length < 6) throw new Error('Could not decode task state from MandateGraph.');
+  const values = JSON.parse(output);
+  if (!Array.isArray(values) || values.length < 6) throw new Error('Could not decode task state from MandateGraph.');
   return {
-    owner: lines[0],
-    budget: BigInt(lines[1].split(/\s+/)[0]),
-    spent: BigInt(lines[2].split(/\s+/)[0]),
-    deadline: BigInt(lines[3].split(/\s+/)[0]),
-    taskHash: lines[4],
-    revoked: lines[5].toLowerCase() === 'true',
+    owner: String(values[0]),
+    budget: BigInt(String(values[1])),
+    spent: BigInt(String(values[2])),
+    deadline: BigInt(String(values[3])),
+    taskHash: String(values[4]),
+    revoked: values[5] === true || String(values[5]).toLowerCase() === 'true',
   };
 }
 
@@ -225,23 +225,23 @@ async function readMandate(contract, mandateId) {
   const output = await castOutput([
     'call', contract,
     'mandates(uint256)(bytes32,uint256,address,address,uint128,uint128,uint128,uint64,uint8,uint256,bool,uint256)',
-    mandateId,
+    mandateId, '--json',
   ]);
-  const lines = outputLines(output);
-  if (lines.length < 12) throw new Error(`Could not decode mandate ${mandateId} state.`);
+  const values = JSON.parse(output);
+  if (!Array.isArray(values) || values.length < 12) throw new Error(`Could not decode mandate ${mandateId} state.`);
   return {
-    taskId: lines[0],
-    parentId: BigInt(lines[1].split(/\s+/)[0]),
-    agent: lines[2],
-    recipient: lines[3],
-    budget: BigInt(lines[4].split(/\s+/)[0]),
-    spent: BigInt(lines[5].split(/\s+/)[0]),
-    allocated: BigInt(lines[6].split(/\s+/)[0]),
-    expiry: BigInt(lines[7].split(/\s+/)[0]),
-    depth: BigInt(lines[8].split(/\s+/)[0]),
-    serviceScope: BigInt(lines[9].split(/\s+/)[0]),
-    revoked: lines[10].toLowerCase() === 'true',
-    activeChildren: BigInt(lines[11].split(/\s+/)[0]),
+    taskId: String(values[0]),
+    parentId: BigInt(String(values[1])),
+    agent: String(values[2]),
+    recipient: String(values[3]),
+    budget: BigInt(String(values[4])),
+    spent: BigInt(String(values[5])),
+    allocated: BigInt(String(values[6])),
+    expiry: BigInt(String(values[7])),
+    depth: BigInt(String(values[8])),
+    serviceScope: BigInt(String(values[9])),
+    revoked: values[10] === true || String(values[10]).toLowerCase() === 'true',
+    activeChildren: BigInt(String(values[11])),
   };
 }
 
