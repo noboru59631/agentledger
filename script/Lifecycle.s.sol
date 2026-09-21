@@ -41,7 +41,7 @@ contract LifecycleScript {
         address recipient = vm.envOr("LIFECYCLE_RECIPIENT", deployer);
         LifecycleToken token;
         uint64 deadline = uint64(block.timestamp + 1 days);
-        bytes32 taskId = keccak256(abi.encode("AgentLedger lifecycle", block.chainid, address(this), block.timestamp));
+        bytes32 taskId = keccak256(abi.encode("AgentLedger lifecycle", block.chainid, deployer, block.timestamp));
 
         vm.startBroadcast(deployer);
         if (localMode) {
@@ -58,10 +58,10 @@ contract LifecycleScript {
         token.approve(address(graph), type(uint256).max);
         (bytes32 paymentId, bytes32 outcomeHash) = _settlePayment(graph, token, childId, taskId, recipient, deadline);
         graph.revokeTask(taskId);
+        vm.stopBroadcast();
         bool retryBlocked = _retryBlocked(graph, childId, recipient, deadline);
         require(retryBlocked, "revoked retry unexpectedly succeeded");
         emit LifecycleEvidence(mode, address(graph), taskId, 1, childId, paymentId, outcomeHash, retryBlocked);
-        vm.stopBroadcast();
 
         string memory evidence = string.concat(
             '{"mode":"', mode,

@@ -91,12 +91,6 @@ contract MandateGraph {
             uint128 released = mandate.budget - mandate.spent;
             parent.allocated -= released;
             parent.activeChildren -= 1;
-            uint256 ancestorId = parent.parentId;
-            while (ancestorId != 0) {
-                Mandate storage ancestor = mandates[ancestorId];
-                ancestor.allocated -= released;
-                ancestorId = ancestor.parentId;
-            }
         }
         emit MandateRevoked(mandateId, mandate.taskId);
     }
@@ -111,7 +105,7 @@ contract MandateGraph {
         if (requestExpiry < block.timestamp || requestExpiry > mandate.expiry || requestExpiry > tasks[mandate.taskId].deadline) revert PaymentExpired();
         if (usedPaymentIds[paymentId]) revert Replay(paymentId);
         if (recipient == address(0) || (mandate.recipient != address(0) && recipient != mandate.recipient)) revert InvalidRecipient();
-        if (amount == 0 || mandate.spent > mandate.budget || amount > mandate.budget - mandate.spent) revert BudgetExceeded();
+        if (amount == 0 || mandate.spent > mandate.budget || mandate.allocated > mandate.budget - mandate.spent || amount > mandate.budget - mandate.spent - mandate.allocated) revert BudgetExceeded();
         if ((serviceClass & mandate.serviceScope) != serviceClass || serviceClass == 0) revert ScopeWidened();
         if (outcomeHash == bytes32(0)) revert InvalidOutcome();
         bytes32 requestHash = keccak256(abi.encode(mandate.taskId, mandateId, recipient, amount, serviceClass, resourceHash, requestExpiry, nonce));
@@ -168,7 +162,7 @@ contract MandateGraph {
         while (cursor != 0) {
             Mandate storage node = mandates[cursor];
             node.spent += amount;
-            if (node.parentId != 0) node.allocated -= amount;
+            if (node.parentId != 0) mandates[node.parentId].allocated -= amount;
             cursor = node.parentId;
         }
     }

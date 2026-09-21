@@ -79,8 +79,9 @@ contract MandateGraphInvariantTest {
         handler = new MandateGraphHandler();
     }
 
-    function targetContract(address target) external view returns (bool) {
-        return target == address(handler);
+    function targetContracts() external view returns (address[] memory targets) {
+        targets = new address[](1);
+        targets[0] = address(handler);
     }
 
     function invariantEveryMandateStaysWithinItsGrant() public view {

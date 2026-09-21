@@ -15,8 +15,9 @@ if (arcTestnetMode && (!process.env.LIFECYCLE_RPC_URL || !process.env.LIFECYCLE_
 }
 
 const forgeArgs = ['script', 'script/Lifecycle.s.sol:LifecycleScript', '--rpc-url', rpcUrl, '--broadcast'];
-if (process.env.LIFECYCLE_ACCOUNT) forgeArgs.push('--account', process.env.LIFECYCLE_ACCOUNT);
-else forgeArgs.push('--sender', process.env.LIFECYCLE_SENDER ?? '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266');
+if (localMode) forgeArgs.push('--private-key', 'ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80');
+else if (process.env.LIFECYCLE_ACCOUNT) forgeArgs.push('--account', process.env.LIFECYCLE_ACCOUNT);
+else forgeArgs.push('--sender', process.env.LIFECYCLE_SENDER);
 process.env.LIFECYCLE_SENDER ??= '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
 
 const result = await new Promise((resolveResult, reject) => {
@@ -30,7 +31,7 @@ if (result !== 0) process.exit(result);
 const chainId = (process.env.LIFECYCLE_CHAIN_ID ?? (localMode ? '31337' : '5042002')).replace(/^0x/, '');
 const runFile = resolve('broadcast', 'Lifecycle.s.sol', chainId, 'run-latest.json');
 const run = JSON.parse(await readFile(runFile, 'utf8'));
-const transactions = run.transactions.filter(({ transactionType }) => transactionType !== 'CALL').map(({ hash, transactionType, contractAddress }) => ({ hash, transactionType, contractAddress }));
+const transactions = run.transactions.filter(({ hash }) => hash).map(({ hash, transactionType, contractAddress }) => ({ hash, transactionType, contractAddress }));
 if (transactions.length === 0 || transactions.some(({ hash }) => !hash)) throw new Error(`No broadcast transaction hashes were recorded in ${runFile}`);
 
 const evidence = JSON.parse(await readFile('lifecycle-evidence.json', 'utf8'));

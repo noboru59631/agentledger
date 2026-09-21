@@ -42,11 +42,11 @@ contract MandateGraphTest {
     function testRejectsChildBudgetOverrunAfterParentSpend() public {
         vm.prank(RESEARCH);
         graph.delegate(1, address(0x123), 3_000_000, deadline, 1, address(0));
-        vm.prank(address(0x123)); usdc.mint(address(0x123), 2_000_000);
-        vm.prank(address(0x123)); usdc.approve(address(graph), type(uint256).max);
-        vm.prank(address(0x123));
+        usdc.mint(RESEARCH, 2_000_000);
+        vm.prank(RESEARCH); usdc.approve(address(graph), type(uint256).max);
+        vm.prank(RESEARCH);
         vm.expectRevert(abi.encodeWithSelector(MandateGraph.BudgetExceeded.selector));
-        graph.executePayment(3, _id(3, VENDOR, 2_000_000, 1, keccak256("parent-use"), deadline, 19), VENDOR, 2_000_000, 1, keccak256("parent-use"), deadline, 19, keccak256("outcome"));
+        graph.executePayment(1, _id(1, VENDOR, 2_000_000, 1, keccak256("parent-use"), deadline, 19), VENDOR, 2_000_000, 1, keccak256("parent-use"), deadline, 19, keccak256("outcome"));
         vm.prank(RESEARCH); vm.expectRevert(abi.encodeWithSelector(MandateGraph.InvalidBudget.selector));
         graph.delegate(1, address(0x124), 2_000_001, deadline, 1, address(0));
     }
@@ -109,7 +109,7 @@ contract MandateGraphTest {
     }
     function testSubtreeRevocationCascades() public {
         vm.prank(HUMAN); graph.revokeTask(taskId);
-        vm.prank(TRANSLATOR); vm.expectRevert(abi.encodeWithSelector(MandateGraph.AuthorityRevoked.selector, 1));
+        vm.prank(TRANSLATOR); vm.expectRevert(abi.encodeWithSelector(MandateGraph.AuthorityRevoked.selector, 2));
         graph.executePayment(2, _id(2, VENDOR, 1, 1, keccak256("r"), deadline, 2), VENDOR, 1, 1, keccak256("r"), deadline, 2, keccak256("o"));
     }
     function testChildBudgetExhaustion() public {
@@ -157,10 +157,12 @@ contract MandateGraphTest {
         usdc.mint(sibling, 2_000_000);
         vm.prank(sibling); usdc.approve(address(graph), type(uint256).max);
         vm.prank(sibling); graph.executePayment(4, _id(4, VENDOR, 2_000_000, 1, keccak256("sibling"), deadline, 48), VENDOR, 2_000_000, 1, keccak256("sibling"), deadline, 48, keccak256("o"));
-        usdc.mint(TRANSLATOR, 1_000_000);
-        vm.prank(TRANSLATOR); graph.executePayment(2, _id(2, VENDOR, 1_000_000, 1, keccak256("child"), deadline, 49), VENDOR, 1_000_000, 1, keccak256("child"), deadline, 49, keccak256("o"));
+        address firstSibling = address(0x123);
+        usdc.mint(firstSibling, 2_000_000);
+        vm.prank(firstSibling); usdc.approve(address(graph), type(uint256).max);
+        vm.prank(firstSibling); graph.executePayment(3, _id(3, VENDOR, 2_000_000, 1, keccak256("child"), deadline, 49), VENDOR, 2_000_000, 1, keccak256("child"), deadline, 49, keccak256("o"));
         (,,,,,uint128 rootSpent, uint128 rootAllocated,,,,,) = graph.mandates(1);
-        require(rootSpent == 3_000_000 && rootAllocated == 1_000_000, "sibling reservation accounting");
+        require(rootSpent == 4_000_000 && rootAllocated == 0, "sibling reservation accounting");
     }
     function testDescendantPaymentConvertsReservationToAncestorSpend() public {
         vm.prank(TRANSLATOR); graph.revokeMandate(2);
@@ -227,6 +229,73 @@ contract MandateGraphTest {
         vm.prank(RESEARCH); vm.expectRevert(abi.encodeWithSelector(MandateGraph.AuthorityRevoked.selector, 1));
         graph.delegate(1, address(0x123), 1, deadline, 1, address(0));
     }
+    function testNestedNoSpendLeafThenParentRevocationReturnsAuthorityAtEachLevel() public {
+        vm.prank(TRANSLATOR); graph.revokeMandate(2);
+        vm.prank(RESEARCH); graph.delegate(1, address(0x123), 2_000_000, deadline, 1, address(0));
+        vm.prank(address(0x123)); graph.delegate(3, address(0x124), 1_000_000, deadline, 1, address(0));
+        _assertAccounting(1, 5_000_000, 0, 2_000_000);
+        _assertAccounting(3, 2_000_000, 0, 1_000_000);
+        vm.prank(address(0x124)); graph.revokeMandate(4);
+        _assertAccounting(1, 5_000_000, 0, 2_000_000);
+        _assertAccounting(3, 2_000_000, 0, 0);
+        vm.prank(address(0x123)); graph.revokeMandate(3);
+        _assertAccounting(1, 5_000_000, 0, 0);
+    }
+    function testNestedPartialSpendRevocationNeverReleasesSpentAuthority() public {
+        vm.prank(TRANSLATOR); graph.revokeMandate(2);
+        vm.prank(RESEARCH); graph.delegate(1, address(0x123), 2_000_000, deadline, 1, address(0));
+        vm.prank(address(0x123)); graph.delegate(3, address(0x124), 1_000_000, deadline, 1, address(0));
+        usdc.mint(address(0x124), 400_000);
+        vm.prank(address(0x124)); usdc.approve(address(graph), type(uint256).max);
+        vm.prank(address(0x124)); graph.executePayment(4, _id(4, VENDOR, 400_000, 1, keccak256("partial"), deadline, 60), VENDOR, 400_000, 1, keccak256("partial"), deadline, 60, keccak256("outcome"));
+        _assertAccounting(1, 5_000_000, 400_000, 1_600_000);
+        _assertAccounting(3, 2_000_000, 400_000, 600_000);
+        vm.prank(address(0x124)); graph.revokeMandate(4);
+        _assertAccounting(1, 5_000_000, 400_000, 1_600_000);
+        _assertAccounting(3, 2_000_000, 400_000, 0);
+        vm.prank(address(0x123)); graph.revokeMandate(3);
+        _assertAccounting(1, 5_000_000, 400_000, 0);
+        vm.prank(RESEARCH); graph.delegate(1, address(0x125), 4_600_000, deadline, 1, address(0));
+        vm.prank(RESEARCH); vm.expectRevert(abi.encodeWithSelector(MandateGraph.InvalidBudget.selector));
+        graph.delegate(1, address(0x126), 1, deadline, 1, address(0));
+    }
+    function testRevokingOneNestedSiblingSubtreeDoesNotCorruptTheOther() public {
+        vm.prank(TRANSLATOR); graph.revokeMandate(2);
+        vm.prank(RESEARCH); graph.delegate(1, address(0x123), 2_000_000, deadline, 1, address(0));
+        vm.prank(RESEARCH); graph.delegate(1, address(0x124), 1_500_000, deadline, 1, address(0));
+        vm.prank(address(0x123)); graph.delegate(3, address(0x125), 1_000_000, deadline, 1, address(0));
+        vm.prank(address(0x125)); graph.revokeMandate(5);
+        vm.prank(address(0x123)); graph.revokeMandate(3);
+        _assertAccounting(1, 5_000_000, 0, 1_500_000);
+        usdc.mint(address(0x124), 1_500_000);
+        vm.prank(address(0x124)); usdc.approve(address(graph), type(uint256).max);
+        vm.prank(address(0x124)); graph.executePayment(4, _id(4, VENDOR, 1_500_000, 1, keccak256("sibling-stays-live"), deadline, 61), VENDOR, 1_500_000, 1, keccak256("sibling-stays-live"), deadline, 61, keccak256("outcome"));
+        _assertAccounting(1, 5_000_000, 1_500_000, 0);
+    }
+    function testNestedAllocationLeavesOnlyRootUnreservedRemainderSpendable() public {
+        vm.prank(TRANSLATOR); graph.revokeMandate(2);
+        vm.prank(RESEARCH); graph.delegate(1, address(0x123), 2_000_000, deadline, 1, address(0));
+        vm.prank(address(0x123)); graph.delegate(3, address(0x124), 1_000_000, deadline, 1, address(0));
+        usdc.mint(RESEARCH, 3_000_000);
+        vm.prank(RESEARCH); usdc.approve(address(graph), type(uint256).max);
+        vm.prank(RESEARCH); graph.executePayment(1, _id(1, VENDOR, 3_000_000, 1, keccak256("root-remainder"), deadline, 62), VENDOR, 3_000_000, 1, keccak256("root-remainder"), deadline, 62, keccak256("outcome"));
+        _assertAccounting(1, 5_000_000, 3_000_000, 2_000_000);
+        vm.prank(RESEARCH); vm.expectRevert(abi.encodeWithSelector(MandateGraph.BudgetExceeded.selector));
+        graph.executePayment(1, _id(1, VENDOR, 1, 1, keccak256("root-overrun"), deadline, 63), VENDOR, 1, 1, keccak256("root-overrun"), deadline, 63, keccak256("outcome"));
+    }
+    function testNestedReleaseAllowsRedelegationWithoutCreatingAuthority() public {
+        vm.prank(TRANSLATOR); graph.revokeMandate(2);
+        vm.prank(RESEARCH); graph.delegate(1, address(0x123), 2_000_000, deadline, 1, address(0));
+        vm.prank(address(0x123)); graph.delegate(3, address(0x124), 1_000_000, deadline, 1, address(0));
+        vm.prank(address(0x124)); graph.revokeMandate(4);
+        vm.prank(address(0x123)); graph.revokeMandate(3);
+        vm.prank(RESEARCH); graph.delegate(1, address(0x125), 5_000_000, deadline, 1, address(0));
+        _assertAccounting(1, 5_000_000, 0, 5_000_000);
+        usdc.mint(RESEARCH, 1);
+        vm.prank(RESEARCH); usdc.approve(address(graph), type(uint256).max);
+        vm.prank(RESEARCH); vm.expectRevert(abi.encodeWithSelector(MandateGraph.BudgetExceeded.selector));
+        graph.executePayment(1, _id(1, VENDOR, 1, 1, keccak256("cycle-overrun"), deadline, 64), VENDOR, 1, 1, keccak256("cycle-overrun"), deadline, 64, keccak256("outcome"));
+    }
     function testSmallestValidPaymentAndZeroPayment() public {
         vm.prank(TRANSLATOR); usdc.mint(TRANSLATOR, 1);
         vm.prank(TRANSLATOR); graph.executePayment(2, _id(2, VENDOR, 1, 1, keccak256("one"), deadline, 46), VENDOR, 1, 1, keccak256("one"), deadline, 46, keccak256("o"));
@@ -235,5 +304,10 @@ contract MandateGraphTest {
     }
     function _id(uint256 mandateId, address recipient, uint128 amount, uint256 serviceClass, bytes32 resourceHash, uint64 requestExpiry, uint256 nonce) private view returns (bytes32) {
         return keccak256(abi.encode(taskId, mandateId, recipient, amount, serviceClass, resourceHash, requestExpiry, nonce));
+    }
+    function _assertAccounting(uint256 mandateId, uint128 expectedBudget, uint128 expectedSpent, uint128 expectedAllocated) private view {
+        (,,,,uint128 budget, uint128 spent, uint128 allocated,,,,,) = graph.mandates(mandateId);
+        require(budget == expectedBudget && spent == expectedSpent && allocated == expectedAllocated, "unexpected accounting state");
+        require(budget - spent - allocated <= budget, "invalid available authority");
     }
 }
