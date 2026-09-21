@@ -29,7 +29,7 @@ MandateGraph is experimental, unaudited software. It has not been deployed. The 
 
 ## Review findings addressed
 
-- **Spent delegation reservation remained locked — fixed.** A child's payment was included in each ancestor's `spent` and remained in `allocated`, double-counting that amount and blocking legitimate remaining spend. Each child payment now reduces every ancestor's outstanding reservation by the amount settled.
+- **Spent delegation reservation remained locked — fixed.** A child's payment was included in every ancestor's `spent` and also left in every ancestor's `allocated`, double-counting the amount and blocking legitimate remaining spend. Each child payment now reduces each ancestor's reservation by the same amount.
 - **Child expiry could exceed task deadline — fixed.** Delegation now caps expiry at both parent expiry and task deadline.
 - **Task deadline did not stop live authority — fixed.** Execution and `isAuthorized` now apply the task deadline throughout the ancestry.
 - **Child's own allocation constrained its payment — fixed.** A child cannot pay against budget it has already delegated; ancestor checks retain descendant reservations while the paying node excludes its own reservation.

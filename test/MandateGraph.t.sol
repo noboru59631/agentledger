@@ -129,7 +129,7 @@ contract MandateGraphTest {
         vm.prank(RESEARCH);
         graph.delegate(1, address(0x1234), 1_000_000, deadline, 1, address(0));
         (,,,,,,,,uint256 allocated,,) = graph.mandates(1);
-        require(allocated == 0, "spent child reservation was not released");
+        require(allocated == 1_000_000, "spent child reservation was not released");
         (,,,,,uint128 parentSpent,,,,,) = graph.mandates(1);
         require(parentSpent == 1_000_000, "ancestor spend was not retained");
     }
@@ -145,7 +145,7 @@ contract MandateGraphTest {
         vm.prank(RESEARCH);
         graph.executePayment(1, _id(1, VENDOR, 4_000_000, 1, keccak256("r"), deadline, 20), VENDOR, 4_000_000, 1, keccak256("r"), deadline, 20, keccak256("o"));
         vm.prank(RESEARCH); vm.expectRevert(abi.encodeWithSelector(MandateGraph.BudgetExceeded.selector));
-        graph.executePayment(1, _id(1, VENDOR, 1_000_001, 1, keccak256("r"), deadline, 21), VENDOR, 1_000_001, 1, keccak256("r"), deadline, 21, keccak256("o"));
+        graph.executePayment(1, _id(1, VENDOR, 1, 1, keccak256("r"), deadline, 21), VENDOR, 1, 1, keccak256("r"), deadline, 21, keccak256("o"));
     }
     function testExpiredRequestFails() public {
         vm.warp(deadline + 1); vm.prank(TRANSLATOR); vm.expectRevert(abi.encodeWithSelector(MandateGraph.PaymentExpired.selector));
