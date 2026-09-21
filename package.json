@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node scripts/serve.mjs",
     "lifecycle": "node scripts/run-lifecycle.mjs",
-    "test": "node --test app/policy.test.mjs"
+    "lifecycle:arc-testnet": "node scripts/run-arc-testnet-lifecycle.mjs",
+    "test": "node --test app/policy.test.mjs scripts/run-arc-testnet-lifecycle.test.mjs"
   },
   "engines": {
     "node": ">=20"

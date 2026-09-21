@@ -46,7 +46,13 @@ npm run lifecycle
 
 Or set `LIFECYCLE_ACCOUNT` to a Foundry keystore account name and enter its passphrase when prompted. Local mode accepts only the localhost Anvil RPC and adds actual broadcast transaction hashes to `lifecycle-evidence.json`.
 
-The runner also has a separately gated `arc-testnet` mode for later validation. It requires `LIFECYCLE_MODE=arc-testnet`, `LIFECYCLE_RPC_URL`, `LIFECYCLE_ACCOUNT`, and `LIFECYCLE_SENDER`, and verifies chain ID `5042002` plus code at the configured Arc testnet USDC address before starting. It needs a funded testnet account and USDC approval. This mode has not been run.
+The local Anvil runner remains separate from the Arc testnet lifecycle. Arc's native USDC calls a system precompile that Forge's local EVM cannot emulate, so Forge script execution fails before it can broadcast; `--skip-simulation` does not avoid local script execution. The dedicated testnet runner uses `forge create` only for deployment, then `cast send` with an encrypted Foundry keystore account for state changes. It pins the RPC to `https://rpc.testnet.arc.io`, checks chain ID `5042002`, USDC code, and sender balance before deployment, and verifies each successful receipt. It transfers exactly `0.01 USDC` (10,000 six-decimal base units); task and delegation budgets are 1 USDC and 0.5 USDC. A revoked retry is checked with read-only `eth_call`. Run it explicitly from WSL with `LIFECYCLE_ACCOUNT` and `LIFECYCLE_SENDER` set; Foundry prompts for the keystore password. It creates `docs/TESTNET_EVIDENCE.json` and does not contact mainnet.
+
+```bash
+LIFECYCLE_ACCOUNT=arc-testnet-deployer \
+LIFECYCLE_SENDER=0x03607de69C487BcC460eaD7C4Bdfd25805658b75 \
+npm run lifecycle:arc-testnet
+```
 
 ## Demo scenario
 
