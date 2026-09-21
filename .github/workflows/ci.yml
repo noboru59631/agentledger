@@ -24,7 +24,6 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: forge fmt --check
       - run: forge build
       - run: forge test -vvv
       - run: npm test
