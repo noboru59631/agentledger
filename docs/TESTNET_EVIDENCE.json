@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "network": "Arc Testnet",
+  "chainId": 5042002,
+  "rpcUrl": "https://rpc.testnet.arc.io",
+  "token": "0x3600000000000000000000000000000000000000",
+  "sender": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+  "recipient": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+  "contractAddress": "0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da",
+  "taskId": "0x09bc403d8cfec6410b6a26ccf0e0ab1138418c016f0374f10d73b8e7b448df7a",
+  "taskHash": "0xa279c608c903cc3802a59b7bca1aeb8dc9447c4a4ca4977897222e5879020422",
+  "rootMandateId": 1,
+  "childMandateId": 2,
+  "deadline": "1790082670",
+  "scope": "3",
+  "resourceHash": "0xd1ed586b5b7d5afce65ae9c28e518e00b3075ab93e890053db66c9d229d7c859",
+  "paymentNonce": "1",
+  "paymentId": "0xe994c7f9477936e6ce3b5401320a85515d966a5f1de0e11669894d413b65947c",
+  "outcomeHash": "0x343d772e09fb6cadc3a8f93e87a4fcdd6dff56d0191d90f9f7c97918ebbd807e",
+  "paymentAmountBaseUnits": "10000",
+  "taskBudgetBaseUnits": "1000000",
+  "delegatedBudgetBaseUnits": "500000",
+  "retryBlocked": true,
+  "steps": {
+    "createTask": {
+      "status": "success",
+      "inferredOnchain": true
+    },
+    "delegate": {
+      "status": "success",
+      "hash": "0xada88a185ec2f880ffcf71f5cf8d9e3e5a7b91a163201c8cadd505426f1bee46",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xada88a185ec2f880ffcf71f5cf8d9e3e5a7b91a163201c8cadd505426f1bee46"
+    },
+    "approve": {
+      "status": "success",
+      "hash": "0xba8d67e6a9d26ff3295462c7399a0df254b0ebc8701067807823374c4b317f39",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xba8d67e6a9d26ff3295462c7399a0df254b0ebc8701067807823374c4b317f39"
+    },
+    "executePayment": {
+      "status": "success",
+      "hash": "0xa4415362a54581faa4afb40cfe367397143aa5969e6227ce501c7e9508e02a00",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xa4415362a54581faa4afb40cfe367397143aa5969e6227ce501c7e9508e02a00"
+    },
+    "revokeTask": {
+      "status": "success",
+      "hash": "0x12fbc23a88ccb864e7cca6bba1bfadcc61f9fdaad347ddef29c4df3458a31e0a",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x12fbc23a88ccb864e7cca6bba1bfadcc61f9fdaad347ddef29c4df3458a31e0a"
+    }
+  },
+  "transactions": [
+    {
+      "action": "deploy",
+      "hash": "0x1254630d843426f6bea89e034e99a3f8366ede7b30bc4725a99b733eb8dd7da5",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x1254630d843426f6bea89e034e99a3f8366ede7b30bc4725a99b733eb8dd7da5"
+    },
+    {
+      "action": "delegate",
+      "hash": "0xada88a185ec2f880ffcf71f5cf8d9e3e5a7b91a163201c8cadd505426f1bee46",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xada88a185ec2f880ffcf71f5cf8d9e3e5a7b91a163201c8cadd505426f1bee46"
+    },
+    {
+      "action": "approve",
+      "hash": "0xba8d67e6a9d26ff3295462c7399a0df254b0ebc8701067807823374c4b317f39",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xba8d67e6a9d26ff3295462c7399a0df254b0ebc8701067807823374c4b317f39"
+    },
+    {
+      "action": "executePayment",
+      "hash": "0xa4415362a54581faa4afb40cfe367397143aa5969e6227ce501c7e9508e02a00",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xa4415362a54581faa4afb40cfe367397143aa5969e6227ce501c7e9508e02a00"
+    },
+    {
+      "action": "revokeTask",
+      "hash": "0x12fbc23a88ccb864e7cca6bba1bfadcc61f9fdaad347ddef29c4df3458a31e0a",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x12fbc23a88ccb864e7cca6bba1bfadcc61f9fdaad347ddef29c4df3458a31e0a"
+    }
+  ],
+  "caveat": "The recipient is the sender address, so this 0.01 USDC transfer is a self-transfer rehearsal. It demonstrates the task-bound payment path and revocation/retry rejection on Arc Testnet; it is not evidence of independent vendor payment or service delivery."
+}
