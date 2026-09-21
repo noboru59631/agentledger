@@ -42,7 +42,6 @@ contract LifecycleScript {
         LifecycleToken token;
         uint64 deadline = uint64(block.timestamp + 1 days);
         bytes32 taskId = keccak256(abi.encode("AgentLedger lifecycle", block.chainid, address(this), block.timestamp));
-        bytes32 outcomeHash = keccak256("local lifecycle outcome");
 
         vm.startBroadcast(deployer);
         if (localMode) {
@@ -57,15 +56,9 @@ contract LifecycleScript {
         graph.createTask(taskId, keccak256("local lifecycle task metadata"), 1_000_000, deadline, 3, deployer, address(0), 1);
         uint256 childId = graph.delegate(1, deployer, 500_000, deadline, 1, recipient);
         token.approve(address(graph), type(uint256).max);
-        bytes32 resourceHash = keccak256("local lifecycle request");
-        uint256 nonce = 1;
-        bytes32 paymentId = keccak256(abi.encode(taskId, childId, recipient, uint128(10_000), uint256(1), resourceHash, deadline, nonce));
-        graph.executePayment(childId, paymentId, recipient, 10_000, 1, resourceHash, deadline, nonce, outcomeHash);
+        (bytes32 paymentId, bytes32 outcomeHash) = _settlePayment(graph, token, childId, taskId, recipient, deadline);
         graph.revokeTask(taskId);
-        bool retryBlocked;
-        try graph.executePayment(childId, keccak256("blocked retry"), recipient, 1, 1, resourceHash, deadline, 2, keccak256("retry")) {
-            retryBlocked = false;
-        } catch { retryBlocked = true; }
+        bool retryBlocked = _retryBlocked(graph, childId, recipient, deadline);
         require(retryBlocked, "revoked retry unexpectedly succeeded");
         emit LifecycleEvidence(mode, address(graph), taskId, 1, childId, paymentId, outcomeHash, retryBlocked);
         vm.stopBroadcast();
@@ -81,6 +74,23 @@ contract LifecycleScript {
             '","revoke":"confirmed","retryBlocked":true}'
         );
         vm.writeFile(string.concat(vm.projectRoot(), "/lifecycle-evidence.json"), evidence);
+    }
+
+    function _settlePayment(MandateGraph graph, LifecycleToken token, uint256 childId, bytes32 taskId, address recipient, uint64 deadline) private returns (bytes32 paymentId, bytes32 outcomeHash) {
+        bytes32 resourceHash = keccak256("local lifecycle request");
+        outcomeHash = keccak256("local lifecycle outcome");
+        uint256 nonce = 1;
+        paymentId = keccak256(abi.encode(taskId, childId, recipient, uint128(10_000), uint256(1), resourceHash, deadline, nonce));
+        graph.executePayment(childId, paymentId, recipient, 10_000, 1, resourceHash, deadline, nonce, outcomeHash);
+    }
+
+    function _retryBlocked(MandateGraph graph, uint256 childId, address recipient, uint64 deadline) private returns (bool) {
+        bytes32 resourceHash = keccak256("local lifecycle request");
+        try graph.executePayment(childId, keccak256("blocked retry"), recipient, 1, 1, resourceHash, deadline, 2, keccak256("retry")) {
+            return false;
+        } catch {
+            return true;
+        }
     }
 
     function _uint(uint256 value) private pure returns (string memory) {
