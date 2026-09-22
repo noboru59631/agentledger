@@ -1,7 +1,7 @@
 import { fallbackPlan, validateProposal } from '../ai-policy.mjs';
 
 const MODEL = 'gemini-2.5-flash-lite';
-const COMPATIBILITY_MODEL = 'gemini-2.5-flash';
+const API_VERSION = 'v1beta';
 const requestLog = new Map();
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
 const schema = { type: 'OBJECT', properties: { taskSummary: { type: 'STRING' }, rootAgent: { type: 'OBJECT', properties: { role: { type: 'STRING' }, budget: { type: 'NUMBER' } }, required: ['role', 'budget'] }, needsSubAgents: { type: 'BOOLEAN' }, subAgents: { type: 'ARRAY', items: { type: 'OBJECT', properties: { role: { type: 'STRING' }, budget: { type: 'NUMBER' }, scope: { type: 'ARRAY', items: { type: 'STRING' } }, expiry: { type: 'STRING' }, delegationDepth: { type: 'INTEGER' } }, required: ['role', 'budget', 'scope', 'expiry', 'delegationDepth'] } }, services: { type: 'ARRAY', items: { type: 'OBJECT', properties: { category: { type: 'STRING' }, description: { type: 'STRING' }, estimatedCost: { type: 'NUMBER' } }, required: ['category', 'description', 'estimatedCost'] } }, finalOutputType: { type: 'STRING' }, expiry: { type: 'STRING' } }, required: ['taskSummary', 'rootAgent', 'needsSubAgents', 'subAgents', 'services', 'finalOutputType', 'expiry'] };
@@ -17,16 +17,10 @@ export async function handleOrchestration(request, { fetchImpl = fetch, env = gl
   if (!env.GEMINI_API_KEY) return fallback('GEMINI_API_KEY is not configured; showing the deterministic demo plan.');
   const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), 12_000);
   try {
-    const requestModel = async (candidateModel) => fetchImpl(`https://generativelanguage.googleapis.com/v1/models/${candidateModel}:generateContent`, { method: 'POST', signal: controller.signal, headers: { 'content-type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY }, body: JSON.stringify({ systemInstruction: { parts: [{ text: 'You propose plans only. Never authorize spending. Return JSON matching the schema. Use only service categories: research, translation, data, api. Keep all allocations and costs within the user budget.' }] }, contents: [{ role: 'user', parts: [{ text: `Goal: ${goal}\nTask budget: ${budget} USDC` }] }], generationConfig: { temperature: 0.2, responseMimeType: 'application/json', responseSchema: schema, maxOutputTokens: 1200 } }) });
-    let result = await requestModel(model);
-    let responseModel = model;
-    if (result.status === 404 && model === MODEL) {
-      result = await requestModel(COMPATIBILITY_MODEL);
-      responseModel = COMPATIBILITY_MODEL;
-    }
-    if (!result.ok) return fallback(result.status === 429 ? 'Gemini free-tier quota is temporarily exhausted.' : `Gemini returned HTTP ${result.status}.`);
+    const result = await fetchImpl(`https://generativelanguage.googleapis.com/${API_VERSION}/models/${encodeURIComponent(model)}:generateContent`, { method: 'POST', signal: controller.signal, headers: { 'content-type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY }, body: JSON.stringify({ systemInstruction: { parts: [{ text: 'You propose plans only. Never authorize spending. Return JSON matching the schema. Use only service categories: research, translation, data, api. Keep all allocations and costs within the user budget.' }] }, contents: [{ role: 'user', parts: [{ text: `Goal: ${goal}\nTask budget: ${budget} USDC` }] }], generationConfig: { temperature: 0.2, responseMimeType: 'application/json', responseSchema: schema, maxOutputTokens: 1200 } }) });
+    if (!result.ok) { let details = {}; try { details = await result.json(); } catch {} const message = typeof details.error?.message === 'string' ? details.error.message.slice(0, 240) : 'No provider message.'; console.error('[gemini] request failed', { code: result.status, message, model, version: API_VERSION }); const diagnostic = { code: result.status, message, model, version: API_VERSION }; return fallback(result.status === 429 ? 'Gemini free-tier quota is temporarily exhausted.' : result.status === 404 ? `Gemini model or API version was not found (${model}/${API_VERSION}).` : `Gemini returned HTTP ${result.status}.`, diagnostic); }
     const payload = await result.json(); const text = payload.candidates?.[0]?.content?.parts?.map((part) => part.text || '').join(''); const proposal = JSON.parse(text); const validation = validateProposal(proposal, budget);
-    if (!validation.valid) return fallback(`The model returned a proposal rejected by deterministic policy: ${validation.errors.join(' ')}`); return json({ source: 'gemini', model: responseModel, proposal, policy: 'deterministic' });
+    if (!validation.valid) return fallback(`The model returned a proposal rejected by deterministic policy: ${validation.errors.join(' ')}`); return json({ source: 'gemini', model, proposal, policy: 'deterministic' });
   } catch (error) { return fallback(error.name === 'AbortError' ? 'Gemini timed out; showing the deterministic demo plan.' : 'Gemini was unavailable or returned malformed JSON; showing the deterministic demo plan.'); } finally { clearTimeout(timer); }
 }
 
