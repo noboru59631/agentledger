@@ -1,7 +1,7 @@
 import {
   ARC_CHAIN_HEX, ARC_CHAIN_ID, ARC_EXPLORER_URL, ARC_RPC_URL, CONTRACT_ADDRESS, DEMO_PAYMENT_CAP,
   USDC_ADDRESS, USDC_DECIMALS, assertArcChain, assertDistinctRecipient, assertDemoPaymentAmount,
-  buildConfirmationPayload,
+  buildConfirmationPayload, validateTaskPermissions,
 } from './live-policy.mjs';
 
 const VIEM_URL = 'https://esm.sh/viem@2.21.54';
@@ -46,6 +46,7 @@ export async function initLiveDemo({ ui }) {
   let provider; let account; let taskId; let rootMandateId; let childMandateId; let paymentId;
   const publicClient = createPublicClient({ chain: arc, transport: http(ARC_RPC_URL) });
   const setMessage = (message, type = '') => { ui.message.textContent = message; ui.message.className = `live-message ${type}`; };
+  const setStep = (step) => ui.steps?.forEach((item, index) => item.classList.toggle('active', index + 1 === step));
   const requireReady = async () => { if (!provider || !account) throw new Error('Connect an injected wallet first.'); assertArcChain(await provider.request({ method: 'eth_chainId' })); };
   const refresh = async () => {
     if (!account) return;
@@ -58,7 +59,7 @@ export async function initLiveDemo({ ui }) {
     if (!window.ethereum) throw new Error('No injected EVM wallet found. Install MetaMask or Rabby.');
     provider = window.ethereum;
     const accounts = await provider.request({ method: 'eth_requestAccounts' });
-    account = accounts[0];
+    account = accounts[0]; setStep(2);
     await refresh();
     if (BigInt(await provider.request({ method: 'eth_chainId' })) !== ARC_CHAIN_ID) ui.switchButton.hidden = false;
     ui.connect.textContent = short(account);
@@ -80,7 +81,10 @@ export async function initLiveDemo({ ui }) {
     ui.tx.textContent = hash; ui.tx.href = `${ARC_EXPLORER_URL}/tx/${hash}`; ui.tx.hidden = false;
     setMessage(`${payload.action} submitted. Waiting for confirmation…`);
     await publicClient.waitForTransactionReceipt({ hash });
-    setMessage(`${payload.action} confirmed.`, 'ok'); await refresh();
+    setMessage(`${payload.action} confirmed.`, 'ok');
+    const progress = { 'Create Task': 4, Delegate: 5, 'Approve USDC': 6, 'Execute Payment': 7, 'Revoke Task': 7 };
+    setStep(progress[payload.action] || 2);
+    await refresh();
   };
   const now = () => BigInt(Math.floor(Date.now() / 1000) + 3600);
   const wallet = () => createWalletClient({ account, chain: arc, transport: custom(provider) });
