@@ -71,7 +71,7 @@ render();
 
 initLiveDemo({ ui: {
   connect: byId('liveConnect'), switchButton: byId('liveSwitch'), chain: byId('liveChain'), address: byId('liveAddress'), balance: byId('liveBalance'),
-  recipient: byId('liveRecipient'), amount: byId('liveAmount'), cap: byId('liveCap'), create: byId('liveCreate'), delegate: byId('liveDelegate'),
+  recipient: byId('liveRecipient'), amount: byId('liveAmount'), budget: byId('liveBudget'), deadline: byId('liveDeadline'), scope: byId('liveScope'), depth: byId('liveDepth'), cap: byId('liveCap'), create: byId('liveCreate'), delegate: byId('liveDelegate'),
   approve: byId('liveApprove'), execute: byId('liveExecute'), revoke: byId('liveRevoke'), root: byId('liveRoot'), child: byId('liveChild'), tx: byId('liveTx'), message: byId('liveMessage'),
   modal: byId('liveModal'), modalTitle: byId('liveModalTitle'), modalBody: byId('liveModalBody'), modalConfirm: byId('liveModalConfirm'), modalCancel: byId('liveModalCancel'), steps: document.querySelectorAll('.wizard-steps span'),
-} }).catch((error) => byId('liveMessage').textContent = `Live mode unavailable until the wallet client loads: ${error.message}`);
+} }).catch((error) => { const message = byId('liveMessage'); message.textContent = `Live mode unavailable until the wallet client loads: ${error.message}`; message.className = 'live-message error'; message.setAttribute('role', 'alert'); });
