@@ -9,7 +9,7 @@
     "lifecycle:arc-testnet:resume": "node scripts/run-arc-testnet-lifecycle.mjs --resume",
     "lifecycle:arc-mainnet:preflight": "node scripts/run-arc-mainnet-lifecycle.mjs --preflight",
     "lifecycle:arc-mainnet:execute": "node scripts/run-arc-mainnet-lifecycle.mjs",
-    "test": "node --test app/policy.test.mjs app/live-policy.test.mjs app/ai-policy.test.mjs api/orchestrate.test.mjs scripts/run-arc-testnet-lifecycle.test.mjs scripts/arc-mainnet-config.test.mjs scripts/deployment-init-code.test.mjs"
+    "test": "node --test app/policy.test.mjs app/live-policy.test.mjs app/ai-policy.test.mjs app/api/orchestrate.test.mjs api/orchestrate.test.mjs scripts/run-arc-testnet-lifecycle.test.mjs scripts/arc-mainnet-config.test.mjs scripts/deployment-init-code.test.mjs"
   },
   "engines": {
     "node": ">=20"
