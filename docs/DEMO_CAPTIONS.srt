@@ -1,0 +1,35 @@
+1
+00:00:00,000 --> 00:00:08,000
+Give AI a budget for the job, not a wallet full of money.
+
+2
+00:00:08,000 --> 00:00:17,000
+Human intent becomes a task, a mandate, and a bounded agent path.
+
+3
+00:00:17,000 --> 00:00:33,000
+Illustrative local demo: a $5.00 task delegates a reserved $1.00 child budget.
+
+4
+00:00:33,000 --> 00:00:42,000
+The payment request is bound to its task, authority, recipient, scope, and nonce.
+
+5
+00:00:42,000 --> 00:00:51,000
+After root revocation, the delegated retry is blocked before settlement.
+
+6
+00:00:51,000 --> 00:01:04,000
+Real Arc Mainnet evidence is shown separately from the fixture-based browser UI.
+
+7
+00:01:04,000 --> 00:01:15,000
+Recorded lifecycle payment: 0.01 USDC to a separately controlled demo wallet.
+
+8
+00:01:15,000 --> 00:01:26,000
+Revocation is onchain; retryBlocked was confirmed by a read-only check.
+
+9
+00:01:26,000 --> 00:01:35,000
+Experimental, unaudited, and open source — with claims kept explicit.

@@ -1,37 +1,36 @@
-# Demo Script (60–90 Seconds)
+# AgentLedger Demo Video Package
+
+Target length: 75–90 seconds. The website is a polished presentation of the repository’s deterministic browser simulation. Keep the `ILLUSTRATIVE LOCAL DEMO` and `Local simulation · fixture data` labels visible whenever the demo frame is on screen.
 
 ## Recording setup
 
-Open these tabs before recording: the local browser simulation, the GitHub repository README, the Arc explorer contract page, the payment execution transaction, the task revocation transaction, and `docs/MAINNET_EVIDENCE.json`. Keep the simulation’s “Local simulation · fixture data” label visible whenever the UI is shown. The UI is not connected to Arc.
+1. Run `npm start` and open `http://localhost:4173` at 110–125% zoom in a clean Chromium window.
+2. Open the Arc Explorer contract page, payment execution transaction, task revocation transaction, and `docs/MAINNET_EVIDENCE.json` in separate tabs.
+3. Use a 1920×1080 capture if possible. Hide bookmarks and keep the browser address bar visible for Explorer shots.
+4. Do not connect a wallet or send a transaction. The only click in the local demo is the fixture interaction that revokes the task.
 
-## Timed walkthrough
+## Timed shot list and narration
 
-**0–10 sec — Introduce the project (GitHub README)**  
-“AgentLedger gives an AI team a budget for a specific job, with spending authority that can be traced back through its delegation chain. The repository includes the contract prototype, local simulation, tests, and public evidence.”
+| Time | Screen / exact action | Narration |
+|---|---|---|
+| 0:00–0:08 | Website hero. Hold on the headline, then click **Explore the demo**. | “AgentLedger gives AI a budget for the job, not a wallet full of money. It connects human intent to delegated mandates and payment evidence.” |
+| 0:08–0:17 | Scroll through **From human intent to accountable outcome**. Pause on the full flow: Human Intent → Task → Mandate → Agent → Sub-Agent → Payment → Service → Outcome. | “A human starts with a task. Authority moves through agents only when budget, scope, recipient, expiry, and depth stay within the parent boundary.” |
+| 0:17–0:33 | Scroll to **See the budget boundary in motion**. Keep both the demo badge and fixture label visible. Show the $5.00 cap, $1.00 delegated child budget, and $0.20 simulated request. | “This local simulation shows a five USDC research task. The Research Agent delegates a reserved one USDC child budget to a Translation Agent, then proposes a twenty-cent request.” |
+| 0:33–0:42 | Move across the four request checks, then click **Revoke task authority**. | “The request is bound to the task, mandate, recipient, amount, service class, resource, expiry, and nonce. The interface is illustrative fixture data; it does not read from Arc.” |
+| 0:42–0:51 | Hold on `Payment blocked: root authority revoked` and `AUTHORITY_REVOKED`. | “When the root authority is revoked, the delegated retry is blocked before settlement. That is the boundary we want agents to inherit.” |
+| 0:51–1:04 | Scroll to **Real settlement evidence**. Switch to the Arc Explorer contract page. | “Separately, AgentLedger completed a documented Arc Mainnet lifecycle rehearsal. This is the deployed MandateGraph contract on chain ID 5042.” |
+| 1:04–1:15 | Show the payment execution transaction with Explorer domain and status legible. | “This page records the 0.01 USDC payment execution. The recipient was a separately controlled demo wallet, not a verified vendor.” |
+| 1:15–1:26 | Show the revocation transaction, then `retryBlocked: true` in `docs/MAINNET_EVIDENCE.json`. | “Task revocation is also recorded onchain. The evidence file records a retry blocked by a read-only check; no retry transaction was sent.” |
+| 1:26–1:35 | Return to limitations and the GitHub CTA. | “The contract is experimental and unaudited, the browser UI is fixture-based, and outcome hashes do not independently prove service delivery. The full prototype, tests, and evidence are open on GitHub.” |
 
-**10–27 sec — Show the product journey (local simulation)**  
-“Here a human task has a five USDC cap. The Research Agent delegates a reserved one USDC child budget to a Translation Agent. Delegated authority can only narrow: a child cannot increase the budget, widen the service scope, extend expiry, or loosen a recipient restriction.”
+## Accuracy checklist
 
-**27–43 sec — Explain payment lineage (local simulation, then Arc contract page)**  
-“The request is tied to the task, mandate, recipient, amount, service class, resource, expiry, and nonce. This screen is illustrative fixture data. The Arc explorer page is the deployed contract; the UI itself does not call it.”
+- Say “simulated,” “fixture,” or “illustrative” for every browser-demo state.
+- Say “Arc Mainnet lifecycle rehearsal” for the real evidence; do not imply the browser executed it.
+- Say “separately controlled demo wallet,” never “vendor,” “customer,” or “service provider.”
+- Describe `retryBlocked: true` as a read-only verification; there is no retry transaction.
+- Do not claim service delivery, output quality, a security audit, or an outcome hash attestation.
 
-**43–59 sec — Show the mainnet payment (payment execution transaction)**  
-“This transaction is the recorded 0.01 USDC payment execution in the Arc Mainnet lifecycle rehearsal. The recipient was a separately controlled demo wallet, so this demonstrates the transaction path rather than an independent vendor purchase or service delivery.”
+## Captions
 
-**59–73 sec — Show revocation (revocation transaction, then evidence JSON)**  
-“Task revocation is recorded here. The evidence file also records `retryBlocked: true`, confirmed by a read-only check after revocation. No retry transaction was sent.”
-
-**73–88 sec — Close on the evidence and limitations (evidence JSON / README)**  
-“AgentLedger demonstrates task-bound mandates, reserved delegated budgets, payment lineage, revocation, and blocked retry on Arc Mainnet. The contract is unaudited, the browser demo is local fixture data, and outcome hashes do not independently prove service delivery.”
-
-## Screens to include
-
-1. GitHub repository README and project status.
-2. Local simulation with the fixture label visible; show task, budget, delegation path, and revocation state.
-3. Arc explorer contract page.
-4. Arc explorer payment execution transaction.
-5. Arc explorer task revocation transaction.
-6. `docs/MAINNET_EVIDENCE.json` showing the transaction hashes and `retryBlocked`.
-7. Optional: latest GitHub Actions CI run for the source revision being submitted.
-
-Do not describe fixture UI values as live chain state, and do not call the demo wallet a vendor.
+The synchronized SRT is in [`docs/DEMO_CAPTIONS.srt`](DEMO_CAPTIONS.srt).
