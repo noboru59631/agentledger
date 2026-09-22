@@ -1,7 +1,17 @@
 import { initLiveDemo } from './live-demo.mjs';
+import { initAIDemo } from './ai-demo.mjs';
+
+const aiSection = document.createElement('section');
+aiSection.className = 'section ai-section';
+aiSection.id = 'ai-demo';
+aiSection.innerHTML = `<div class="section-heading"><div><div class="eyebrow">AI ORCHESTRATED DEMO</div><h2>Turn a goal into a<br><em>bounded agent plan.</em></h2></div><div class="demo-badge"><span class="status-dot"></span> SERVER-SIDE PLANNER · NO TRANSACTIONS</div></div><div class="ai-card"><div class="ai-intro"><p>Describe the work and a task budget. Gemini proposes a structured plan; AgentLedger then checks allocations, service scope, and revocation locally.</p><form id="aiForm"><label>Natural-language goal<textarea id="aiGoal" rows="3">Research competing projects on Arc and produce a comparison report.</textarea></label><label>Task budget (USDC)<input id="aiBudget" value="5" type="number" min="0.01" max="100" step="0.01"></label><button class="button button-primary" id="aiRun" type="submit">Generate bounded plan <span>→</span></button></form><p class="ai-status" id="aiStatus">A missing key or exhausted quota automatically uses the labeled non-AI fallback.</p></div><div class="ai-explainer"><span>LLM</span><b>Proposal only</b><small>Strict JSON schema</small><i>↓</i><span>POLICY</span><b>Deterministic checks</b><small>Budget · scope · STOP</small><i>↓</i><span>LEDGER</span><b>Auditable state</b><small>No real settlement</small></div></div><div class="ai-dashboard" id="aiDashboard" hidden><div class="ai-dashboard-top"><div><span class="pill" id="aiSource">DEMO FALLBACK · NON-AI</span><h3 id="aiSummary">—</h3><p id="aiReason">—</p></div><div class="ai-controls"><button class="button button-quiet" id="aiInvalid" type="button">Inject invalid proposal</button><button class="revoke" id="aiStop" type="button">STOP / kill switch</button></div></div><div class="metrics ai-metrics"><div><span>Budget</span><strong id="aiBudgetMetric">$5.00</strong><small>Task cap · simulated</small></div><div><span>Allocated</span><strong id="aiAllocated">$0.00</strong><small>Child budgets</small></div><div><span>Reserved</span><strong id="aiReserved">$0.00</strong><small>Held for descendants</small></div><div><span>Spent</span><strong id="aiSpent">$0.00</strong><small>Simulated service costs</small></div><div><span>Remaining</span><strong id="aiRemaining">$0.00</strong><small>Available after policy</small></div></div><div class="ai-columns"><div class="ai-panel"><div class="eyebrow">AGENT TREE</div><ul id="aiAgents"></ul><div class="eyebrow">SERVICE DECISIONS</div><ul id="aiServices"></ul></div><div class="ai-panel ai-dark"><div class="eyebrow">BLOCKED ACTIONS</div><ul id="aiBlocked"></ul><div class="eyebrow">FINAL GENERATED REPORT</div><p id="aiReport"></p><details><summary>Advanced / audit</summary><code>policy=deterministic<br>root=task-bound<br>settlement=disabled<br>mandate IDs hidden in main UX</code></details></div></div></div>`;
+document.getElementById('demo')?.before(aiSection);
+const heroActions = document.querySelector('.hero-actions');
+if (heroActions) {
+  const aiLaunch = document.createElement('a'); aiLaunch.className = 'button button-primary'; aiLaunch.href = '#ai-demo'; aiLaunch.innerHTML = 'Try AI orchestration <span>↓</span>'; heroActions.prepend(aiLaunch);
+}
 
 const livePanel = document.getElementById('live-demo');
-const heroActions = document.querySelector('.hero-actions');
 if (heroActions && livePanel) {
   const launch = document.createElement('a');
   launch.className = 'button button-primary launch-live';
@@ -75,3 +85,5 @@ initLiveDemo({ ui: {
   approve: byId('liveApprove'), execute: byId('liveExecute'), revoke: byId('liveRevoke'), root: byId('liveRoot'), child: byId('liveChild'), tx: byId('liveTx'), message: byId('liveMessage'),
   modal: byId('liveModal'), modalTitle: byId('liveModalTitle'), modalBody: byId('liveModalBody'), modalConfirm: byId('liveModalConfirm'), modalCancel: byId('liveModalCancel'), steps: document.querySelectorAll('.wizard-steps span'),
 } }).catch((error) => { const message = byId('liveMessage'); message.textContent = `Live mode unavailable until the wallet client loads: ${error.message}`; message.className = 'live-message error'; message.setAttribute('role', 'alert'); });
+
+initAIDemo();
