@@ -28,6 +28,16 @@ npm start
 npm test
 ```
 
+### AI Orchestrated Demo
+
+The site includes a separate AI Orchestrated Demo. It sends a natural-language goal to `/api/orchestrate` on Vercel; the server asks Gemini for a strict JSON proposal, then the browser runs that proposal through deterministic budget, service-allowlist, and STOP checks. The API never authorizes or settles spend, and this mode never writes to Arc Mainnet. Service costs are simulated.
+
+The default provider is Google Gemini API model `gemini-2.5-flash-lite`. Google’s official [Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing) page lists a Free tier with limited model access and free input/output tokens; quotas and rate limits vary by model and account. The official [billing guide](https://ai.google.dev/gemini-api/docs/billing) confirms new accounts can use the Free tier without linking a billing account.
+
+For a live AI plan, add `GEMINI_API_KEY` to Vercel Project Settings → Environment Variables for Preview and Production, then redeploy. Create the key in [Google AI Studio](https://aistudio.google.com/app/apikey). Optionally set `GEMINI_MODEL`; otherwise the route uses `gemini-2.5-flash-lite`. Never add the key to `app/` or commit it. If the key is missing, malformed, timed out, or quota-limited, the UI labels and displays a deterministic non-AI fallback plan.
+
+Run the demo by opening the AI Orchestrated Demo section, entering a goal and budget, selecting “Generate bounded plan,” then reviewing the agent tree, simulated service decisions, and blocked actions. “Inject invalid proposal” demonstrates allowlist and budget rejection; “STOP / kill switch” revokes the root state and blocks queued descendants. The existing Illustrative Simulation and Arc Mainnet Demo Mode remain separate; the latter still requires explicit wallet confirmations and can spend real USDC.
+
 Solidity tests use Foundry:
 
 ```powershell
