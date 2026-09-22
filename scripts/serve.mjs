@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 
 const root = new URL("../app/", import.meta.url).pathname;
-const types = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript" };
+const types = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript", ".mjs": "text/javascript" };
 createServer(async (request, response) => {
   const route = request.url === "/" ? "/index.html" : request.url.split("?")[0];
   const file = normalize(join(root, route));
