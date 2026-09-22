@@ -2,6 +2,8 @@
 
 Deployment status: **DEPLOYED; Arc Mainnet lifecycle rehearsal completed.**
 
+Public submission links: [live app](https://agentledger-livid.vercel.app/), [demo video](https://youtu.be/aXnjAd3mFsE), [repository](https://github.com/noboru59631/agentledger), [builder profile](https://x.com/noboru59631).
+
 - Arc Mainnet contract: [0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da](https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da)
 - Deployment transaction: [explorer](https://explorer.arc.io/tx/0x7f1287234e0b9049b45aa5ea67857c358ac95fda7b2e1e9ac2516070157d80b8)
 - Create task: [explorer](https://explorer.arc.io/tx/0x17602976ae236cd73f0c2fb9e0d34e82e8f841a82f7d8c1ff2b33abad9ccb731)
@@ -11,4 +13,4 @@ Deployment status: **DEPLOYED; Arc Mainnet lifecycle rehearsal completed.**
 - Task revocation: [explorer](https://explorer.arc.io/tx/0x7a694807ac98d25f6e4145fd2fc7f715838269544155309ac69602b66c8f65ba)
 - Retry after revocation: `retryBlocked: true`, verified with a read-only check.
 
-The recipient was a separately controlled demo wallet. These transactions demonstrate the deployed task-bound payment path, delegation, revocation, and blocked retry; they do not demonstrate an independent vendor relationship, service delivery, or service proof. No `outcomeHash` claim is made. See [`MAINNET_EVIDENCE.json`](MAINNET_EVIDENCE.json) for complete parameters and hashes.
+The recipient was a separately controlled demo wallet, not a verified vendor. These transactions demonstrate the deployed task-bound payment path, delegation, revocation, and blocked retry; they do not demonstrate an independent vendor relationship, service delivery, or service proof. Outcome hashes, when supplied by a caller, are lineage data rather than independent proof of service delivery. See [`MAINNET_EVIDENCE.json`](MAINNET_EVIDENCE.json) for complete parameters and hashes.

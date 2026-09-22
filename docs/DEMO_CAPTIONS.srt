@@ -7,20 +7,20 @@ Give AI a budget for the job, not a wallet full of money.
 Human intent becomes a task, a mandate, and a bounded agent path.
 
 3
-00:00:17,000 --> 00:00:33,000
-Illustrative local demo: a $5.00 task delegates a reserved $1.00 child budget.
+00:00:17,000 --> 00:00:31,000
+Gemini proposes a plan; deterministic AgentLedger policy approves it. Service costs are simulated.
 
 4
-00:00:33,000 --> 00:00:42,000
-The payment request is bound to its task, authority, recipient, scope, and nonce.
+00:00:31,000 --> 00:00:40,000
+Invalid proposals are blocked, and STOP propagates revocation to queued descendants.
 
 5
-00:00:42,000 --> 00:00:51,000
-After root revocation, the delegated retry is blocked before settlement.
+00:00:40,000 --> 00:00:51,000
+The illustrative fixture view shows the same bounded lineage and blocked retry after root revocation.
 
 6
 00:00:51,000 --> 00:01:04,000
-Real Arc Mainnet evidence is shown separately from the fixture-based browser UI.
+Arc Mainnet Demo Mode requires a wallet and explicit confirmation for each write; evidence is shown separately.
 
 7
 00:01:04,000 --> 00:01:15,000
@@ -32,4 +32,4 @@ Revocation is onchain; retryBlocked was confirmed by a read-only check.
 
 9
 00:01:26,000 --> 00:01:35,000
-Experimental, unaudited, and open source — with claims kept explicit.
+Experimental and unaudited: AI costs are simulated, and outcome hashes do not prove service delivery.
