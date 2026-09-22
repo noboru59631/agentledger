@@ -67,7 +67,9 @@ Resume mode validates the existing contract, reconciles completed lifecycle step
 
 ## Demo scenario
 
-The fixture depicts a $5 research task. Research Agent delegates up to $1 to Translation Agent; a $0.20 request is checked against the hierarchy, then the human revokes root authority and a retry is blocked. All displayed amounts, service status, and receipts are illustrative local state.
+The Illustrative Simulation depicts a $5 research task. Research Agent delegates up to $1 to Translation Agent; a $0.20 request is checked against the hierarchy, then the human revokes root authority and a retry is blocked. All displayed amounts, service status, and receipts in that panel are illustrative local state.
+
+The static site also includes an explicitly labeled Arc Mainnet Demo Mode. It connects to an injected EVM wallet, requires chain ID `5042`, reads the deployed USDC balance, and exposes one separately confirmed write for each of `createTask`, `delegate`, USDC `approve`, `executePayment`, and `revokeTask`. Demo payments are capped in the UI at `0.01 USDC`, and the recipient must be a separate wallet. This mode is experimental and unaudited, can spend real Mainnet USDC, and does not verify vendors or service delivery. No transaction is sent during development or verification; a user must approve each wallet prompt manually.
 
 ## Implemented contract behavior
 

@@ -1,3 +1,5 @@
+import { initLiveDemo } from './live-demo.mjs';
+
 const state = { revoked: false, spent: 0.2, failed: 0 };
 const byId = (id) => document.getElementById(id);
 const money = (value) => `$${value.toFixed(2)}`;
@@ -35,3 +37,10 @@ document.querySelectorAll('.nav-links a').forEach((link) => link.addEventListene
   byId('menuToggle').setAttribute('aria-expanded', 'false');
 }));
 render();
+
+initLiveDemo({ ui: {
+  connect: byId('liveConnect'), switchButton: byId('liveSwitch'), chain: byId('liveChain'), address: byId('liveAddress'), balance: byId('liveBalance'),
+  recipient: byId('liveRecipient'), amount: byId('liveAmount'), cap: byId('liveCap'), create: byId('liveCreate'), delegate: byId('liveDelegate'),
+  approve: byId('liveApprove'), execute: byId('liveExecute'), revoke: byId('liveRevoke'), root: byId('liveRoot'), child: byId('liveChild'), tx: byId('liveTx'), message: byId('liveMessage'),
+  modal: byId('liveModal'), modalTitle: byId('liveModalTitle'), modalBody: byId('liveModalBody'), modalConfirm: byId('liveModalConfirm'), modalCancel: byId('liveModalCancel'),
+} }).catch((error) => byId('liveMessage').textContent = `Live mode unavailable until the wallet client loads: ${error.message}`);
