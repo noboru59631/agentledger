@@ -13,7 +13,7 @@ export async function handleOrchestration(request, { fetchImpl = fetch, env = gl
   let input; try { input = await request.json(); } catch { return json({ error: 'Request body must be JSON.' }, 400); }
   const goal = typeof input.goal === 'string' ? input.goal.trim().slice(0, 500) : ''; const budget = Number(input.budget);
   if (!goal || !Number.isFinite(budget) || budget <= 0 || budget > 100) return json({ error: 'Provide a goal and a budget between 0 and 100 USDC.' }, 400);
-  const model = env.GEMINI_MODEL || MODEL; const fallback = (reason) => json({ source: 'fallback', model, reason, proposal: fallbackPlan(goal, budget), policy: 'deterministic' });
+  const model = env.GEMINI_MODEL || MODEL; const fallback = (reason, diagnostic) => json({ source: 'fallback', model, reason, ...(diagnostic ? { diagnostic } : {}), proposal: fallbackPlan(goal, budget), policy: 'deterministic' });
   if (!env.GEMINI_API_KEY) return fallback('GEMINI_API_KEY is not configured; showing the deterministic demo plan.');
   const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), 12_000);
   try {
