@@ -32,7 +32,7 @@ export function initAIDemo() {
     try {
       const response = await fetch('/api/orchestrate', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ goal: byId('aiGoal').value, budget: byId('aiBudget').value }) });
       const payload = await response.json(); if (!response.ok) throw new Error(payload.error || 'Planner unavailable.');
-      showPlan(payload); byId('aiStatus').textContent = payload.source === 'gemini' ? 'Plan received and checked by deterministic policy.' : 'Fallback plan loaded; add GEMINI_API_KEY for live AI proposals.';
+      showPlan(payload); byId('aiStatus').textContent = payload.source === 'gemini' ? 'Plan received and checked by deterministic policy.' : `Fallback plan loaded: ${payload.reason || 'the live planner was unavailable.'}`;
     } catch (error) { current = fallbackPlan(byId('aiGoal').value, Number(byId('aiBudget').value)); render(evaluateDemoPlan(current, Number(byId('aiBudget').value)), 'fallback', error.message); byId('aiStatus').textContent = 'Network fallback loaded; no AI call was completed.'; }
     byId('aiRun').disabled = false;
   });
