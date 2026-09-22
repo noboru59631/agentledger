@@ -2,7 +2,7 @@
 
 ## Product boundary
 
-AgentLedger connects a human task to bounded agent authority, payment attempts, and outcome evidence. The repository currently has a local fixture UI and an experimental onchain authorization/settlement contract. There is no deployed integration between them.
+AgentLedger connects a human task to bounded agent authority, payment attempts, and outcome evidence. The repository has a local fixture simulation, a real Gemini proposal route with deterministic browser policy checks, a wallet-connected Arc Mainnet Demo Mode, and an experimental onchain authorization/settlement contract. The AI demo does not settle; Mainnet writes are explicit user-confirmed actions.
 
 ```text
 Human intent → task metadata hash → root mandate → delegated mandates
@@ -13,10 +13,11 @@ Human intent → task metadata hash → root mandate → delegated mandates
 
 | Component | Intended responsibility | Current implementation |
 | --- | --- | --- |
-| Dashboard | Explain objective, budget, lineage, request checks, receipt, and revocation | Static HTML with local JavaScript fixture state |
-| Policy engine | Reproduce deterministic contract checks and canonical request IDs | Small illustrative browser logic; not a production SDK |
-| MandateGraph | Store authority, enforce budget/scope/expiry/revocation, execute transfer | Solidity contract source; not deployed |
-| USDC adapter | Configure Arc RPC/token and submit signed transactions | Not implemented; deploy script is contract-only |
+| Dashboard | Explain objective, budget, lineage, request checks, receipt, and revocation | Static HTML with three explicitly separated demo surfaces |
+| AI planner | Propose structured multi-agent plans | Gemini-backed `/api/orchestrate`; deterministic policy decides approval; no settlement |
+| Policy engine | Reproduce deterministic budget, scope, expiry, depth, and STOP checks | Browser policy modules; not a production SDK |
+| MandateGraph | Store authority, enforce budget/scope/expiry/revocation, execute transfer | Solidity contract deployed experimentally on Arc Mainnet |
+| USDC adapter | Configure Arc RPC/token and submit signed transactions | Wallet-connected live demo with explicit confirmation for each write |
 | Evidence/indexing | Link chain tx, service evidence, and result | Not implemented; fixture hashes are not proof |
 
 ## Contract lifecycle
@@ -36,7 +37,7 @@ Before real use, a client still needs to:
 1. Confirm mainnet RPC, chain ID, explorer, gas model, and native/ ERC-20 USDC details in current official Arc documentation.
 2. Create a user-controlled signer or smart account; fund it with Arc USDC and approve the token contract.
 3. Deploy the reviewed contract with the verified Arc USDC ERC-20 address.
-4. Add a chain-aware client, wallet confirmation, transaction simulation, error handling, and event indexer.
+4. The current demo has a chain-aware wallet client and explicit confirmation; production still needs transaction simulation, robust error handling, and an event indexer.
 5. Bind the transaction hash plus independently obtained vendor delivery evidence to a durable receipt.
 
 The 2026-09-21 Arc docs index states USDC is the gas asset but also contains a stale testnet-only statement. It links an EVM differences document that distinguishes 18-decimal native gas units from the 6-decimal USDC ERC-20 interface. Third-party explorer documentation currently reports mainnet chain ID 5042 and RPC `https://rpc.arc-scan.org`; treat these as candidate values until independently checked against current official endpoints.
@@ -44,7 +45,7 @@ The 2026-09-21 Arc docs index states USDC is the gas asset but also contains a s
 ## Trust boundaries
 
 - The model may suggest a task or payment, but it cannot set or bypass contract constraints.
-- The browser demo is presentation-only and is not an authorization source.
+- The Illustrative Simulation is presentation-only and is not an authorization source. The AI planner is proposal-only; the live wallet panel is the only UI surface that can request Mainnet writes.
 - A task hash proves bytes were committed, not that the task is legitimate.
 - An outcome hash proves only that a caller supplied a hash; it does not attest service quality.
 - The token contract and signer are external dependencies; deployment and token behavior require validation.
