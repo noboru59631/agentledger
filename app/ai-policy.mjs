@@ -2,7 +2,7 @@ export const SERVICE_CATEGORIES = ['research', 'translation', 'data', 'api'];
 
 const isFiniteNumber = (value) => typeof value === 'number' && Number.isFinite(value);
 
-export function validateProposal(proposal, taskBudget, { now = Date.now() } = {}) {
+export function validateProposal(proposal, taskBudget, { now = Date.now(), allowedScope = new Set(SERVICE_CATEGORIES) } = {}) {
   const errors = [];
   if (!proposal || typeof proposal !== 'object') return { valid: false, errors: ['Proposal must be an object.'] };
   if (typeof proposal.taskSummary !== 'string' || proposal.taskSummary.trim().length < 3) errors.push('Task summary is missing.');
@@ -22,12 +22,11 @@ export function validateProposal(proposal, taskBudget, { now = Date.now() } = {}
   }
   const estimated = services.reduce((sum, service) => sum + (isFiniteNumber(service.estimatedCost) ? service.estimatedCost : Number.POSITIVE_INFINITY), 0);
   if (estimated > taskBudget) errors.push('Estimated service costs exceed the task budget.');
-  const allowedScope = new Set(SERVICE_CATEGORIES);
   const rootBudget = isFiniteNumber(proposal.rootAgent?.budget) ? proposal.rootAgent.budget : 0;
   const requestIds = new Set();
   for (const agent of proposal.subAgents || []) {
     if (!isFiniteNumber(agent.budget) || agent.budget < 0 || agent.budget > rootBudget) errors.push(`Child allocation for ${agent.role || 'unnamed agent'} exceeds its parent. `);
-    if (!Array.isArray(agent.scope) || agent.scope.some((category) => !allowedScope.has(category))) errors.push(`Scope for ${agent.role || 'unnamed agent'} widens beyond the task services.`);
+    if (!Array.isArray(agent.scope) || agent.scope.length === 0 || agent.scope.some((category) => !allowedScope.has(category))) errors.push(`Scope for ${agent.role || 'unnamed agent'} widens beyond the task services.`);
     if (!Number.isInteger(agent.delegationDepth) || agent.delegationDepth < 0 || agent.delegationDepth >= 2) errors.push(`Delegation depth for ${agent.role || 'unnamed agent'} is not monotonically narrower.`);
     if (agent.expiry && proposal.expiry && new Date(agent.expiry).getTime() > new Date(proposal.expiry).getTime()) errors.push(`Expiry for ${agent.role || 'unnamed agent'} extends the parent.`);
   }
@@ -38,6 +37,20 @@ export function validateProposal(proposal, taskBudget, { now = Date.now() } = {}
   }
   if (proposal.expiry && new Date(proposal.expiry).getTime() < now) errors.push('Proposal expiry is already in the past.');
   return { valid: errors.length === 0, errors };
+}
+
+export function normalizeProposal(proposal, { goal, now = Date.now(), taskExpiry = now + 24 * 60 * 60 * 1000 } = {}) {
+  const normalized = structuredClone(proposal);
+  normalized.taskSummary = normalized.taskSummary || goal;
+  normalized.expiry = new Date(taskExpiry).toISOString();
+  normalized.subAgents = Array.isArray(normalized.subAgents) ? normalized.subAgents : [];
+  normalized.subAgents = normalized.subAgents.map((agent) => {
+    const hours = Number(agent.relativeExpiryHours);
+    const safeHours = Number.isFinite(hours) ? Math.max(0, Math.min(24, hours)) : 12;
+    const { relativeExpiryHours, ...rest } = agent;
+    return { ...rest, expiry: new Date(Math.max(now + 1000, Math.min(taskExpiry, now + safeHours * 60 * 60 * 1000))).toISOString() };
+  });
+  return normalized;
 }
 
 export function evaluateDemoPlan(proposal, taskBudget, { revoked = false } = {}) {

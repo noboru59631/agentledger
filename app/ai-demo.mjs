@@ -3,11 +3,12 @@ import { evaluateDemoPlan, fallbackPlan } from './ai-policy.mjs';
 const byId = (id) => document.getElementById(id);
 const money = (value) => `$${Number(value || 0).toFixed(2)}`;
 let current = null;
+let currentSource = 'fallback';
 let revoked = false;
 
 function render(result, source, reason) {
   const plan = current;
-  byId('aiSource').textContent = source === 'gemini' ? 'LIVE GEMINI PLAN' : 'DEMO FALLBACK · NON-AI';
+  byId('aiSource').textContent = source === 'gemini' ? 'GEMINI PLAN · POLICY APPROVED' : 'DEMO FALLBACK · NON-AI';
   byId('aiReason').textContent = reason || 'LLM output is a proposal only; every decision below is deterministic.';
   byId('aiSummary').textContent = plan.taskSummary;
   byId('aiBudgetMetric').textContent = money(byId('aiBudget').value);
@@ -22,7 +23,7 @@ function render(result, source, reason) {
   byId('aiDashboard').hidden = false;
 }
 
-function showPlan(payload) { current = payload.proposal; render(evaluateDemoPlan(current, Number(byId('aiBudget').value), { revoked }), payload.source, payload.reason); }
+function showPlan(payload) { current = payload.proposal; currentSource = payload.source; render(evaluateDemoPlan(current, Number(byId('aiBudget').value), { revoked }), currentSource, payload.reason); }
 
 export function initAIDemo() {
   const form = byId('aiForm'); if (!form) return;
@@ -35,6 +36,6 @@ export function initAIDemo() {
     } catch (error) { current = fallbackPlan(byId('aiGoal').value, Number(byId('aiBudget').value)); render(evaluateDemoPlan(current, Number(byId('aiBudget').value)), 'fallback', error.message); byId('aiStatus').textContent = 'Network fallback loaded; no AI call was completed.'; }
     byId('aiRun').disabled = false;
   });
-  byId('aiStop').addEventListener('click', () => { if (!current) return; revoked = true; render(evaluateDemoPlan(current, Number(byId('aiBudget').value), { revoked }), 'fallback', 'STOP is deterministic and propagates to queued descendants.'); byId('aiStatus').textContent = 'STOP propagated: descendant actions are blocked.'; });
-  byId('aiInvalid').addEventListener('click', () => { if (!current) return; const invalid = structuredClone(current); invalid.services = [...invalid.services, { category: 'wallet-drain', description: 'Intentionally invalid demo request', estimatedCost: Number(byId('aiBudget').value) }]; render(evaluateDemoPlan(invalid, Number(byId('aiBudget').value)), 'fallback', 'Intentionally invalid proposal injected to demonstrate policy enforcement.'); byId('aiStatus').textContent = 'Blocked invalid proposal: disallowed service and over-budget request.'; });
+  byId('aiStop').addEventListener('click', () => { if (!current) return; revoked = true; render(evaluateDemoPlan(current, Number(byId('aiBudget').value), { revoked }), currentSource, 'STOP is deterministic and propagates to queued descendants.'); byId('aiStatus').textContent = 'STOP propagated: descendant actions are blocked.'; });
+  byId('aiInvalid').addEventListener('click', () => { if (!current) return; const invalid = structuredClone(current); invalid.services = [...invalid.services, { category: 'wallet-drain', description: 'Intentionally invalid demo request', estimatedCost: Number(byId('aiBudget').value) }]; render(evaluateDemoPlan(invalid, Number(byId('aiBudget').value)), currentSource, 'Intentionally invalid proposal injected to demonstrate policy enforcement.'); byId('aiStatus').textContent = 'Blocked invalid proposal: disallowed service and over-budget request.'; });
 }
