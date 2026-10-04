@@ -209,7 +209,7 @@ async function preflight() {
       calldata: legacyAllowanceCleanupData,
       estimate: serializeCost(legacyAllowanceCleanupCost),
       exactLocalCommand: powershellCastCommand([
-        'send', arcMainnet.usdcAddress, 'approve(address,uint256)', arcMainnet.legacyContract, '0',
+        'send', arcMainnet.usdcAddress, quote('approve(address,uint256)'), arcMainnet.legacyContract, '0',
         '--account', '$env:ARC_MAINNET_ACCOUNT', '--rpc-url', rpcUrl,
         '--gas-limit', legacyAllowanceCleanupCost.gasLimit, '--gas-price', legacyAllowanceCleanupCost.gasPrice, '--json',
       ]),
@@ -223,7 +223,7 @@ async function preflight() {
       calldata: registrationData,
       estimate: serializeCost(registrationCost),
       exactLocalCommand: powershellCastCommand([
-        'send', arcMainnet.identityRegistry, 'register(string)(uint256)', quote(agentUri),
+        'send', arcMainnet.identityRegistry, quote('register(string)(uint256)'), quote(agentUri),
         '--account', '$env:ARC_MAINNET_ACCOUNT', '--rpc-url', rpcUrl,
         '--gas-limit', registrationCost.gasLimit, '--gas-price', registrationCost.gasPrice, '--json',
       ]),

@@ -1,11 +1,11 @@
 {
   "version": 1,
   "mode": "read-only-preflight",
-  "generatedAt": "2026-10-04T05:11:17.984Z",
+  "generatedAt": "2026-10-04T05:14:13.532Z",
   "network": "Arc Mainnet",
   "chainId": 5042,
   "rpcUrl": "https://rpc.mainnet.arc.io",
-  "latestBlock": "24168366",
+  "latestBlock": "24168712",
   "officialContracts": {
     "usdc": {
       "address": "0x3600000000000000000000000000000000000000",
@@ -59,22 +59,22 @@
       "gasPriceWei": "20000010000",
       "worstCaseFeeUsdc": "0.00116476058238"
     },
-    "exactLocalCommand": "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send 0x3600000000000000000000000000000000000000 approve(address,uint256) 0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da 0 --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 58238 --gas-price 20000010000 --json"
+    "exactLocalCommand": "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send 0x3600000000000000000000000000000000000000 'approve(address,uint256)' 0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da 0 --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 58238 --gas-price 20000010000 --json"
   },
   "agentRegistration": {
     "required": true,
-    "agentUri": "https://agentledger-livid.vercel.app/agent-registration.json",
+    "agentUri": "https://raw.githubusercontent.com/noboru59631/agentledger/bef7831a49127e22d1d1cabd68f18d2e0484d695/app/agent-registration.json",
     "destination": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
     "valueUsdc": "0",
     "expectedStateChange": "Mint one ERC-8004 Identity NFT to the sender and emit Registered(agentId, agentURI, owner).",
-    "calldata": "0xf2c298be0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003c68747470733a2f2f6167656e746c65646765722d6c697669642e76657263656c2e6170702f6167656e742d726567697374726174696f6e2e6a736f6e00000000",
+    "calldata": "0xf2c298be0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000007e68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6e6f626f727535393633312f6167656e746c65646765722f626566373833316134393132376532326431643163616264363866313864326530343834643639352f6170702f6167656e742d726567697374726174696f6e2e6a736f6e0000",
     "estimate": {
-      "estimatedGas": "180515",
-      "gasLimit": "270773",
+      "estimatedGas": "229908",
+      "gasLimit": "344862",
       "gasPriceWei": "20000010000",
-      "worstCaseFeeUsdc": "0.00541546270773"
+      "worstCaseFeeUsdc": "0.00689724344862"
     },
-    "exactLocalCommand": "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send 0x8004A169FB4a3325136EB29fA0ceB6D2e539a432 register(string)(uint256) 'https://agentledger-livid.vercel.app/agent-registration.json' --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 270773 --gas-price 20000010000 --json"
+    "exactLocalCommand": "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send 0x8004A169FB4a3325136EB29fA0ceB6D2e539a432 'register(string)(uint256)' 'https://raw.githubusercontent.com/noboru59631/agentledger/bef7831a49127e22d1d1cabd68f18d2e0484d695/app/agent-registration.json' --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 344862 --gas-price 20000010000 --json"
   },
   "candidateDeployment": {
     "required": true,
@@ -135,9 +135,9 @@
   },
   "funding": {
     "feePriceWeiPerGas": "20000010000",
-    "bufferedGasCostUsdc": "0.14864851432422",
+    "bufferedGasCostUsdc": "0.15013031506512",
     "paymentAmountUsdc": "0.025000",
-    "minimumFundingUsdc": "0.17364851432422",
+    "minimumFundingUsdc": "0.17513031506512",
     "adequateNativeGasAndPayments": true,
     "adequateErc20Payments": true
   },
