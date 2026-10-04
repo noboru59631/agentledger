@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "mode": "read-only-preflight",
+  "generatedAt": "2026-10-04T05:11:17.984Z",
+  "network": "Arc Mainnet",
+  "chainId": 5042,
+  "rpcUrl": "https://rpc.mainnet.arc.io",
+  "latestBlock": "24168366",
+  "officialContracts": {
+    "usdc": {
+      "address": "0x3600000000000000000000000000000000000000",
+      "symbol": "USDC",
+      "erc20Decimals": 6,
+      "codeBytes": 1798
+    },
+    "identityRegistry": {
+      "address": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+      "codeBytes": 130
+    },
+    "reputationRegistry": {
+      "address": "0x8004BAa17C55a88189AE136b182e5fdA19dE9b63",
+      "codeBytes": 130,
+      "identityRegistry": "0x8004a169fb4a3325136eb29fa0ceb6d2e539a432"
+    },
+    "validationRegistry": {
+      "address": "0x8004Cc8439f36fd5F9F049D9fF86523Df6dAAB58",
+      "codeBytes": 130,
+      "identityRegistry": "0x8004a169fb4a3325136eb29fa0ceb6d2e539a432"
+    }
+  },
+  "sender": {
+    "address": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+    "nonce": "26",
+    "nativeUsdc18": "3.48409224682496053",
+    "erc20Usdc6": "3.484092",
+    "erc8004IdentityBalance": "0",
+    "testnetAgentIdOnMainnet": {
+      "agentId": "897002",
+      "exists": false,
+      "owner": null
+    },
+    "legacyAllowanceBaseUnits": "10000"
+  },
+  "recipient": {
+    "address": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+    "independentControlledDemoWallet": true
+  },
+  "legacyAllowanceCleanup": {
+    "required": true,
+    "destination": "0x3600000000000000000000000000000000000000",
+    "currentAllowanceBaseUnits": "10000",
+    "nextAllowanceBaseUnits": "0",
+    "valueUsdc": "0",
+    "expectedStateChange": "Set the legacy Mainnet contract USDC allowance to zero before the new controlled PoC.",
+    "calldata": "0x095ea7b3000000000000000000000000235dc11cd709542c42eb81c8f341c8f1a2bce0da0000000000000000000000000000000000000000000000000000000000000000",
+    "estimate": {
+      "estimatedGas": "38825",
+      "gasLimit": "58238",
+      "gasPriceWei": "20000010000",
+      "worstCaseFeeUsdc": "0.00116476058238"
+    },
+    "exactLocalCommand": "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send 0x3600000000000000000000000000000000000000 approve(address,uint256) 0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da 0 --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 58238 --gas-price 20000010000 --json"
+  },
+  "agentRegistration": {
+    "required": true,
+    "agentUri": "https://agentledger-livid.vercel.app/agent-registration.json",
+    "destination": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+    "valueUsdc": "0",
+    "expectedStateChange": "Mint one ERC-8004 Identity NFT to the sender and emit Registered(agentId, agentURI, owner).",
+    "calldata": "0xf2c298be0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003c68747470733a2f2f6167656e746c65646765722d6c697669642e76657263656c2e6170702f6167656e742d726567697374726174696f6e2e6a736f6e00000000",
+    "estimate": {
+      "estimatedGas": "180515",
+      "gasLimit": "270773",
+      "gasPriceWei": "20000010000",
+      "worstCaseFeeUsdc": "0.00541546270773"
+    },
+    "exactLocalCommand": "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send 0x8004A169FB4a3325136EB29fA0ceB6D2e539a432 register(string)(uint256) 'https://agentledger-livid.vercel.app/agent-registration.json' --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 270773 --gas-price 20000010000 --json"
+  },
+  "candidateDeployment": {
+    "required": true,
+    "destination": null,
+    "valueUsdc": "0",
+    "constructor": {
+      "usdc": "0x3600000000000000000000000000000000000000",
+      "identityRegistry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
+    },
+    "expectedStateChange": "Deploy a new MandateGraph candidate configured for Arc Mainnet USDC and the official Mainnet Identity Registry.",
+    "artifact": {
+      "path": "out/MandateGraph.sol/MandateGraph.json",
+      "sourceHash": "0xd71cb4eaf8e00d8cf0fb01f8df52b3c0e51a7a05742eb7d80312b8dd158b484b",
+      "compiler": "0.8.28+commit.7893614a",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "initCodeBytes": 12538,
+      "initCodeHash": "0x249b8e3f44a2967761a79a9f915d087dc2a8f91248914b304ac4a2b0caaeeea0",
+      "normalizedRuntimeHash": "0x1c27f49450e7f9bf29643a2fde4284e7295e5e12f6f57ea8a14c681747d9f431"
+    },
+    "testnetCandidate": {
+      "address": "0x8135c6E750E240FB352ee6701F2976fF8BA63ea3",
+      "agentId": "897002",
+      "codeBytes": 12154,
+      "normalizedRuntimeHash": "0x1c27f49450e7f9bf29643a2fde4284e7295e5e12f6f57ea8a14c681747d9f431",
+      "normalizedBytecodeMatch": true
+    },
+    "legacyMainnet": {
+      "address": "0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da",
+      "codeBytes": 6798,
+      "runtimeHash": "0x0222ec87ca55996d06cae594b4806f69b9ec4c477c5d151c7d9feb29934b7049",
+      "selectedForLifecycle": false
+    },
+    "estimate": {
+      "estimatedGas": "2735608",
+      "gasLimit": "4103412",
+      "gasPriceWei": "20000010000",
+      "worstCaseFeeUsdc": "0.08206828103412"
+    },
+    "exactLocalCommands": [
+      "$initCode = node scripts/print-mainnet-init-code.mjs",
+      "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send --create $initCode --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 4103412 --gas-price 20000010000 --json"
+    ]
+  },
+  "lifecyclePlan": {
+    "initialAuthorityCapBaseUnits": "10000",
+    "smallPaymentBaseUnits": "5000",
+    "promotedAuthorityCapBaseUnits": "50000",
+    "largerPaymentBaseUnits": "20000",
+    "demotedAuthorityCapBaseUnits": "25000",
+    "rejectedPaymentBaseUnits": "26000",
+    "exactApprovalBaseUnits": "25000",
+    "totalExecutedPaymentBaseUnits": "25000",
+    "rejectedPaymentMode": "eth_call only",
+    "reinstatementRequiredForCapSpecificReject": true
+  },
+  "funding": {
+    "feePriceWeiPerGas": "20000010000",
+    "bufferedGasCostUsdc": "0.14864851432422",
+    "paymentAmountUsdc": "0.025000",
+    "minimumFundingUsdc": "0.17364851432422",
+    "adequateNativeGasAndPayments": true,
+    "adequateErc20Payments": true
+  },
+  "safety": {
+    "privateKeyRead": false,
+    "keystoreRead": false,
+    "passwordRequested": false,
+    "transactionsSent": false,
+    "productionApproved": false,
+    "status": "STOP_BEFORE_SIGNATURE"
+  },
+  "transactions": []
+}

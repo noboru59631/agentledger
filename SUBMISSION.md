@@ -2,17 +2,17 @@
 
 ## One-line pitch
 
-**AI proposes. AgentLedger decides.** AgentLedger gives multi-agent systems task-bound USDC spending authority and deterministic financial governance for delegation, scope, budgets, lineage, and revocation.
+**Don’t give a new AI agent the keys to the company wallet. Let it earn them.** AgentLedger starts an agent with small, task-bound USDC authority, lets recorded work support a human-approved increase, and reduces authority after a violation.
 
 ## Problem
 
-A wallet spend limit caps outflow but does not explain which human task authorized a payment, which agent delegated that authority, how much budget is reserved for descendants, or why a payment should be allowed. Agent teams need controls tied to work, not only to an account balance.
+Unlimited wallet authority is unsafe, while asking a human to approve every action removes the autonomy people and companies want from AI agents. A wallet spend limit also cannot explain which task authorized a payment, which agent delegated it, or what authority remains.
 
 ## Solution
 
-MandateGraph connects a human-defined task to a root mandate, narrower child mandates, payment requests, and outcome lineage. Child budgets reserve part of the parent’s available budget. Delegation cannot widen budget, service scope, recipient restriction, expiry, or depth. Each payment request is bound to its task, mandate, recipient, amount, service class, resource hash, expiry, and nonce. Revoking a task or mandate blocks descendant authority when checked.
+MandateGraph connects a human-defined task to narrower mandates, payment requests, outcome lineage, and an agent career state. An agent starts as a Trainee with a small Authority cap. Successful payment-bound work can make it promotion-eligible; only the ERC-8004 identity owner can approve Promotion. A violation applies STOP, records a Demotion, and halves Authority. After explicit remediation, the reduced cap remains enforced.
 
-Gemini is proposal-only: it suggests task decomposition, child agents, budgets, and services. AgentLedger applies deterministic policy checks. Invalid proposals are blocked, and the STOP / kill switch propagates revocation to queued descendants.
+Gemini is proposal-only. ERC-8004 supplies portable identity plus external reputation and validation inputs. AgentLedger—not ERC-8004—applies deterministic policy and rejects payments that exceed contract-enforced authority.
 
 ## Why Arc
 
@@ -24,9 +24,9 @@ The public app has three clearly separated modes:
 
 1. **Illustrative Simulation:** local fixture task and lineage state; no wallet or Arc reads.
 2. **AI Orchestrated Demo:** real Gemini proposal when configured, deterministic policy approval/rejection, simulated service costs, and STOP propagation; no automatic chain writes.
-3. **Arc Mainnet Demo Mode:** injected-wallet connection and explicit confirmation for each live write. The flow supports `createTask`, `delegate`, USDC `approve`, `executePayment`, and `revokeTask` on Arc Mainnet chain ID `5042`.
+3. **Arc Mainnet Read-only Mode:** injected-wallet connection, chain/address/balance reads, and historical Explorer evidence. It exposes no write controls.
 
-The live mode is experimental and unaudited, caps demo payments at `0.01 USDC`, and can spend real USDC. No write occurs without the user approving the wallet prompt.
+The ERC-8004/Authority candidate is verified on Arc Testnet. A separately controlled Mainnet PoC is being prepared with `0.005` and `0.02 USDC` payments, exact `0.025 USDC` approval, and a read-only `0.026 USDC` cap rejection. Repository automation cannot broadcast Mainnet transactions.
 
 ## Verified Arc Mainnet evidence
 
@@ -43,7 +43,7 @@ The recipient was a separately controlled demo wallet, not a verified vendor. Th
 - Solidity MandateGraph prototype with bounded delegation, reserved child budgets, request-bound payment IDs, replay protection, ancestry checks, and reentrancy protection.
 - Node test suite covering browser policy, live-mode guards, AI policy, orchestration routes, lifecycle helpers, and deployment configuration.
 - Foundry contract tests and stateful invariants run in CI with fuzzing.
-- Arc Mainnet deployment and documented lifecycle evidence.
+- Legacy Arc Mainnet deployment evidence plus ERC-8004/Authority lifecycle evidence on Arc Testnet.
 
 The exact test result belongs to the CI run for the submitted commit; no test count is hard-coded here.
 

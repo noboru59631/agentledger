@@ -1,12 +1,12 @@
 # AgentLedger
 
-> Give AI a budget for the job, not a wallet full of money.
+> Don’t give a new AI agent the keys to the company wallet. Let it earn them.
 
 [![CI](https://github.com/noboru59631/agentledger/actions/workflows/ci.yml/badge.svg)](https://github.com/noboru59631/agentledger/actions/workflows/ci.yml)
 
-AgentLedger is a task-native financial governance prototype for multi-agent systems. It connects human intent to bounded mandates, delegated budgets, payment requests, and outcome lineage.
+AgentLedger is an earned-authority layer for individuals and companies that want AI agents to complete real work and make bounded USDC payments. A new agent starts with a small task-bound cap, recorded work can support a human-approved increase, and a violation triggers STOP plus an enforceable reduction.
 
-**AI proposes. AgentLedger decides.** Gemini may propose a plan, but deterministic policy checks decide whether budgets, service scope, delegation, expiry, recipient restrictions, replay protection, and revocation rules are satisfied.
+**AI proposes. Humans approve progression. AgentLedger enforces.** Gemini may propose a plan. ERC-8004 provides portable identity and external reputation or validation inputs. The AgentLedger contract—not ERC-8004—enforces budgets, Authority caps, scope, delegation, replay protection, STOP, and payment rejection.
 
 ## Public links
 
@@ -27,7 +27,21 @@ The three product surfaces are intentionally separate:
 | AI Orchestrated Demo | Real Gemini proposal when configured, followed by deterministic budget/scope/STOP checks; shows `GEMINI PLAN · POLICY APPROVED` for an accepted live plan | Simulates service costs and never authorizes, settles, or writes to Arc |
 | Arc Mainnet Read-only Mode | Injected-wallet connection plus chain, address, and USDC balance reads; historical Explorer evidence | Cannot create, delegate, approve, pay, revoke, deploy, or broadcast |
 
-The Arc Mainnet read-only surface documents the legacy deployed contract without exposing transaction controls. Repository lifecycle/deployment automation is Testnet-only and Mainnet preflight is read-only.
+The Arc Mainnet read-only surface documents the legacy deployed contract without exposing transaction controls. Mainnet broadcast remains disabled in repository automation. `npm run lifecycle:arc-mainnet:preflight` performs only RPC reads and local artifact checks, writes a stopped-before-signature plan to `docs/MAINNET_AUTHORITY_EVIDENCE.json`, and never reads a keystore or asks for a password.
+
+## Controlled Mainnet PoC plan
+
+The Arc Microgrants PoC is intentionally separate from a production launch. Its target story is `Trainee → small payment → work proof → human-approved Promotion → larger payment → violation/STOP → Demotion → remediation/reinstatement → AuthorityCapExceeded simulation`.
+
+- Initial Authority: `0.01 USDC` (`10,000` base units).
+- Small payment: `0.005 USDC` (`5,000` base units).
+- Promoted Authority: `0.05 USDC` (`50,000` base units).
+- Larger payment: `0.02 USDC` (`20,000` base units).
+- Demoted Authority: `0.025 USDC` (`25,000` base units).
+- Rejected request: `0.026 USDC` (`26,000` base units), proven by `eth_call` without a failed Mainnet transaction.
+- Exact approval: `0.025 USDC`; total executed payment: `0.025 USDC`.
+
+The controlled PoC is experimental, unaudited, limited to demonstration amounts, and not intended for production custody or unrestricted autonomous spending.
 
 ## AI Orchestrated Demo
 
@@ -86,7 +100,7 @@ Circle/Arc wallets and other wallet products are complementary wallet and settle
 
 ## Limitations and caveats
 
-- The legacy Mainnet contract and the Arc Testnet ERC-8004 candidate are experimental and unaudited.
+- The legacy Mainnet contract and the ERC-8004/Authority candidate are experimental and unaudited.
 - Mainnet writes are disabled in the browser and automation; historical Mainnet transactions remain linked as evidence.
 - AI demo service costs are simulated; the AI route never writes to the chain.
 - The mainnet recipient was a controlled demo wallet, not a verified vendor.
@@ -102,7 +116,7 @@ Circle/Arc wallets and other wallet products are complementary wallet and settle
 - Canonical request signing, vendor identity/dispute flows, refunds, and safer production wallet architecture.
 - Confirm current Arc program eligibility and submit through the official Arc Microgrants form.
 
-Mainnet deployment/broadcast is disabled in `scripts/deploy.ps1`. Complete the Arc Testnet identity registration, CI, deployment, lifecycle evidence, and independent review before any separate Mainnet decision.
+Mainnet deployment/broadcast is disabled in repository automation. The controlled Arc Microgrants PoC uses separately reviewed local commands and stops before every signature; production Mainnet remains NO-GO pending independent review and the remaining hardening work.
 
 ## Primary references
 
