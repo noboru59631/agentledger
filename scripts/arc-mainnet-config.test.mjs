@@ -32,26 +32,20 @@ test('funding estimate applies fee floor, lifecycle reserve, and 50 percent marg
   assert.equal(estimate.totalFundingWei, 100_000_000_000_000_000n);
 });
 
-test('broadcast requires the explicit confirmation and raw private key env is rejected', async () => {
+test('mainnet runner exposes read-only preflight only', async () => {
   const runner = await (await import('node:fs/promises')).readFile(new URL('./run-arc-mainnet-lifecycle.mjs', import.meta.url), 'utf8');
-  assert.match(runner, /confirmation !== 'YES'/);
-  assert.match(runner, /\/PRIVATE_KEY\/i\.test\(name\)/);
-  assert.match(runner, /if \(preflightOnly\) await preflight\(\)/);
-  assert.match(runner, /--account', account, '--rpc-url', rpcUrl, '--json'/);
-  const preflightBody = runner.slice(runner.indexOf('async function preflight()'), runner.indexOf('async function saveEvidence'));
+  assert.match(runner, /Mainnet broadcast is disabled/);
+  assert.doesNotMatch(runner, /cast, \['send'|forge, \['create'|--broadcast/);
+  const preflightBody = runner.slice(runner.indexOf('async function preflight()'));
   assert.doesNotMatch(preflightBody, /cast, \['send'|forge, \['create'/);
   assert.match(preflightBody, /eth_estimateGas/);
   assert.match(preflightBody, /eth_getCode/);
-  assert.match(runner, /retryPaymentEncoding = await run\(cast, \['abi-encode'/);
-  assert.match(runner, /eth_call', \[\{ from: sender, to: contract, data: retryData \}/);
-  assert.match(runner, /!\/revert\/i\.test\(error\.message\)/);
+  assert.match(runner, /identityRegistry/);
 });
 
-test('execution without explicit mainnet confirmation stops before Foundry or RPC work', () => {
-  const env = { ...process.env };
-  delete env.CONFIRM_ARC_MAINNET;
-  const result = spawnSync(process.execPath, [resolve('scripts/run-arc-mainnet-lifecycle.mjs')], { encoding: 'utf8', env });
+test('mainnet execution mode stops before Foundry or RPC work', () => {
+  const result = spawnSync(process.execPath, [resolve('scripts/run-arc-mainnet-lifecycle.mjs')], { encoding: 'utf8', env: { ...process.env } });
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /Broadcast mode requires CONFIRM_ARC_MAINNET=YES/);
+  assert.match(result.stderr, /Mainnet broadcast is disabled/);
   assert.doesNotMatch(result.stderr, /(?:forge|cast|fetch) failed|HTTP \d/);
 });

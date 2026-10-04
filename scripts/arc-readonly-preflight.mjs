@@ -1,4 +1,23 @@
-const rpcUrl = process.env.ARC_RPC_URL ?? 'https://rpc.mainnet.arc.io';
+const network = process.env.ARC_NETWORK ?? 'testnet';
+const networks = {
+  testnet: {
+    rpcUrl: 'https://rpc.testnet.arc.io',
+    chainId: 5042002n,
+    identityRegistry: '0x8004A818BFB912233c491871b3d84c89A494BD9e',
+    reputationRegistry: '0x8004B663056A597Dffe9eCcC1965A193B7388713',
+    validationRegistry: '0x8004Cb1BF31DAf7788923b405b754f57acEB4272',
+  },
+  mainnet: {
+    rpcUrl: 'https://rpc.mainnet.arc.io',
+    chainId: 5042n,
+    identityRegistry: '0x8004A169FB4a3325136EB29fA0ceB6D2e539a432',
+    reputationRegistry: '0x8004BAa17C55a88189AE136b182e5fdA19dE9b63',
+    validationRegistry: '0x8004Cc8439f36fd5F9F049D9fF86523Df6dAAB58',
+  },
+};
+if (!networks[network]) throw new Error(`ARC_NETWORK must be testnet or mainnet; received ${network}.`);
+const config = networks[network];
+const rpcUrl = process.env.ARC_RPC_URL ?? config.rpcUrl;
 const token = '0x3600000000000000000000000000000000000000';
 
 async function rpc(method, params = []) {
@@ -24,7 +43,7 @@ function decodeString(value) {
 }
 
 const chainId = BigInt(await rpc('eth_chainId'));
-if (chainId !== 5042n) throw new Error(`Expected Arc mainnet chain ID 5042; received ${chainId}.`);
+if (chainId !== config.chainId) throw new Error(`Expected Arc ${network} chain ID ${config.chainId}; received ${chainId}.`);
 const block = await rpc('eth_blockNumber');
 if (BigInt(block) <= 0n) throw new Error(`Invalid latest block number: ${block}.`);
 const code = await rpc('eth_getCode', [token, 'latest']);
@@ -36,4 +55,14 @@ const [symbolData, decimalsData] = await Promise.all([
 const symbol = decodeString(symbolData);
 const decimals = Number(BigInt(decimalsData));
 if (symbol !== 'USDC' || decimals !== 6) throw new Error(`Unexpected token metadata: symbol=${symbol}, decimals=${decimals}.`);
-console.log(`Read-only Arc preflight passed: chainId=${chainId} block=${BigInt(block)} USDC=${token} symbol=${symbol} decimals=${decimals}. No transaction sent.`);
+for (const [name, address] of [
+  ['IdentityRegistry', config.identityRegistry],
+  ['ReputationRegistry', config.reputationRegistry],
+  ['ValidationRegistry (optional for AgentLedger MVP)', config.validationRegistry],
+]) {
+  const registryCode = await rpc('eth_getCode', [address, 'latest']);
+  if (typeof registryCode !== 'string' || registryCode === '0x' || registryCode.length <= 2) {
+    throw new Error(`No contract bytecode at ${name} ${address}.`);
+  }
+}
+console.log(`Read-only Arc preflight passed: network=${network} chainId=${chainId} block=${BigInt(block)} USDC=${token} symbol=${symbol} decimals=${decimals} IdentityRegistry=${config.identityRegistry} ReputationRegistry=${config.reputationRegistry} ValidationRegistry=${config.validationRegistry}. No transaction sent.`);

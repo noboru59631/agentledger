@@ -10,3 +10,6 @@ invariant.depth = 64
 invariant.fail_on_revert = false
 fs_permissions = [{ access = "read-write", path = "./" }]
 
+[profile.arc]
+network = "arc"
+

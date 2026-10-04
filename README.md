@@ -17,7 +17,7 @@ AgentLedger is a task-native financial governance prototype for multi-agent syst
 
 ## Current status
 
-The repository includes an experimental, unaudited Solidity contract, a public live app, a real Gemini-backed orchestration route, a wallet-connected Arc Mainnet Demo Mode, and documented Arc Mainnet lifecycle evidence. The mainnet lifecycle used a separately controlled demo wallet; it is not evidence of an independent vendor relationship or service delivery.
+The repository includes an experimental, unaudited Solidity contract candidate, a public live app, a real Gemini-backed orchestration route, a wallet-connected Arc Mainnet Demo Mode, and documented evidence from an earlier deployed contract version. The ERC-8004/Authority candidate in this branch is not deployed. The earlier mainnet lifecycle used a separately controlled demo wallet; it is not evidence of an independent vendor relationship or service delivery.
 
 The three product surfaces are intentionally separate:
 
@@ -27,7 +27,7 @@ The three product surfaces are intentionally separate:
 | AI Orchestrated Demo | Real Gemini proposal when configured, followed by deterministic budget/scope/STOP checks; shows `GEMINI PLAN · POLICY APPROVED` for an accepted live plan | Simulates service costs and never authorizes, settles, or writes to Arc |
 | Arc Mainnet Demo Mode | Injected-wallet connection, live balance/read checks, and explicit user-confirmed `createTask`, `delegate`, `approve`, `executePayment`, and `revokeTask` writes | Does not verify vendors, service delivery, or outcome quality |
 
-The Arc Mainnet Demo Mode is experimental, unaudited, can spend real USDC, requires chain ID `5042`, and caps demo payments in the UI at `0.01 USDC`. Every write requires a separate wallet confirmation; no transaction is sent automatically.
+The Arc Mainnet Demo Mode documents the legacy deployed contract and can spend real USDC if a user deliberately confirms writes. This audit does not authorize or execute Mainnet writes; repository deployment automation is Testnet-only and Mainnet preflight is read-only.
 
 ## AI Orchestrated Demo
 
@@ -37,7 +37,7 @@ The default model is `gemini-2.5-flash-lite` through Gemini API `v1beta`. Set `G
 
 ## Arc Mainnet evidence
 
-**Status: deployed; documented lifecycle rehearsal completed successfully.** Contract: [`0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da`](https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da) on Arc Mainnet, chain ID `5042`, using USDC at `0x3600000000000000000000000000000000000000`.
+**Legacy version status: deployed; documented lifecycle rehearsal completed successfully.** Contract: [`0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da`](https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da) on Arc Mainnet, chain ID `5042`, using USDC at `0x3600000000000000000000000000000000000000`. This address does not contain the ERC-8004 identity, career, Authority cap, STOP/demotion, or work-proof changes in this branch.
 
 - Deployment: [transaction](https://explorer.arc.io/tx/0x7f1287234e0b9049b45aa5ea67857c358ac95fda7b2e1e9ac2516070157d80b8)
 - Task creation: [transaction](https://explorer.arc.io/tx/0x17602976ae236cd73f0c2fb9e0d34e82e8f841a82f7d8c1ff2b33abad9ccb731)
@@ -54,14 +54,16 @@ The recipient was a separately controlled demo wallet, not a verified vendor. Th
 - Task-rooted mandates with deadline, service bitmap, and bounded delegation depth.
 - Delegation with reserved child budgets and non-widening scope, expiry, recipient, and depth.
 - Payment IDs bound to task, mandate, recipient, amount, service class, resource hash, expiry, and nonce.
-- One-use payment IDs, ancestor revocation/expiry checks, ancestor budget accounting, USDC `transferFrom`, and emitted outcome hash.
-- Reentrancy protection around token transfer.
+- Official ERC-8004 Identity Registry ownership checks, one-to-one `agentId` binding, and ownership-transfer-aware administration.
+- Successful-payment-bound work proof, human-approved one-step promotion, per-payment Authority caps, STOP/demotion, and explicit reinstatement.
+- One-use payment IDs, ancestor revocation/expiry/STOP checks, reservation accounting and release, USDC `transferFrom`, and indexed payment/work evidence.
+- Contract-wide reentrancy protection around same-function and cross-function token callbacks.
 
 These are code properties, not an independent audit or proof that a deployed system is safe.
 
 ## Local development
 
-Requirements: Node.js 20+ and Foundry for Solidity tests.
+Requirements: Node.js 20+, upstream Foundry for baseline/local lifecycle tests, and Circle Arc Foundry for Arc execution semantics.
 
 ```powershell
 npm install
@@ -69,6 +71,7 @@ npm start
 # Open http://localhost:4173
 npm test
 forge test -vv
+FOUNDRY_PROFILE=arc arc-forge test -vvv
 ```
 
 ## Differentiation
@@ -77,11 +80,12 @@ Circle/Arc wallets and other wallet products are complementary wallet and settle
 
 ## Limitations and caveats
 
-- The deployed contract is experimental and unaudited.
+- The legacy deployed contract and the newer ERC-8004 candidate are experimental and unaudited.
 - Mainnet writes require explicit wallet confirmation and can spend real USDC.
 - AI demo service costs are simulated; the AI route never writes to the chain.
 - The mainnet recipient was a controlled demo wallet, not a verified vendor.
 - Outcome hashes are caller-supplied lineage, not independent proof of service delivery.
+- Validation Registry is not an MVP dependency; Reputation Registry feedback remains external to AgentLedger's performance-to-Authority conversion.
 - The live app separates fixture simulation, AI orchestration, and wallet-confirmed Mainnet actions; they are not presented as one end-to-end automated settlement system.
 
 ## Remaining hardening / Roadmap
@@ -91,6 +95,8 @@ Circle/Arc wallets and other wallet products are complementary wallet and settle
 - Durable event indexing and independently obtained service evidence.
 - Canonical request signing, vendor identity/dispute flows, refunds, and safer production wallet architecture.
 - Confirm current Arc program eligibility and submit through the official Arc Microgrants form.
+
+Mainnet deployment/broadcast is disabled in `scripts/deploy.ps1`. Complete the Arc Testnet identity registration, CI, deployment, lifecycle evidence, and independent review before any separate Mainnet decision.
 
 ## Primary references
 
