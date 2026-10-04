@@ -1,11 +1,11 @@
 {
   "version": 1,
   "mode": "read-only-preflight",
-  "generatedAt": "2026-10-04T08:09:13.399Z",
+  "generatedAt": "2026-10-04T08:19:41.565Z",
   "network": "Arc Mainnet",
   "chainId": 5042,
   "rpcUrl": "https://rpc.mainnet.arc.io",
-  "latestBlock": "24189393",
+  "latestBlock": "24190645",
   "officialContracts": {
     "usdc": {
       "address": "0x3600000000000000000000000000000000000000",
@@ -30,9 +30,9 @@
   },
   "sender": {
     "address": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
-    "nonce": "29",
-    "nativeUsdc18": "3.42468368682496053",
-    "erc20Usdc6": "3.424683",
+    "nonce": "30",
+    "nativeUsdc18": "3.42257744682496053",
+    "erc20Usdc6": "3.422577",
     "erc8004IdentityBalance": "1",
     "testnetAgentIdOnMainnet": {
       "agentId": "897002",
@@ -134,6 +134,13 @@
     ]
   },
   "lifecyclePlan": {
+    "taskId": "0xdcebbecdd7c326e42e8dce6e7c43f2419ecef6a125df573d42134d43d98232cf",
+    "taskHash": "0xeb927e0596f7056441e9569434d430dc39bf4c246d25ad4ae0853c2eebb4f09e",
+    "taskBudgetBaseUnits": "100000",
+    "delegatedBudgetBaseUnits": "100000",
+    "deadline": "1793750399",
+    "serviceScope": "3",
+    "maxDepth": 3,
     "initialAuthorityCapBaseUnits": "10000",
     "smallPaymentBaseUnits": "5000",
     "promotedAuthorityCapBaseUnits": "50000",
@@ -160,7 +167,7 @@
     "transactionsSent": true,
     "transactionsSentByAutomation": false,
     "productionApproved": false,
-    "status": "CANDIDATE_DEPLOYMENT_CONFIRMED_STOP_BEFORE_LIFECYCLE_SIGNATURE"
+    "status": "TRAINEE_REGISTRATION_CONFIRMED_STOP_BEFORE_TASK_SIGNATURE"
   },
   "transactions": [
     {
@@ -226,6 +233,32 @@
         "usdc": "0x3600000000000000000000000000000000000000",
         "identityRegistry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
         "senderNonce": "29"
+      }
+    },
+    {
+      "sequence": 4,
+      "action": "trainee_registration",
+      "hash": "0x672b5f3fb3810a6ba32af26077c3d6231cc1e5f746b0a4475af56b1517531492",
+      "explorerUrl": "https://explorer.arc.io/tx/0x672b5f3fb3810a6ba32af26077c3d6231cc1e5f746b0a4475af56b1517531492",
+      "status": "success",
+      "blockNumber": "24190368",
+      "blockTimestamp": "2026-10-04T08:17:21.000Z",
+      "from": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "to": "0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e",
+      "valueUsdc": "0",
+      "gasUsed": "105312",
+      "effectiveGasPriceWei": "20000000000",
+      "feeUsdc": "0.00210624",
+      "stateVerification": {
+        "agentId": "1395",
+        "career": "Trainee",
+        "careerValue": 0,
+        "authorityCapBaseUnits": "10000",
+        "completedWorks": "0",
+        "violations": "0",
+        "active": true,
+        "identityAgent": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+        "senderNonce": "30"
       }
     }
   ]
