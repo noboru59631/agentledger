@@ -27,7 +27,8 @@ test('Mainnet parameters and reference demo are pinned separately', () => {
   assert.equal(PUBLIC_DEPLOYMENT_STATUS.testnet.verification, 'pass');
   assert.equal(PUBLIC_DEPLOYMENT_STATUS.testnet.contractAddress, '0x3757ac538e8416388be609c0ca5543abe6072101');
   assert.equal(PUBLIC_DEPLOYMENT_STATUS.mainnet.writesEnabled, false);
-  assert.equal(PUBLIC_DEPLOYMENT_STATUS.mainnet.contractAddress, null);
+  assert.equal(PUBLIC_DEPLOYMENT_STATUS.mainnet.contractAddress, '0x015099f831c247460b467154c73028804Ea38a10');
+  assert.equal(PUBLIC_DEPLOYMENT_STATUS.mainnet.deployment, 'deployed-verification-pass-smoke-pending');
   assert.equal(USDC_ADDRESS, '0x3600000000000000000000000000000000000000');
   assert.equal(USDC_DECIMALS, 6);
 });

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "status": "ready-for-explicit-approval",
-  "generatedAt": "2026-10-04T14:29:31.090Z",
+  "generatedAt": "2026-10-04T14:36:03.004Z",
   "safety": {
     "readOnly": true,
     "transactionSigned": false,
@@ -12,7 +12,7 @@
     "name": "Arc Mainnet",
     "chainId": "5042",
     "rpcUrl": "https://rpc.mainnet.arc.io",
-    "observedBlock": "24234358"
+    "observedBlock": "24235147"
   },
   "deployment": {
     "contract": "MandateGraphV2",

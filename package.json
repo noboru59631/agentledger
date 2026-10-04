@@ -11,7 +11,8 @@
     "lifecycle:arc-testnet:v2": "node scripts/run-arc-testnet-v2-self-custody.mjs",
     "lifecycle:arc-mainnet:preflight": "node scripts/run-arc-mainnet-lifecycle.mjs --preflight",
     "prepare:arc-mainnet:v2": "node scripts/prepare-v2-mainnet-deployment.mjs",
-    "test": "node --test app/policy.test.mjs app/live-policy.test.mjs app/ai-policy.test.mjs app/api/orchestrate.test.mjs api/orchestrate.test.mjs scripts/run-arc-testnet-lifecycle.test.mjs scripts/arc-testnet-v2-lifecycle-lib.test.mjs scripts/run-arc-testnet-v2-self-custody.test.mjs scripts/arc-mainnet-config.test.mjs scripts/deployment-init-code.test.mjs scripts/runtime-bytecode.test.mjs scripts/prepare-v2-mainnet-deployment.test.mjs scripts/run-v2-mainnet-deploy.test.mjs"
+    "verify:arc-mainnet:v2": "node scripts/verify-v2-mainnet-deployment.mjs",
+    "test": "node --test app/policy.test.mjs app/live-policy.test.mjs app/ai-policy.test.mjs app/api/orchestrate.test.mjs api/orchestrate.test.mjs scripts/run-arc-testnet-lifecycle.test.mjs scripts/arc-testnet-v2-lifecycle-lib.test.mjs scripts/run-arc-testnet-v2-self-custody.test.mjs scripts/arc-mainnet-config.test.mjs scripts/deployment-init-code.test.mjs scripts/runtime-bytecode.test.mjs scripts/prepare-v2-mainnet-deployment.test.mjs scripts/run-v2-mainnet-deploy.test.mjs scripts/verify-v2-mainnet-deployment.test.mjs"
   },
   "engines": {
     "node": ">=20"

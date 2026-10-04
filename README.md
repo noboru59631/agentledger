@@ -86,6 +86,12 @@ The Testnet runner remains resumable and requires two encrypted Foundry keystore
 
 The read-only V2 Mainnet deployment preparation is recorded in [`docs/MAINNET_V2_DEPLOYMENT_PLAN.json`](docs/MAINNET_V2_DEPLOYMENT_PLAN.json). It pins the intended bytecode and constructor configuration, checks the official Mainnet contracts, estimates gas and fees, and cannot sign or broadcast a transaction.
 
+### V2 Mainnet deployment status
+
+**Deployment verification: PASS; controlled smoke lifecycle: pending; public writes: locked.** `MandateGraphV2` was explicitly approved and deployed at [`0x015099f831c247460b467154c73028804Ea38a10`](https://explorer.arc.io/address/0x015099f831c247460b467154c73028804Ea38a10). The successful deployment transaction used the reviewed init code and nonce, the deployed normalized runtime matches the local artifact, and the immutable USDC and official Identity Registry configuration match the deployment plan. Receipt, bytecode, configuration, and fee evidence are stored separately in [`docs/MAINNET_V2_DEPLOYMENT_EVIDENCE.json`](docs/MAINNET_V2_DEPLOYMENT_EVIDENCE.json).
+
+`PUBLIC_CONTRACT_ADDRESS` remains `null`, so the browser cannot submit Mainnet writes. Source publication, a separately approved minimal Mainnet smoke lifecycle, zero-residual-allowance verification, and a separate UI-unlock approval remain required. Production Mainnet remains unaudited and NO-GO.
+
 ## Implemented contract behavior
 
 - Task-rooted mandates with deadline, service bitmap, and bounded delegation depth.
@@ -133,7 +139,7 @@ Circle/Arc wallets and other wallet products are complementary wallet and settle
 - Canonical request signing, vendor identity/dispute flows, refunds, and safer production wallet architecture.
 - Confirm current Arc program eligibility and submit through the official Arc Microgrants form.
 
-Mainnet deployment/broadcast remains disabled in repository automation. The controlled Arc Microgrants PoC used separately reviewed local commands and stopped before every signature; production Mainnet remains NO-GO pending independent review and the remaining hardening work.
+General Mainnet deployment/broadcast remains disabled in repository automation. The V2 deployment used a one-transaction, hash-pinned local wrapper after explicit approval and stopped after deployment; public writes and the controlled V2 Mainnet smoke lifecycle remain locked. Production Mainnet remains NO-GO pending independent review and the remaining hardening work.
 
 ## Primary references
 
