@@ -96,6 +96,7 @@ export async function initLiveDemo({ container }) {
     await refreshAllowance();
     controlIds.forEach((id) => { byId(id).disabled = true; });
     byId('agentAdd').disabled = state.chainId !== ARC_CHAIN_ID;
+    if (state.selectedAgentId === null) byId('agentList').textContent = 'Enter an ERC-8004 agentId owned by this wallet.';
     if (state.selectedAgentId !== null && hasPublicContract && state.chainId === ARC_CHAIN_ID) await loadAgent(state.selectedAgentId);
     if (!hasPublicContract) setMessage('Wallet connected. Public V2 is unavailable, so all writes remain locked.', 'ok');
     else setMessage('Wallet connected. Only Agents owned by this wallet and this wallet’s USDC can be used.', 'ok');
@@ -163,11 +164,19 @@ export async function initLiveDemo({ container }) {
     Object.assign(state, { account: null, walletClient: null, selectedAgentId: null, profile: null, task: null, payment: null, chainId: null });
     byId('walletConnect').textContent = 'Connect Wallet'; byId('walletDisconnect').hidden = true; byId('walletSwitch').hidden = true;
     byId('walletChain').textContent = 'Not connected'; byId('walletAddress').textContent = '—'; byId('walletBalance').textContent = 'USDC —'; byId('walletGas').textContent = 'Gas —';
+    byId('agentList').textContent = 'Connect a wallet to verify ownership.';
     controlIds.forEach((id) => { byId(id).disabled = true; });
     setMessage('Disconnected locally. Use your wallet settings to revoke site permissions.', 'ok');
   };
   byId('walletSwitch').onclick = () => switchNetwork().catch((error) => setMessage(error.message, 'error'));
-  byId('agentAdd').onclick = () => loadAgent(BigInt(byId('agentIdInput').value.trim())).catch((error) => setMessage(error.shortMessage || error.message, 'error'));
+  byId('agentAdd').onclick = async () => {
+    let agentId;
+    try { agentId = BigInt(byId('agentIdInput').value.trim()); await loadAgent(agentId); }
+    catch (error) {
+      byId('agentList').textContent = agentId === undefined ? 'Enter a valid numeric ERC-8004 agentId.' : `Agent #${agentId} was not added. ownerOf must match this wallet.`;
+      setMessage(error.shortMessage || error.message, 'error');
+    }
+  };
   byId('agentRegister').onclick = async () => {
     try { if (state.selectedAgentId === null) throw new Error('Verify an owned Agent first.'); await submit('registerAgent', [state.selectedAgentId, state.account, amount('initialCap')], 'Register Agent'); await loadAgent(state.selectedAgentId); }
     catch (error) { setMessage(error.shortMessage || error.message, 'error'); }

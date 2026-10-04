@@ -54,6 +54,7 @@ test('browser surface simulates every contract write and never embeds a signer',
   assert.match(liveDemoSource, /writeContract/);
   assert.match(liveDemoSource, /eth_requestAccounts/);
   assert.match(liveDemoSource, /ownerOf/);
+  assert.match(liveDemoSource, /ownerOf must match this wallet/);
   assert.match(liveDemoSource, /Approve exact amount/);
   assert.match(liveDemoSource, /0n/);
   assert.match(liveDemoSource, /AuthorityCapExceeded/);
