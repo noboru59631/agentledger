@@ -22,12 +22,12 @@ if (heroActions && livePanel) {
 if (livePanel) {
   const intro = document.createElement('div');
   intro.className = 'live-how';
-  intro.innerHTML = '<strong>Read-only Mainnet view</strong><ol><li>Connect your wallet and switch to Arc Mainnet.</li><li>Review your address and USDC balance.</li><li>Open the historical evidence in Arc Explorer.</li></ol>';
+  intro.innerHTML = '<strong>Read-only Mainnet view</strong><ol><li>Connect your wallet and switch to Arc Mainnet.</li><li>Review your address and USDC balance.</li><li>Open the controlled PoC evidence in Arc Explorer.</li></ol>';
   livePanel.querySelector('.live-warning').before(intro);
   const steps = document.createElement('div');
   steps.className = 'wizard-steps';
   steps.setAttribute('aria-label', 'Read-only Mainnet checks');
-  ['Connect wallet', 'Network & balance', 'Review historical evidence'].forEach((label, index) => {
+  ['Connect wallet', 'Network & balance', 'Review PoC evidence'].forEach((label, index) => {
     const item = document.createElement('span'); item.dataset.step = String(index + 1); item.textContent = `${index + 1} ${label}`; steps.append(item);
   });
   livePanel.querySelector('.live-card').prepend(steps);

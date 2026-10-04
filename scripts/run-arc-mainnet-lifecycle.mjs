@@ -300,7 +300,7 @@ async function preflight() {
     throw new Error('Sender balance is below the buffered deployment, registration, lifecycle, and payment estimate. No transaction sent.');
   }
 
-  await writeFile(resolve('docs/MAINNET_AUTHORITY_EVIDENCE.json'), `${JSON.stringify(output, null, 2)}\n`);
+  await writeFile(resolve('docs/MAINNET_AUTHORITY_PREFLIGHT.json'), `${JSON.stringify(output, null, 2)}\n`);
   process.stdout.write(`${JSON.stringify(output, null, 2)}\n`);
 }
 

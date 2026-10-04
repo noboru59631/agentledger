@@ -55,6 +55,8 @@ test('mainnet runner exposes read-only preflight only', async () => {
   assert.match(runner, /STOP_BEFORE_SIGNATURE/);
   assert.match(runner, /normalizedBytecodeMatch/);
   assert.match(runner, /'send', '--from',[\s\S]*'--json', '--create', '\$initCode'/);
+  assert.match(runner, /MAINNET_AUTHORITY_PREFLIGHT\.json/);
+  assert.doesNotMatch(runner, /writeFile\(resolve\('docs\/MAINNET_AUTHORITY_EVIDENCE\.json'/);
 });
 
 test('mainnet execution mode stops before Foundry or RPC work', () => {

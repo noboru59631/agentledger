@@ -17,7 +17,7 @@ AgentLedger is an earned-authority layer for individuals and companies that want
 
 ## Current status
 
-The repository includes an experimental, unaudited Solidity contract candidate, a public live app, a real Gemini-backed orchestration route, a read-only Arc Mainnet evidence surface, and documented evidence from an earlier deployed contract version. The ERC-8004/Authority candidate in this branch is deployed on Arc Testnet only at `0x8135c6E750E240FB352ee6701F2976fF8BA63ea3`; it is not deployed on Mainnet. The earlier mainnet lifecycle used a separately controlled demo wallet; it is not evidence of an independent vendor relationship or service delivery.
+The repository includes an experimental, unaudited Solidity contract candidate, a public live app, a real Gemini-backed orchestration route, and a read-only Arc Mainnet evidence surface. The reviewed ERC-8004/Authority candidate is deployed on Arc Mainnet at `0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e`, where a controlled demonstration completed the earned-authority lifecycle with agentId `1395`. The recipient was a separately controlled demo wallet; this is not evidence of an independent vendor relationship or service delivery.
 
 The three product surfaces are intentionally separate:
 
@@ -25,13 +25,13 @@ The three product surfaces are intentionally separate:
 | --- | --- | --- |
 | Illustrative Simulation | Local fixture state for task, mandate, payment lineage, and revoke/blocked retry | Does not read from Arc or use a wallet |
 | AI Orchestrated Demo | Real Gemini proposal when configured, followed by deterministic budget/scope/STOP checks; shows `GEMINI PLAN · POLICY APPROVED` for an accepted live plan | Simulates service costs and never authorizes, settles, or writes to Arc |
-| Arc Mainnet Read-only Mode | Injected-wallet connection plus chain, address, and USDC balance reads; historical Explorer evidence | Cannot create, delegate, approve, pay, revoke, deploy, or broadcast |
+| Arc Mainnet Read-only Mode | Injected-wallet connection plus chain, address, and USDC balance reads; controlled PoC Explorer evidence | Cannot create, delegate, approve, pay, revoke, deploy, or broadcast |
 
-The Arc Mainnet read-only surface documents the legacy deployed contract without exposing transaction controls. Mainnet broadcast remains disabled in repository automation. `npm run lifecycle:arc-mainnet:preflight` performs only RPC reads and local artifact checks, writes a stopped-before-signature plan to `docs/MAINNET_AUTHORITY_EVIDENCE.json`, and never reads a keystore or asks for a password.
+The Arc Mainnet read-only surface documents the controlled PoC without exposing transaction controls. Mainnet broadcast remains disabled in repository automation. `npm run lifecycle:arc-mainnet:preflight` performs only RPC reads and local artifact checks, writes `docs/MAINNET_AUTHORITY_PREFLIGHT.json`, and never reads a keystore or asks for a password. It cannot overwrite the completed lifecycle evidence.
 
-## Controlled Mainnet PoC plan
+## Controlled Mainnet PoC result
 
-The Arc Microgrants PoC is intentionally separate from a production launch. Its target story is `Trainee → small payment → work proof → human-approved Promotion → larger payment → violation/STOP → Demotion → remediation/reinstatement → AuthorityCapExceeded simulation`.
+**Status: PASS.** The Arc Microgrants PoC is intentionally separate from a production launch. Arc Mainnet recorded `Trainee → small payment → work proof → human-approved Promotion → larger payment → violation/STOP → Demotion → remediation/reinstatement → AuthorityCapExceeded simulation`.
 
 - Initial Authority: `0.01 USDC` (`10,000` base units).
 - Small payment: `0.005 USDC` (`5,000` base units).
@@ -51,17 +51,20 @@ The default model is `gemini-2.5-flash-lite` through Gemini API `v1beta`. Set `G
 
 ## Arc Mainnet evidence
 
-**Legacy version status: deployed; documented lifecycle rehearsal completed successfully.** Contract: [`0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da`](https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da) on Arc Mainnet, chain ID `5042`, using USDC at `0x3600000000000000000000000000000000000000`. This address does not contain the ERC-8004 identity, career, Authority cap, STOP/demotion, or work-proof changes in this branch.
+**Controlled PoC status: PASS.** Contract: [`0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e`](https://explorer.arc.io/address/0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e) on Arc Mainnet, chain ID `5042`, using official USDC and ERC-8004 Identity Registry addresses. [Sourcify verification](https://sourcify.dev/server/v2/contract/5042/0xdc321eb50cff0239a2c43532ecc8b0c41d969a9e) reports exact creation and runtime matches. Mainnet agentId `1395` is separate from Testnet agentId `897002`.
 
-- Deployment: [transaction](https://explorer.arc.io/tx/0x7f1287234e0b9049b45aa5ea67857c358ac95fda7b2e1e9ac2516070157d80b8)
-- Task creation: [transaction](https://explorer.arc.io/tx/0x17602976ae236cd73f0c2fb9e0d34e82e8f841a82f7d8c1ff2b33abad9ccb731)
-- Delegation: [transaction](https://explorer.arc.io/tx/0xe8bb539e56eaa8e94321326870f89d5acc8f2c616cd746ab40566373f8b1eb8b)
-- Payment approval: [transaction](https://explorer.arc.io/tx/0x099e17ef1c9ed66450ebb9390bf3653925d3cdf71bbe7c8dc3b2a7800b4f7be3)
-- Payment execution: [transaction](https://explorer.arc.io/tx/0xba0064e2a6cb13daeffafe90e79fc53c94d25ea7ae0a205e58bbee53c46eec6e)
-- Task revocation: [transaction](https://explorer.arc.io/tx/0x7a694807ac98d25f6e4145fd2fc7f715838269544155309ac69602b66c8f65ba)
-- Retry after revocation: `retryBlocked: true`, verified with a read-only check.
+- Identity registration: [transaction](https://explorer.arc.io/tx/0xf611588bdbcb232d007c0b8d3b559409d51b88acf2ec3ab240486f3ca69fb39a)
+- Candidate deployment: [transaction](https://explorer.arc.io/tx/0x24c2f75b9db21297c92c1e317383a866d074112a9c684eb520228a87baadb5d4)
+- Task and delegation: [task](https://explorer.arc.io/tx/0xf2d21736f5f80a3316ca5abe7f6515897b48929579c79d687135b090a4527176), [delegation](https://explorer.arc.io/tx/0x3aef9c43d4a96fba54c82312386fcefbb6d6d5da8a0756739f98042c86a046d2)
+- Small payment and work proof: [0.005 USDC payment](https://explorer.arc.io/tx/0xc3b12fe6981c8bfb9e5c8ae9677a4083a7db9c3b41fa1d3e2abd985e953d9956), [work proof](https://explorer.arc.io/tx/0x4f95c1fda801598a6b0a635000f0c22b0f3474cad189108bae8a2408a8b8f440)
+- Authority increase and larger payment: [Promotion to 0.05 USDC](https://explorer.arc.io/tx/0x0a492d04a14cf638dfb0bc7638ba4557307fbe3f2ee27ffd328924dbaa0be8fc), [0.02 USDC payment](https://explorer.arc.io/tx/0x8b487174fccac75481fff4aadb87e90cc13484ea6b6ef9da7bed3f095d227009)
+- Authority reduction and remediation: [STOP/Demotion to 0.025 USDC](https://explorer.arc.io/tx/0xa0110d645f957e1c7c1e0d5e9db7a56f808ae51d669a388ee48a4bfe5ed98e17), [reinstatement](https://explorer.arc.io/tx/0x51dbfdf95cb62e891eb8bbc1c22e737544e59dbca5ce9d71a3351aca0543a24b)
+- Over-cap rejection: a `0.026 USDC` `eth_call` reverted with selector `0xe5bbd38c`, decoded as `AuthorityCapExceeded()`. No failed transaction was broadcast and no gas was spent on the rejection.
+- Totals: `0.025000 USDC` executed payment, `0.08705870 USDC` receipt-derived fees across 13 successful transactions, and zero remaining allowance.
 
-The recipient was a separately controlled demo wallet, not a verified vendor. The evidence demonstrates deployment, task-bound payment execution, delegation, revocation, and blocked retry behavior. It does not prove service delivery or output quality. Outcome hashes are caller-supplied lineage data, not independent proof of service delivery. Full parameters are in [`docs/MAINNET_EVIDENCE.json`](docs/MAINNET_EVIDENCE.json).
+The recipient was a separately controlled demo wallet, not a verified vendor. The evidence demonstrates contract enforcement, not service delivery or output quality. Outcome hashes are caller-supplied lineage data. Full transaction hashes, calldata, state checks, fees, and rejection output are in [`docs/MAINNET_AUTHORITY_EVIDENCE.json`](docs/MAINNET_AUTHORITY_EVIDENCE.json).
+
+The prior Mainnet contract at [`0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da`](https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da) is retained only as archived legacy evidence and was not used for this lifecycle.
 
 ## Arc Testnet audit evidence
 
@@ -100,23 +103,23 @@ Circle/Arc wallets and other wallet products are complementary wallet and settle
 
 ## Limitations and caveats
 
-- The legacy Mainnet contract and the ERC-8004/Authority candidate are experimental and unaudited.
-- Mainnet writes are disabled in the browser and automation; historical Mainnet transactions remain linked as evidence.
+- The deployed ERC-8004/Authority candidate is experimental and unaudited; production Mainnet remains NO-GO.
+- Mainnet writes are disabled in the browser and repository automation; controlled PoC transactions remain linked as evidence.
 - AI demo service costs are simulated; the AI route never writes to the chain.
 - The mainnet recipient was a controlled demo wallet, not a verified vendor.
 - Outcome hashes are caller-supplied lineage, not independent proof of service delivery.
 - Validation Registry is not an MVP dependency; Reputation Registry feedback remains external to AgentLedger's performance-to-Authority conversion.
-- The live app separates fixture simulation, AI orchestration, read-only Mainnet evidence, and Arc Testnet lifecycle evidence.
+- The live app separates fixture simulation, AI orchestration, read-only Mainnet evidence, and the controlled onchain lifecycle.
 
 ## Remaining hardening / Roadmap
 
 - Independent contract review, broader adversarial/fuzz testing, and formal verification where appropriate.
-- Verified source publication and production-grade signer/account abstraction.
+- Production-grade signer/account abstraction and operational controls.
 - Durable event indexing and independently obtained service evidence.
 - Canonical request signing, vendor identity/dispute flows, refunds, and safer production wallet architecture.
 - Confirm current Arc program eligibility and submit through the official Arc Microgrants form.
 
-Mainnet deployment/broadcast is disabled in repository automation. The controlled Arc Microgrants PoC uses separately reviewed local commands and stops before every signature; production Mainnet remains NO-GO pending independent review and the remaining hardening work.
+Mainnet deployment/broadcast remains disabled in repository automation. The controlled Arc Microgrants PoC used separately reviewed local commands and stopped before every signature; production Mainnet remains NO-GO pending independent review and the remaining hardening work.
 
 ## Primary references
 

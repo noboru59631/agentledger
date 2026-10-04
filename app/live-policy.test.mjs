@@ -17,7 +17,7 @@ test('read-only Mainnet parameters are pinned', () => {
   assert.equal(ARC_CHAIN_ID, 5042n);
   assert.equal(ARC_RPC_URL, 'https://rpc.mainnet.arc.io');
   assert.equal(ARC_EXPLORER_URL, 'https://explorer.arc.io');
-  assert.equal(CONTRACT_ADDRESS, '0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da');
+  assert.equal(CONTRACT_ADDRESS, '0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e');
   assert.equal(USDC_ADDRESS, '0x3600000000000000000000000000000000000000');
   assert.equal(USDC_DECIMALS, 6);
 });

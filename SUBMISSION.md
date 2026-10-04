@@ -24,17 +24,19 @@ The public app has three clearly separated modes:
 
 1. **Illustrative Simulation:** local fixture task and lineage state; no wallet or Arc reads.
 2. **AI Orchestrated Demo:** real Gemini proposal when configured, deterministic policy approval/rejection, simulated service costs, and STOP propagation; no automatic chain writes.
-3. **Arc Mainnet Read-only Mode:** injected-wallet connection, chain/address/balance reads, and historical Explorer evidence. It exposes no write controls.
+3. **Arc Mainnet Read-only Mode:** injected-wallet connection, chain/address/balance reads, and controlled PoC Explorer evidence. It exposes no write controls.
 
-The ERC-8004/Authority candidate is verified on Arc Testnet. A separately controlled Mainnet PoC is being prepared with `0.005` and `0.02 USDC` payments, exact `0.025 USDC` approval, and a read-only `0.026 USDC` cap rejection. Repository automation cannot broadcast Mainnet transactions.
+The ERC-8004/Authority candidate is deployed and working on Arc Mainnet. A separately controlled PoC completed `0.005` and `0.02 USDC` payments, exact `0.025 USDC` approval, and a read-only `0.026 USDC` cap rejection. Repository automation cannot broadcast Mainnet transactions.
 
 ## Verified Arc Mainnet evidence
 
 - Network: Arc Mainnet, chain ID `5042`.
-- Contract: [0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da](https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da)
-- Lifecycle: [deployment](https://explorer.arc.io/tx/0x7f1287234e0b9049b45aa5ea67857c358ac95fda7b2e1e9ac2516070157d80b8), [task creation](https://explorer.arc.io/tx/0x17602976ae236cd73f0c2fb9e0d34e82e8f841a82f7d8c1ff2b33abad9ccb731), [delegation](https://explorer.arc.io/tx/0xe8bb539e56eaa8e94321326870f89d5acc8f2c616cd746ab40566373f8b1eb8b), [payment execution](https://explorer.arc.io/tx/0xba0064e2a6cb13daeffafe90e79fc53c94d25ea7ae0a205e58bbee53c46eec6e), and [task revocation](https://explorer.arc.io/tx/0x7a694807ac98d25f6e4145fd2fc7f715838269544155309ac69602b66c8f65ba).
-- Payment: `0.01 USDC`; post-revocation retry: `retryBlocked: true` through a read-only check.
-- Structured parameters and hashes: [`docs/MAINNET_EVIDENCE.json`](docs/MAINNET_EVIDENCE.json).
+- Contract: [0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e](https://explorer.arc.io/address/0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e), exact-match [Sourcify verification](https://sourcify.dev/server/v2/contract/5042/0xdc321eb50cff0239a2c43532ecc8b0c41d969a9e).
+- ERC-8004 Identity: Mainnet agentId `1395`, owned by the controlled PoC signer.
+- Lifecycle: [Identity registration](https://explorer.arc.io/tx/0xf611588bdbcb232d007c0b8d3b559409d51b88acf2ec3ab240486f3ca69fb39a), [deployment](https://explorer.arc.io/tx/0x24c2f75b9db21297c92c1e317383a866d074112a9c684eb520228a87baadb5d4), [task](https://explorer.arc.io/tx/0xf2d21736f5f80a3316ca5abe7f6515897b48929579c79d687135b090a4527176), [delegation](https://explorer.arc.io/tx/0x3aef9c43d4a96fba54c82312386fcefbb6d6d5da8a0756739f98042c86a046d2), [small payment](https://explorer.arc.io/tx/0xc3b12fe6981c8bfb9e5c8ae9677a4083a7db9c3b41fa1d3e2abd985e953d9956), [work proof](https://explorer.arc.io/tx/0x4f95c1fda801598a6b0a635000f0c22b0f3474cad189108bae8a2408a8b8f440), [Promotion](https://explorer.arc.io/tx/0x0a492d04a14cf638dfb0bc7638ba4557307fbe3f2ee27ffd328924dbaa0be8fc), [larger payment](https://explorer.arc.io/tx/0x8b487174fccac75481fff4aadb87e90cc13484ea6b6ef9da7bed3f095d227009), [STOP/Demotion](https://explorer.arc.io/tx/0xa0110d645f957e1c7c1e0d5e9db7a56f808ae51d669a388ee48a4bfe5ed98e17), and [reinstatement](https://explorer.arc.io/tx/0x51dbfdf95cb62e891eb8bbc1c22e737544e59dbca5ce9d71a3351aca0543a24b).
+- Authority: `0.01 → 0.05 → 0.025 USDC`; a `0.026 USDC` `eth_call` reverted with `AuthorityCapExceeded()` without broadcasting a failed transaction.
+- Totals: `0.025000 USDC` executed payment and `0.08705870 USDC` receipt-derived fees across 13 successful transactions.
+- Structured parameters, all hashes, calldata, final state, and rejection output: [`docs/MAINNET_AUTHORITY_EVIDENCE.json`](docs/MAINNET_AUTHORITY_EVIDENCE.json).
 
 The recipient was a separately controlled demo wallet, not a verified vendor. This evidence demonstrates an onchain task-bound payment path and authority lifecycle; it does not prove service delivery, service quality, or an independent vendor relationship. Outcome hashes are caller-supplied lineage only.
 
@@ -43,13 +45,13 @@ The recipient was a separately controlled demo wallet, not a verified vendor. Th
 - Solidity MandateGraph prototype with bounded delegation, reserved child budgets, request-bound payment IDs, replay protection, ancestry checks, and reentrancy protection.
 - Node test suite covering browser policy, live-mode guards, AI policy, orchestration routes, lifecycle helpers, and deployment configuration.
 - Foundry contract tests and stateful invariants run in CI with fuzzing.
-- Legacy Arc Mainnet deployment evidence plus ERC-8004/Authority lifecycle evidence on Arc Testnet.
+- Exact-match verified ERC-8004/Authority deployment and controlled lifecycle evidence on Arc Mainnet.
 
 The exact test result belongs to the CI run for the submitted commit; no test count is hard-coded here.
 
 ## Quality and next step
 
-The product is usable as a public demonstration today, while the contract remains experimental. The next hardening steps are independent review, verified source publication, broader adversarial testing, durable event indexing, canonical signing, independent service evidence, and production-grade wallet/account abstraction.
+The product is usable as a public demonstration today, while the contract remains experimental and unaudited. The next hardening steps are independent review, broader adversarial testing, durable event indexing, canonical signing, independent service evidence, and production-grade wallet/account abstraction. Production Mainnet remains NO-GO.
 
 ## Submission links
 
@@ -57,7 +59,7 @@ The product is usable as a public demonstration today, while the contract remain
 - Demo video: https://youtu.be/aXnjAd3mFsE
 - Repository: https://github.com/noboru59631/agentledger
 - Builder profile: https://x.com/noboru59631
-- Arc Mainnet contract: https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da
+- Arc Mainnet contract: https://explorer.arc.io/address/0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e
 
 ## Manual form fields
 
