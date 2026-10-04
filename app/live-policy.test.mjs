@@ -23,12 +23,12 @@ test('Mainnet parameters and reference demo are pinned separately', () => {
   assert.equal(IDENTITY_REGISTRY_ADDRESS, '0x8004A169FB4a3325136EB29fA0ceB6D2e539a432');
   assert.equal(REFERENCE_CONTRACT_ADDRESS, '0xdc321eb50cff0239a2c43532ecc8b0c41d969a9e');
   assert.equal(REFERENCE_AGENT_ID, 1395n);
-  assert.equal(PUBLIC_CONTRACT_ADDRESS, null);
+  assert.equal(PUBLIC_CONTRACT_ADDRESS, '0x015099f831c247460b467154c73028804Ea38a10');
   assert.equal(PUBLIC_DEPLOYMENT_STATUS.testnet.verification, 'pass');
   assert.equal(PUBLIC_DEPLOYMENT_STATUS.testnet.contractAddress, '0x3757ac538e8416388be609c0ca5543abe6072101');
-  assert.equal(PUBLIC_DEPLOYMENT_STATUS.mainnet.writesEnabled, false);
+  assert.equal(PUBLIC_DEPLOYMENT_STATUS.mainnet.writesEnabled, true);
   assert.equal(PUBLIC_DEPLOYMENT_STATUS.mainnet.contractAddress, '0x015099f831c247460b467154c73028804Ea38a10');
-  assert.equal(PUBLIC_DEPLOYMENT_STATUS.mainnet.deployment, 'deployed-source-exact-match-smoke-pending');
+  assert.equal(PUBLIC_DEPLOYMENT_STATUS.mainnet.deployment, 'public-v2-smoke-pass');
   assert.equal(USDC_ADDRESS, '0x3600000000000000000000000000000000000000');
   assert.equal(USDC_DECIMALS, 6);
 });
@@ -37,7 +37,7 @@ test('write readiness requires chain, wallet, and upgraded deployment', () => {
   const wallet = '0x0000000000000000000000000000000000000001';
   assert.throws(() => assertWriteReady({ chainId: 1n, account: wallet, contractAddress: REFERENCE_CONTRACT_ADDRESS }), /Arc Mainnet/);
   assert.throws(() => assertWriteReady({ chainId: ARC_CHAIN_ID, account: null, contractAddress: REFERENCE_CONTRACT_ADDRESS }), /Connect a wallet/);
-  assert.throws(() => assertWriteReady({ chainId: ARC_CHAIN_ID, account: wallet }), /not deployed/);
+  assert.equal(assertWriteReady({ chainId: ARC_CHAIN_ID, account: wallet }), true);
   assert.equal(assertWriteReady({ chainId: ARC_CHAIN_ID, account: wallet, contractAddress: '0x0000000000000000000000000000000000000002' }), true);
 });
 

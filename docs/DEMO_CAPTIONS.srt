@@ -20,15 +20,15 @@ The illustrative fixture view shows the same bounded lineage and blocked retry a
 
 6
 00:00:51,000 --> 00:01:04,000
-Arc Mainnet mode is read-only; historical transaction evidence is shown separately.
+Public V2 verifies Agent ownership and keeps every Mainnet write wallet-signed.
 
 7
 00:01:04,000 --> 00:01:15,000
-Recorded lifecycle payment: 0.01 USDC to a separately controlled demo wallet.
+Verified lifecycle payment: 0.025 USDC with exact approval and final allowance zero.
 
 8
 00:01:15,000 --> 00:01:26,000
-Revocation is onchain; retryBlocked was confirmed by a read-only check.
+STOP reduced Authority; a 0.026 request was rejected by read-only eth_call.
 
 9
 00:01:26,000 --> 00:01:35,000

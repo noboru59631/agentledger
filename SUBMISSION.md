@@ -24,19 +24,19 @@ The public app has three clearly separated modes:
 
 1. **Illustrative Simulation:** local fixture task and lineage state; no wallet or Arc reads.
 2. **AI Orchestrated Demo:** real Gemini proposal when configured, deterministic policy approval/rejection, simulated service costs, and STOP propagation; no automatic chain writes.
-3. **Arc Mainnet Read-only Mode:** injected-wallet connection, chain/address/balance reads, and controlled PoC Explorer evidence. It exposes no write controls.
+3. **Public Arc Mainnet V2 dApp:** wallet connection, network switching, owner-verified Agents, task creation, exact USDC approval/revoke, payment, work proof, promotion, STOP/demotion, reinstatement, and read-only cap testing.
 
-The ERC-8004/Authority candidate is deployed and working on Arc Mainnet. A separately controlled PoC completed `0.005` and `0.02 USDC` payments, exact `0.025 USDC` approval, and a read-only `0.026 USDC` cap rejection. Repository automation cannot broadcast Mainnet transactions.
+The self-custodial V2 contract is deployed, Sourcify exact-match verified, lifecycle-tested, and active in the public dApp. Its controlled Mainnet smoke completed `0.005` and `0.02 USDC` payments, exact `0.025 USDC` approval, and a read-only `0.026 USDC` cap rejection with final allowance zero.
 
 ## Verified Arc Mainnet evidence
 
 - Network: Arc Mainnet, chain ID `5042`.
-- Contract: [0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e](https://explorer.arc.io/address/0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e), exact-match [Sourcify verification](https://sourcify.dev/server/v2/contract/5042/0xdc321eb50cff0239a2c43532ecc8b0c41d969a9e).
+- Contract: [0x015099f831c247460b467154c73028804Ea38a10](https://explorer.arc.io/address/0x015099f831c247460b467154c73028804Ea38a10), exact-match [Sourcify verification](https://sourcify.dev/server/v2/contract/5042/0x015099f831c247460b467154c73028804ea38a10).
 - ERC-8004 Identity: Mainnet agentId `1395`, owned by the controlled PoC signer.
-- Lifecycle: [Identity registration](https://explorer.arc.io/tx/0xf611588bdbcb232d007c0b8d3b559409d51b88acf2ec3ab240486f3ca69fb39a), [deployment](https://explorer.arc.io/tx/0x24c2f75b9db21297c92c1e317383a866d074112a9c684eb520228a87baadb5d4), [task](https://explorer.arc.io/tx/0xf2d21736f5f80a3316ca5abe7f6515897b48929579c79d687135b090a4527176), [delegation](https://explorer.arc.io/tx/0x3aef9c43d4a96fba54c82312386fcefbb6d6d5da8a0756739f98042c86a046d2), [small payment](https://explorer.arc.io/tx/0xc3b12fe6981c8bfb9e5c8ae9677a4083a7db9c3b41fa1d3e2abd985e953d9956), [work proof](https://explorer.arc.io/tx/0x4f95c1fda801598a6b0a635000f0c22b0f3474cad189108bae8a2408a8b8f440), [Promotion](https://explorer.arc.io/tx/0x0a492d04a14cf638dfb0bc7638ba4557307fbe3f2ee27ffd328924dbaa0be8fc), [larger payment](https://explorer.arc.io/tx/0x8b487174fccac75481fff4aadb87e90cc13484ea6b6ef9da7bed3f095d227009), [STOP/Demotion](https://explorer.arc.io/tx/0xa0110d645f957e1c7c1e0d5e9db7a56f808ae51d669a388ee48a4bfe5ed98e17), and [reinstatement](https://explorer.arc.io/tx/0x51dbfdf95cb62e891eb8bbc1c22e737544e59dbca5ce9d71a3351aca0543a24b).
+- Lifecycle: [registration](https://explorer.arc.io/tx/0x3d888ca1482d1f592ebf9faf29edc29c15e03cabf6f890761e67719ed65b1369), [task](https://explorer.arc.io/tx/0xba222a896744a8609e0c6be202e51e69984c5cfbb9930a11e9337076a10564b6), [delegation](https://explorer.arc.io/tx/0x3245b0cb7ae47b2b6e44fcde852f7976166db41765aefb222d893ad0d5c83d50), [small payment](https://explorer.arc.io/tx/0x785ea926de8b7addcb5443ce2b2354bb681c0aea72b0ed330e17d030ffdb8f20), [work proof](https://explorer.arc.io/tx/0xd1f8aa095797c7ce1c04f3fa4073aae277e6c298c2be05fb5dc69dc96ed82ce5), [Promotion](https://explorer.arc.io/tx/0xb4bb0d25ee84924258828debec85c8fe364a7250e7c45f646acb8615709c80db), [larger payment](https://explorer.arc.io/tx/0xb62b204513d6fb83046e51b9de84d2d216f732599c0a798b2f4ebb51cf3280f0), [STOP/Demotion](https://explorer.arc.io/tx/0x1ffad00314e2714a66de6bdee35530a95d2327d2fda8bc57886835f3ae1fb433), and [reinstatement](https://explorer.arc.io/tx/0x37c72e097b1e6ae1321712b8fd710120b24b26236e87b5dfec10b46e991d2e4e).
 - Authority: `0.01 → 0.05 → 0.025 USDC`; a `0.026 USDC` `eth_call` reverted with `AuthorityCapExceeded()` without broadcasting a failed transaction.
-- Totals: `0.025000 USDC` executed payment and `0.08705870 USDC` receipt-derived fees across 13 successful transactions.
-- Structured parameters, all hashes, calldata, final state, and rejection output: [`docs/MAINNET_AUTHORITY_EVIDENCE.json`](docs/MAINNET_AUTHORITY_EVIDENCE.json).
+- Totals: `0.025000 USDC` executed payment and `0.02803583401791` native USDC receipt-derived fees across 10 successful transactions, 0 failed broadcasts.
+- Structured parameters, all hashes, calldata, final state, and isolation output: [`docs/MAINNET_V2_SELF_CUSTODY_EVIDENCE.json`](docs/MAINNET_V2_SELF_CUSTODY_EVIDENCE.json).
 
 The recipient was a separately controlled demo wallet, not a verified vendor. This evidence demonstrates an onchain task-bound payment path and authority lifecycle; it does not prove service delivery, service quality, or an independent vendor relationship. Outcome hashes are caller-supplied lineage only.
 
@@ -59,7 +59,8 @@ The product is usable as a public demonstration today, while the contract remain
 - Demo video: https://youtu.be/aXnjAd3mFsE
 - Repository: https://github.com/noboru59631/agentledger
 - Builder profile: https://x.com/noboru59631
-- Arc Mainnet contract: https://explorer.arc.io/address/0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e
+- Arc Mainnet V2 contract: https://explorer.arc.io/address/0x015099f831c247460b467154c73028804Ea38a10
+- Sourcify exact match: https://sourcify.dev/server/v2/contract/5042/0x015099f831c247460b467154c73028804ea38a10
 
 ## Manual form fields
 

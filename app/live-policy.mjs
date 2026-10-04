@@ -5,7 +5,7 @@ export const ARC_CHAIN_HEX = '0x13b2';
 export const ARC_RPC_URL = 'https://rpc.mainnet.arc.io';
 export const ARC_EXPLORER_URL = 'https://explorer.arc.io';
 export const IDENTITY_REGISTRY_ADDRESS = '0x8004A169FB4a3325136EB29fA0ceB6D2e539a432';
-export const PUBLIC_CONTRACT_ADDRESS = null;
+export const PUBLIC_CONTRACT_ADDRESS = '0x015099f831c247460b467154c73028804Ea38a10';
 export const PUBLIC_DEPLOYMENT_STATUS = V2_DEPLOYMENT_STATUS;
 export const REFERENCE_CONTRACT_ADDRESS = '0xdc321eb50cff0239a2c43532ecc8b0c41d969a9e';
 export const REFERENCE_AGENT_ID = 1395n;
@@ -32,7 +32,7 @@ export function assertWriteReady({ chainId, account, contractAddress = PUBLIC_CO
   assertArcChain(chainId);
   if (!account) throw new Error('Connect a wallet before submitting a transaction.');
   if (!/^0x[\da-fA-F]{40}$/.test(contractAddress ?? '')) {
-    throw new Error('The security-upgraded Mainnet contract is not deployed. Writes remain disabled.');
+    throw new Error('The verified public Mainnet contract is unavailable. Writes remain disabled.');
   }
   return true;
 }

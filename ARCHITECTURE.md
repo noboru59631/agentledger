@@ -2,7 +2,7 @@
 
 ## Product boundary
 
-AgentLedger connects a human task to bounded agent authority, payment attempts, and outcome evidence. The repository has a local fixture simulation, a real Gemini proposal route with deterministic browser policy checks, a legacy Arc Mainnet read-only evidence surface, and an ERC-8004-aware authorization/settlement candidate deployed on Arc Testnet only. The AI demo does not settle; this audit performs no Mainnet writes.
+AgentLedger connects a human task to bounded agent authority, payment attempts, and outcome evidence. The repository has a local fixture simulation, a Gemini proposal route with deterministic policy checks, a legacy V1 read-only reference, and a public self-custodial V2 dApp backed by the exact-match verified Arc Mainnet deployment.
 
 ```text
 Human intent → task metadata hash → root mandate → delegated mandates
@@ -13,12 +13,12 @@ Human intent → task metadata hash → root mandate → delegated mandates
 
 | Component | Intended responsibility | Current implementation |
 | --- | --- | --- |
-| Dashboard | Explain objective, budget, lineage, request checks, receipt, and revocation | Static HTML with simulation, AI proposal, and read-only Mainnet evidence surfaces |
+| Dashboard | Explain objective, budget, lineage, request checks, receipt, and revocation | Static HTML with simulation, AI proposal, and wallet-signed Arc Mainnet V2 controls |
 | AI planner | Propose structured multi-agent plans | Gemini-backed `/api/orchestrate`; deterministic policy decides approval; no settlement |
 | Policy engine | Reproduce deterministic budget, scope, expiry, depth, and STOP checks | Browser policy modules; not a production SDK |
-| MandateGraph | Store identity-bound career authority, enforce budget/scope/expiry/revocation/STOP, execute transfer | Legacy version deployed experimentally on Mainnet; current ERC-8004 candidate deployed and lifecycle-verified on Arc Testnet only |
-| USDC adapter | Configure Arc RPC/token for test execution and Mainnet inspection | Signed execution exists only in the explicit Arc Testnet runner; browser Mainnet mode is read-only |
-| Evidence/indexing | Link chain tx, service evidence, and result | Not implemented; fixture hashes are not proof |
+| MandateGraph | Store identity-bound career authority, enforce budget/scope/expiry/revocation/STOP, execute transfer | V2 deployed and lifecycle-verified on Arc Mainnet; V1 retained read-only |
+| USDC adapter | Configure Arc RPC/token and exact owner approval | Browser writes are simulation-first and signed only by the connected wallet |
+| Evidence/indexing | Link chain tx, service evidence, and result | Structured deployment/lifecycle evidence exists; durable event indexing remains deferred |
 
 ## Contract lifecycle
 
@@ -38,7 +38,7 @@ Before real use, a client still needs to:
 1. Confirm mainnet RPC, chain ID, explorer, gas model, and native/ ERC-20 USDC details in current official Arc documentation.
 2. Create a user-controlled signer or smart account; fund it with Arc USDC and approve the token contract.
 3. The 2026-10-04 Arc Testnet run registered agentId `897002`, deployed the candidate with verified USDC and official Identity Registry addresses, and completed the promotion/demotion lifecycle; repeat this process after any bytecode-affecting change.
-4. The current browser has a chain-aware read-only wallet view; production write support is intentionally absent and would require transaction simulation, robust error handling, and an event indexer.
+4. The browser verifies `ownerOf`, simulates every write, uses the connected wallet, shows pending/success/revert state, and links receipts to Arc Explorer.
 5. Bind the transaction hash plus independently obtained vendor delivery evidence to a durable receipt.
 
 The 2026-10-04 read-only preflight confirmed Arc Testnet chain ID `5042002`, USDC ERC-20 metadata (`USDC`, 6 decimals), bytecode at all three official ERC-8004 registries, and Identity Registry bindings from Reputation/Validation. Validation exists onchain but is not an MVP dependency.
@@ -46,7 +46,7 @@ The 2026-10-04 read-only preflight confirmed Arc Testnet chain ID `5042002`, USD
 ## Trust boundaries
 
 - The model may suggest a task or payment, but it cannot set or bypass contract constraints.
-- The Illustrative Simulation is presentation-only and is not an authorization source. The AI planner is proposal-only; no browser surface can request Mainnet writes.
+- The Illustrative Simulation is presentation-only and is not an authorization source. The AI planner is proposal-only; only the separate self-custodial V2 surface can request wallet-signed Mainnet writes.
 - A task hash proves bytes were committed, not that the task is legitimate.
 - An outcome hash proves only that a caller supplied a hash; it does not attest service quality.
 - USDC, the immutable official ERC-8004 Identity Registry, and the signer are external dependencies; deployment and contract behavior require validation.

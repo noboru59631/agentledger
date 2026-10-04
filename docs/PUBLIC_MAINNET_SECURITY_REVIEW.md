@@ -1,91 +1,61 @@
 # Public Mainnet self-custody security review
 
-Date: 2026-10-04  
-Scope: PR #29 at `dd1972e8fe1364c312ece2a07ec39bece5825675`, controlled Mainnet contract `0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e`, and the proposed public multi-user flow.
+Date: 2026-10-05 JST
+Scope: `MandateGraphV2`, Arc Mainnet deployment `0x015099f831c247460b467154c73028804Ea38a10`, controlled smoke evidence, and the public wallet flow.
 
 ## Decision
 
-**Existing Mainnet contract: NOT SAFE for public multi-user use.**
+**Public interactive Mainnet dApp: READY for an experimental small-amount demo.**
 
-The deployed contract remains valid evidence for the controlled single-wallet PoC, but it must not be exposed as a public write target. The browser keeps it in a separate read-only Reference Demo panel.
+**Production Mainnet custody: NO-GO.** The contracts remain unaudited and the demo does not provide independent offchain service attestation, durable indexing, account recovery, production monitoring, or formal verification.
 
-**Public interactive Mainnet dApp: NOT READY.**
-
-`MandateGraphV2` fixes the identified ownership and payer boundaries and passes local unit, fuzz, invariant, and browser-policy checks. Its Mainnet address is intentionally unset, so every public write remains disabled. A real Arc Testnet broadcast is still required before requesting approval for a new Mainnet deployment.
-
-Production Mainnet remains **NO-GO** while the contracts are unaudited.
-
-## Why V1 cannot be made safe with UI restrictions
-
-| Area | V1 behavior | Public-use finding |
-| --- | --- | --- |
-| ERC-8004 ownership | `ownerOf(agentId)` gates promotion, demotion, and reinstatement | Administration follows an NFT transfer, but execution does not |
-| Agent binding | Profile is keyed by a fixed operational address; `agentId` is permanently bound to it | A transferred identity inherits the old operational address, and the new owner cannot rebind it |
-| Payer | `executePayment` calls `transferFrom(msg.sender, recipient, amount)` | Funds come from the operational caller, not the current ERC-8004 owner or task owner |
-| Multiple owned Agents | One active profile can exist per operational address | A wallet cannot safely use the same self-custodial address for multiple Agent identities |
-| Task isolation | Anyone may create a root task for any registered Agent address | It cannot guarantee that every public task belongs to the connected Agent owner |
-| NFT transfer | New owner gains administration over the existing profile | Old tasks and the old operational address are not automatically invalidated by the transfer |
-| UI mitigation | A UI could hide foreign Agent addresses | Direct contract calls would bypass that restriction, so this is not a security boundary |
-
-V1 retains useful protections: dynamic owner checks for administration, unique `agentId` registration, monotonic delegation, reservation accounting, replay protection, non-reentrancy, STOP propagation, and checked USDC return values. Those protections are not enough to satisfy public self-custody.
+The V1 Mainnet contract remains a read-only reference because its operational-agent/payer model is not suitable for public multi-user self-custody. Public writes target only V2.
 
 ## V2 security model
 
-`contracts/MandateGraphV2.sol` changes the trust boundary from operational-address ownership to ERC-8004 `agentId` ownership.
-
-- Profiles are keyed by `agentId`, so one wallet can own and use multiple Agents.
-- Registration, operational-address updates, promotion, demotion/STOP, and reinstatement use the current `ownerOf(agentId)`.
-- Task IDs are namespaced as `keccak256(owner, taskSalt)`, removing cross-wallet task-ID front-running collisions.
+- Profiles are keyed by ERC-8004 `agentId`.
+- Registration, operational-address updates, promotion, demotion/STOP, and reinstatement follow current `ownerOf(agentId)`.
+- Task IDs are namespaced by task owner and salt.
 - Only the ERC-8004 owner can create a root task for an Agent.
-- Every delegated Agent in a task must have the same current ERC-8004 owner as the task owner.
-- The task owner is the payer. USDC always uses `transferFrom(task.owner, recipient, amount)`.
-- The task owner or the explicitly registered operational Agent can execute bounded work, but neither can change ownership administration rules.
-- A transfer of any Agent identity in the mandate ancestry immediately makes the old task unauthorized. Old tasks cannot spend the previous owner’s remaining allowance.
-- The new NFT owner receives administration rights and can update the operational address, but must create a new task before spending.
-- Payment IDs bind `chainid`, contract address, task, mandate, payer, recipient, amount, service class, resource, expiry, and nonce.
-- State is committed before the USDC call and all write functions use the reentrancy guard; a failed transfer rolls the entire transaction back.
-- Promotion remains owner-signed and work-proof-gated. Demotion halves the cap and activates STOP. Reinstatement clears STOP without restoring the prior cap.
+- Every delegated Agent must share the task owner.
+- The task owner is always the USDC payer.
+- Payment IDs bind chain, contract, task, mandate, payer, recipient, amount, scope, resource, expiry, and nonce.
+- Ownership transfer invalidates old-owner task authority.
+- State commits before USDC transfer and every write entry point uses the reentrancy guard.
+- Promotion requires fresh payment-bound proof plus an owner signature.
+- Demotion halves Authority and activates STOP; reinstatement does not restore the prior cap.
 
-## Two-wallet isolation
+## Mainnet verification
 
-The V2 test suite proves these boundaries with Alice and Bob identities, operational addresses, balances, and allowances:
+- Runtime matches the reviewed local artifact after immutable normalization.
+- Sourcify reports `exact_match` for creation and runtime, match ID `54611987`.
+- Controlled lifecycle: 10 successful transactions, 0 failed broadcasts.
+- Payment total: `0.025` USDC; final allowance: `0`.
+- Authority: `0.01 → 0.05 → 0.025` USDC per payment.
+- STOP/Demotion and reinstatement preserve the reduced cap.
+- `0.026` USDC over-cap request reverted with `AuthorityCapExceeded()` by `eth_call` only.
+- Wallet B administration, task, payment, proof, and delegation attempts reverted with the expected owner/operator errors by `eth_call` only.
 
-- Alice cannot register, administer, update, or create a task for Bob’s Agent.
-- Alice cannot delegate her task to Bob’s Agent.
-- Bob cannot execute Alice’s mandate or spend Alice’s approved USDC.
-- Bob’s own allowance cannot substitute for Alice’s task-owner allowance.
-- An approved operational Agent spends only the task owner’s bounded allowance.
-- An ERC-8004 transfer freezes the old owner’s tasks before any further transfer.
-- The new owner receives administration and can replace the operational address.
+Evidence: [`MAINNET_V2_SELF_CUSTODY_EVIDENCE.json`](MAINNET_V2_SELF_CUSTODY_EVIDENCE.json).
 
-## Verification completed
+## Browser boundary
 
-- Existing Foundry suite retained.
-- V2 unit/access-control/isolation suite: 11 tests.
-- V2 fuzz: 256 runs.
-- V2 invariants: 128 runs × 64 depth = 8,192 calls with zero reverts.
-- V2 replay and cross-function reentrancy regression tests pass.
-- Node/browser policy suite: 46 tests.
-- Solidity build succeeds.
-- Browser visual QA confirms the exact hero copy, owner-only Agent verification, Current Authority hero, exact approval/revoke controls, simulation-first writes, explicit promotion/STOP/reinstatement, and separate #1395 Reference Demo.
-- The #1395 panel reads live Arc Mainnet state and reports Trainee, 0.025 USDC authority, one completed work, one violation, STOP cleared after remediation, and mandate #2 authorized at the reduced cap.
+- Uses an injected wallet; no signer material is embedded or transmitted.
+- Requires Arc Mainnet chain ID `5042`.
+- Adds an Agent to **My Agents** only when `ownerOf` matches the connected wallet.
+- Simulates every contract or USDC write before requesting a wallet signature.
+- Uses exact approval amounts and exposes allowance revoke-to-zero.
+- Shows pending/success/revert status and Arc Explorer links.
+- Keeps V1 Agent #1395 in a separate read-only reference panel.
 
-## Arc Testnet status
+## Validation
 
-The no-broadcast Arc Testnet fork reached official ERC-8004 ownership verification, official USDC balance verification, V2 deployment, Agent registration, task creation, and exact approval. Foundry’s local fork then failed while emulating Arc’s USDC blocklist precompile (`0x1800…0001`) with a local `StackUnderflow`. This is a fork-EVM limitation, not an observed Arc Testnet transaction revert.
+- Foundry: 63/63 tests, fuzz runs 256.
+- V1 invariants: 8,192 calls, 0 reverts.
+- V2 invariants: 8,192 calls, 0 reverts.
+- Node: 66/66 tests.
+- Testnet V2: two-wallet lifecycle, ownership transfer freeze/recovery, exact allowance, and isolation PASS.
 
-The reproducible lifecycle is in `script/PublicLifecycleV2.s.sol`. It covers deploy → register → task → exact approve → small payment → proof → promotion → larger payment → STOP/demotion → reinstatement at reduced cap → over-cap simulation only → final allowance zero.
+## Remaining risk
 
-No real V2 Testnet transaction was broadcast because this environment has no unlocked signer variables, and the task explicitly forbids requesting a private key, seed, or keystore password. The next permitted step is wallet/secure-signer approval of the Arc Testnet lifecycle. Mainnet deployment must not begin until that lifecycle succeeds and its receipts are recorded.
-
-## Mainnet deployment gate
-
-Before requesting Mainnet approval:
-
-1. Broadcast `PublicLifecycleV2Script` on Arc Testnet with an existing self-custodial signer.
-2. Record deployment and lifecycle receipts in `docs/TESTNET_V2_EVIDENCE.json`.
-3. Re-read final Agent state, allowance, payer and recipient balance deltas, and the over-cap error selector.
-4. Verify V2 creation/runtime bytecode.
-5. Re-run Foundry, Node, build, and diff checks.
-
-Only then set `PUBLIC_CONTRACT_ADDRESS` in `app/live-policy.mjs` and request explicit approval for the new Arc Mainnet deployment/broadcast.
+Independent audit, formal methods, canonical offchain evidence, event indexing, production wallet/account abstraction, monitoring, recovery, and operational controls remain required before production custody.
