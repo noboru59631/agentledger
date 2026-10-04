@@ -17,7 +17,7 @@ AgentLedger is a task-native financial governance prototype for multi-agent syst
 
 ## Current status
 
-The repository includes an experimental, unaudited Solidity contract candidate, a public live app, a real Gemini-backed orchestration route, a wallet-connected Arc Mainnet Demo Mode, and documented evidence from an earlier deployed contract version. The ERC-8004/Authority candidate in this branch is not deployed. The earlier mainnet lifecycle used a separately controlled demo wallet; it is not evidence of an independent vendor relationship or service delivery.
+The repository includes an experimental, unaudited Solidity contract candidate, a public live app, a real Gemini-backed orchestration route, a wallet-connected Arc Mainnet Demo Mode, and documented evidence from an earlier deployed contract version. The ERC-8004/Authority candidate in this branch is deployed on Arc Testnet only at `0x8135c6E750E240FB352ee6701F2976fF8BA63ea3`; it is not deployed on Mainnet. The earlier mainnet lifecycle used a separately controlled demo wallet; it is not evidence of an independent vendor relationship or service delivery.
 
 The three product surfaces are intentionally separate:
 
@@ -48,6 +48,12 @@ The default model is `gemini-2.5-flash-lite` through Gemini API `v1beta`. Set `G
 - Retry after revocation: `retryBlocked: true`, verified with a read-only check.
 
 The recipient was a separately controlled demo wallet, not a verified vendor. The evidence demonstrates deployment, task-bound payment execution, delegation, revocation, and blocked retry behavior. It does not prove service delivery or output quality. Outcome hashes are caller-supplied lineage data, not independent proof of service delivery. Full parameters are in [`docs/MAINNET_EVIDENCE.json`](docs/MAINNET_EVIDENCE.json).
+
+## Arc Testnet audit evidence
+
+**ERC-8004/Authority candidate status: deployed and lifecycle verified on Arc Testnet.** Contract: [`0x8135c6E750E240FB352ee6701F2976fF8BA63ea3`](https://testnet.arcscan.app/address/0x8135c6E750E240FB352ee6701F2976fF8BA63ea3), bound to official Identity Registry `0x8004A818BFB912233c491871b3d84c89A494BD9e` and agentId `897002`.
+
+The verified path covered identity registration, candidate deployment, Trainee registration, task/delegation, 0.01 USDC payment, payment-bound work proof, human-approved promotion and Authority increase, 0.02 USDC payment, violation/demotion with STOP and Authority reduction, explicit remediation/reinstatement, and a read-only rejection above the reduced cap. All 12 submitted transactions succeeded; the final over-cap call reverted with `AuthorityCapExceeded`. Full hashes and independently checked final state are in [`docs/TESTNET_EVIDENCE.json`](docs/TESTNET_EVIDENCE.json).
 
 ## Implemented contract behavior
 
@@ -80,7 +86,7 @@ Circle/Arc wallets and other wallet products are complementary wallet and settle
 
 ## Limitations and caveats
 
-- The legacy deployed contract and the newer ERC-8004 candidate are experimental and unaudited.
+- The legacy Mainnet contract and the Arc Testnet ERC-8004 candidate are experimental and unaudited.
 - Mainnet writes require explicit wallet confirmation and can spend real USDC.
 - AI demo service costs are simulated; the AI route never writes to the chain.
 - The mainnet recipient was a controlled demo wallet, not a verified vendor.

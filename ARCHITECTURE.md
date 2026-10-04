@@ -16,7 +16,7 @@ Human intent → task metadata hash → root mandate → delegated mandates
 | Dashboard | Explain objective, budget, lineage, request checks, receipt, and revocation | Static HTML with three explicitly separated demo surfaces |
 | AI planner | Propose structured multi-agent plans | Gemini-backed `/api/orchestrate`; deterministic policy decides approval; no settlement |
 | Policy engine | Reproduce deterministic budget, scope, expiry, depth, and STOP checks | Browser policy modules; not a production SDK |
-| MandateGraph | Store identity-bound career authority, enforce budget/scope/expiry/revocation/STOP, execute transfer | Legacy version deployed experimentally; current ERC-8004 candidate not deployed |
+| MandateGraph | Store identity-bound career authority, enforce budget/scope/expiry/revocation/STOP, execute transfer | Legacy version deployed experimentally on Mainnet; current ERC-8004 candidate deployed and lifecycle-verified on Arc Testnet only |
 | USDC adapter | Configure Arc RPC/token and submit signed transactions | Wallet-connected live demo with explicit confirmation for each write |
 | Evidence/indexing | Link chain tx, service evidence, and result | Not implemented; fixture hashes are not proof |
 
@@ -37,7 +37,7 @@ Before real use, a client still needs to:
 
 1. Confirm mainnet RPC, chain ID, explorer, gas model, and native/ ERC-20 USDC details in current official Arc documentation.
 2. Create a user-controlled signer or smart account; fund it with Arc USDC and approve the token contract.
-3. Register an ERC-8004 identity, then deploy the reviewed candidate to Arc Testnet with the verified USDC and official Identity Registry addresses.
+3. The 2026-10-04 Arc Testnet run registered agentId `897002`, deployed the candidate with verified USDC and official Identity Registry addresses, and completed the promotion/demotion lifecycle; repeat this process after any bytecode-affecting change.
 4. The current demo has a chain-aware wallet client and explicit confirmation; production still needs transaction simulation, robust error handling, and an event indexer.
 5. Bind the transaction hash plus independently obtained vendor delivery evidence to a durable receipt.
 

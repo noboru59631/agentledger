@@ -2,7 +2,7 @@
 
 ## Status
 
-MandateGraph is experimental, unaudited software. A legacy version was deployed for evidence, but the ERC-8004/Authority candidate in this branch has not been deployed. Do not use either version to custody or authorize production funds.
+MandateGraph is experimental, unaudited software. A legacy version was deployed on Mainnet for evidence, and the ERC-8004/Authority candidate in this branch was deployed on Arc Testnet for lifecycle verification. The candidate has not been deployed on Mainnet. Do not use either version to custody or authorize production funds.
 
 ## Controls in source
 
