@@ -1,11 +1,11 @@
 {
   "version": 1,
   "mode": "read-only-preflight",
-  "generatedAt": "2026-10-04T07:39:40.263Z",
+  "generatedAt": "2026-10-04T07:44:15.867Z",
   "network": "Arc Mainnet",
   "chainId": 5042,
   "rpcUrl": "https://rpc.mainnet.arc.io",
-  "latestBlock": "24185910",
+  "latestBlock": "24186455",
   "officialContracts": {
     "usdc": {
       "address": "0x3600000000000000000000000000000000000000",
@@ -30,36 +30,36 @@
   },
   "sender": {
     "address": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
-    "nonce": "26",
-    "nativeUsdc18": "3.48409224682496053",
-    "erc20Usdc6": "3.484092",
+    "nonce": "27",
+    "nativeUsdc18": "3.48342220682496053",
+    "erc20Usdc6": "3.483422",
     "erc8004IdentityBalance": "0",
     "testnetAgentIdOnMainnet": {
       "agentId": "897002",
       "exists": false,
       "owner": null
     },
-    "legacyAllowanceBaseUnits": "10000"
+    "legacyAllowanceBaseUnits": "0"
   },
   "recipient": {
     "address": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
     "independentControlledDemoWallet": true
   },
   "legacyAllowanceCleanup": {
-    "required": true,
+    "required": false,
     "destination": "0x3600000000000000000000000000000000000000",
-    "currentAllowanceBaseUnits": "10000",
+    "currentAllowanceBaseUnits": "0",
     "nextAllowanceBaseUnits": "0",
     "valueUsdc": "0",
     "expectedStateChange": "Set the legacy Mainnet contract USDC allowance to zero before the new controlled PoC.",
     "calldata": "0x095ea7b3000000000000000000000000235dc11cd709542c42eb81c8f341c8f1a2bce0da0000000000000000000000000000000000000000000000000000000000000000",
     "estimate": {
-      "estimatedGas": "38825",
-      "gasLimit": "58238",
+      "estimatedGas": "35863",
+      "gasLimit": "53795",
       "gasPriceWei": "20000000000",
-      "worstCaseFeeUsdc": "0.00116476"
+      "worstCaseFeeUsdc": "0.0010759"
     },
-    "exactLocalCommand": "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send 0x3600000000000000000000000000000000000000 'approve(address,uint256)' 0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da 0 --from 0x03607de69C487BcC460eaD7C4Bdfd25805658b75 --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 58238 --gas-price 20000000000 --json"
+    "exactLocalCommand": "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send 0x3600000000000000000000000000000000000000 'approve(address,uint256)' 0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da 0 --from 0x03607de69C487BcC460eaD7C4Bdfd25805658b75 --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 53795 --gas-price 20000000000 --json"
   },
   "agentRegistration": {
     "required": true,
@@ -135,9 +135,9 @@
   },
   "funding": {
     "feePriceWeiPerGas": "20000000000",
-    "bufferedGasCostUsdc": "0.15013024",
+    "bufferedGasCostUsdc": "0.15004138",
     "paymentAmountUsdc": "0.025000",
-    "minimumFundingUsdc": "0.17513024",
+    "minimumFundingUsdc": "0.17504138",
     "adequateNativeGasAndPayments": true,
     "adequateErc20Payments": true
   },
@@ -145,9 +145,30 @@
     "privateKeyRead": false,
     "keystoreRead": false,
     "passwordRequested": false,
-    "transactionsSent": false,
+    "transactionsSent": true,
+    "transactionsSentByAutomation": false,
     "productionApproved": false,
-    "status": "STOP_BEFORE_SIGNATURE"
+    "status": "LEGACY_ALLOWANCE_CLEANUP_CONFIRMED_STOP_BEFORE_NEXT_SIGNATURE"
   },
-  "transactions": []
+  "transactions": [
+    {
+      "sequence": 1,
+      "action": "legacy_allowance_cleanup",
+      "hash": "0x1dbcf7e050924bf3a8d4164c6bcf628e8e54ce2f1e598df20a93e834fb80fd73",
+      "explorerUrl": "https://explorer.arc.io/tx/0x1dbcf7e050924bf3a8d4164c6bcf628e8e54ce2f1e598df20a93e834fb80fd73",
+      "status": "success",
+      "blockNumber": "24186322",
+      "blockTimestamp": "2026-10-04T07:43:08.000Z",
+      "from": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "to": "0x3600000000000000000000000000000000000000",
+      "valueUsdc": "0",
+      "gasUsed": "33502",
+      "effectiveGasPriceWei": "20000000000",
+      "feeUsdc": "0.00067004",
+      "stateVerification": {
+        "legacyAllowanceBaseUnits": "0",
+        "senderNonce": "27"
+      }
+    }
+  ]
 }
