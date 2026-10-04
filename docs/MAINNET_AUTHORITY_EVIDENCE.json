@@ -1,11 +1,11 @@
 {
   "version": 1,
   "mode": "read-only-preflight",
-  "generatedAt": "2026-10-04T08:29:14.734Z",
+  "generatedAt": "2026-10-04T08:33:06.892Z",
   "network": "Arc Mainnet",
   "chainId": 5042,
   "rpcUrl": "https://rpc.mainnet.arc.io",
-  "latestBlock": "24191774",
+  "latestBlock": "24192232",
   "officialContracts": {
     "usdc": {
       "address": "0x3600000000000000000000000000000000000000",
@@ -30,9 +30,9 @@
   },
   "sender": {
     "address": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
-    "nonce": "32",
-    "nativeUsdc18": "3.41223038682496053",
-    "erc20Usdc6": "3.412230",
+    "nonce": "33",
+    "nativeUsdc18": "3.41112186682496053",
+    "erc20Usdc6": "3.411121",
     "erc8004IdentityBalance": "1",
     "testnetAgentIdOnMainnet": {
       "agentId": "897002",
@@ -145,6 +145,10 @@
     "maxDepth": 3,
     "initialAuthorityCapBaseUnits": "10000",
     "smallPaymentBaseUnits": "5000",
+    "smallPaymentId": "0x9ee0348ad45c9b064c65fd70048c557a81e61dc94476a51e4f7108b424ad6c1f",
+    "smallPaymentResourceHash": "0x4181d4fb0d9c875ba08e3e7fc86b3f86d4ccd184dfd9e6875cc8c4bf1e34579a",
+    "smallPaymentOutcomeHash": "0x08706a7c1b89c0352c169bb4829490111f6cf55e4b8687c5751afb2f26ad3a63",
+    "smallPaymentNonce": "1",
     "promotedAuthorityCapBaseUnits": "50000",
     "largerPaymentBaseUnits": "20000",
     "demotedAuthorityCapBaseUnits": "25000",
@@ -169,7 +173,7 @@
     "transactionsSent": true,
     "transactionsSentByAutomation": false,
     "productionApproved": false,
-    "status": "DELEGATION_CONFIRMED_STOP_BEFORE_MINIMAL_APPROVAL_SIGNATURE"
+    "status": "MINIMAL_APPROVAL_CONFIRMED_STOP_BEFORE_SMALL_PAYMENT_SIGNATURE"
   },
   "transactions": [
     {
@@ -317,6 +321,28 @@
         "authorized": true,
         "allowanceBaseUnits": "0",
         "senderNonce": "32"
+      }
+    },
+    {
+      "sequence": 7,
+      "action": "minimal_usdc_approval",
+      "hash": "0xbedd82c8631f73679be6fcc67822b70118846996801808dd831fd739ab930d6a",
+      "explorerUrl": "https://explorer.arc.io/tx/0xbedd82c8631f73679be6fcc67822b70118846996801808dd831fd739ab930d6a",
+      "status": "success",
+      "blockNumber": "24192012",
+      "blockTimestamp": "2026-10-04T08:31:15.000Z",
+      "from": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "to": "0x3600000000000000000000000000000000000000",
+      "valueUsdc": "0",
+      "gasUsed": "55426",
+      "effectiveGasPriceWei": "20000000000",
+      "feeUsdc": "0.00110852",
+      "stateVerification": {
+        "spender": "0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e",
+        "allowanceBaseUnits": "25000",
+        "allowanceUsdc": "0.025000",
+        "recipientBalanceBeforeBaseUnits": "10000",
+        "senderNonce": "33"
       }
     }
   ]
