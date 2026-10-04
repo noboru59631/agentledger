@@ -210,7 +210,7 @@ async function preflight() {
       estimate: serializeCost(legacyAllowanceCleanupCost),
       exactLocalCommand: powershellCastCommand([
         'send', arcMainnet.usdcAddress, quote('approve(address,uint256)'), arcMainnet.legacyContract, '0',
-        '--account', '$env:ARC_MAINNET_ACCOUNT', '--rpc-url', rpcUrl,
+        '--from', sender, '--account', '$env:ARC_MAINNET_ACCOUNT', '--rpc-url', rpcUrl,
         '--gas-limit', legacyAllowanceCleanupCost.gasLimit, '--gas-price', legacyAllowanceCleanupCost.gasPrice, '--json',
       ]),
     },
@@ -224,7 +224,7 @@ async function preflight() {
       estimate: serializeCost(registrationCost),
       exactLocalCommand: powershellCastCommand([
         'send', arcMainnet.identityRegistry, quote('register(string)(uint256)'), quote(agentUri),
-        '--account', '$env:ARC_MAINNET_ACCOUNT', '--rpc-url', rpcUrl,
+        '--from', sender, '--account', '$env:ARC_MAINNET_ACCOUNT', '--rpc-url', rpcUrl,
         '--gas-limit', registrationCost.gasLimit, '--gas-price', registrationCost.gasPrice, '--json',
       ]),
     },
@@ -260,7 +260,7 @@ async function preflight() {
       exactLocalCommands: [
         '$initCode = node scripts/print-mainnet-init-code.mjs',
         powershellCastCommand([
-          'send', '--create', '$initCode', '--account', '$env:ARC_MAINNET_ACCOUNT', '--rpc-url', rpcUrl,
+          'send', '--create', '$initCode', '--from', sender, '--account', '$env:ARC_MAINNET_ACCOUNT', '--rpc-url', rpcUrl,
           '--gas-limit', deploymentCost.gasLimit, '--gas-price', deploymentCost.gasPrice, '--json',
         ]),
       ],

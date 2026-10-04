@@ -1,11 +1,11 @@
 {
   "version": 1,
   "mode": "read-only-preflight",
-  "generatedAt": "2026-10-04T05:14:13.532Z",
+  "generatedAt": "2026-10-04T05:16:28.225Z",
   "network": "Arc Mainnet",
   "chainId": 5042,
   "rpcUrl": "https://rpc.mainnet.arc.io",
-  "latestBlock": "24168712",
+  "latestBlock": "24168977",
   "officialContracts": {
     "usdc": {
       "address": "0x3600000000000000000000000000000000000000",
@@ -56,10 +56,10 @@
     "estimate": {
       "estimatedGas": "38825",
       "gasLimit": "58238",
-      "gasPriceWei": "20000010000",
-      "worstCaseFeeUsdc": "0.00116476058238"
+      "gasPriceWei": "20000000000",
+      "worstCaseFeeUsdc": "0.00116476"
     },
-    "exactLocalCommand": "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send 0x3600000000000000000000000000000000000000 'approve(address,uint256)' 0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da 0 --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 58238 --gas-price 20000010000 --json"
+    "exactLocalCommand": "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send 0x3600000000000000000000000000000000000000 'approve(address,uint256)' 0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da 0 --from 0x03607de69C487BcC460eaD7C4Bdfd25805658b75 --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 58238 --gas-price 20000000000 --json"
   },
   "agentRegistration": {
     "required": true,
@@ -71,10 +71,10 @@
     "estimate": {
       "estimatedGas": "229908",
       "gasLimit": "344862",
-      "gasPriceWei": "20000010000",
-      "worstCaseFeeUsdc": "0.00689724344862"
+      "gasPriceWei": "20000000000",
+      "worstCaseFeeUsdc": "0.00689724"
     },
-    "exactLocalCommand": "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send 0x8004A169FB4a3325136EB29fA0ceB6D2e539a432 'register(string)(uint256)' 'https://raw.githubusercontent.com/noboru59631/agentledger/bef7831a49127e22d1d1cabd68f18d2e0484d695/app/agent-registration.json' --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 344862 --gas-price 20000010000 --json"
+    "exactLocalCommand": "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send 0x8004A169FB4a3325136EB29fA0ceB6D2e539a432 'register(string)(uint256)' 'https://raw.githubusercontent.com/noboru59631/agentledger/bef7831a49127e22d1d1cabd68f18d2e0484d695/app/agent-registration.json' --from 0x03607de69C487BcC460eaD7C4Bdfd25805658b75 --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 344862 --gas-price 20000000000 --json"
   },
   "candidateDeployment": {
     "required": true,
@@ -113,12 +113,12 @@
     "estimate": {
       "estimatedGas": "2735608",
       "gasLimit": "4103412",
-      "gasPriceWei": "20000010000",
-      "worstCaseFeeUsdc": "0.08206828103412"
+      "gasPriceWei": "20000000000",
+      "worstCaseFeeUsdc": "0.08206824"
     },
     "exactLocalCommands": [
       "$initCode = node scripts/print-mainnet-init-code.mjs",
-      "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send --create $initCode --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 4103412 --gas-price 20000010000 --json"
+      "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send --create $initCode --from 0x03607de69C487BcC460eaD7C4Bdfd25805658b75 --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 4103412 --gas-price 20000000000 --json"
     ]
   },
   "lifecyclePlan": {
@@ -134,10 +134,10 @@
     "reinstatementRequiredForCapSpecificReject": true
   },
   "funding": {
-    "feePriceWeiPerGas": "20000010000",
-    "bufferedGasCostUsdc": "0.15013031506512",
+    "feePriceWeiPerGas": "20000000000",
+    "bufferedGasCostUsdc": "0.15013024",
     "paymentAmountUsdc": "0.025000",
-    "minimumFundingUsdc": "0.17513031506512",
+    "minimumFundingUsdc": "0.17513024",
     "adequateNativeGasAndPayments": true,
     "adequateErc20Payments": true
   },
