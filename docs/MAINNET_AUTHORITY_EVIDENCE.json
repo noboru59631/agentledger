@@ -1,11 +1,11 @@
 {
   "version": 1,
   "mode": "read-only-preflight",
-  "generatedAt": "2026-10-04T08:24:11.716Z",
+  "generatedAt": "2026-10-04T08:29:14.734Z",
   "network": "Arc Mainnet",
   "chainId": 5042,
   "rpcUrl": "https://rpc.mainnet.arc.io",
-  "latestBlock": "24191177",
+  "latestBlock": "24191774",
   "officialContracts": {
     "usdc": {
       "address": "0x3600000000000000000000000000000000000000",
@@ -30,9 +30,9 @@
   },
   "sender": {
     "address": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
-    "nonce": "31",
-    "nativeUsdc18": "3.41713632682496053",
-    "erc20Usdc6": "3.417136",
+    "nonce": "32",
+    "nativeUsdc18": "3.41223038682496053",
+    "erc20Usdc6": "3.412230",
     "erc8004IdentityBalance": "1",
     "testnetAgentIdOnMainnet": {
       "agentId": "897002",
@@ -139,6 +139,7 @@
     "taskBudgetBaseUnits": "100000",
     "delegatedBudgetBaseUnits": "100000",
     "rootMandateId": "1",
+    "childMandateId": "2",
     "deadline": "1793750399",
     "serviceScope": "3",
     "maxDepth": 3,
@@ -168,7 +169,7 @@
     "transactionsSent": true,
     "transactionsSentByAutomation": false,
     "productionApproved": false,
-    "status": "TASK_CREATION_CONFIRMED_STOP_BEFORE_DELEGATION_SIGNATURE"
+    "status": "DELEGATION_CONFIRMED_STOP_BEFORE_MINIMAL_APPROVAL_SIGNATURE"
   },
   "transactions": [
     {
@@ -289,6 +290,33 @@
         "serviceScope": "3",
         "maxDepth": 3,
         "senderNonce": "31"
+      }
+    },
+    {
+      "sequence": 6,
+      "action": "delegation",
+      "hash": "0x3aef9c43d4a96fba54c82312386fcefbb6d6d5da8a0756739f98042c86a046d2",
+      "explorerUrl": "https://explorer.arc.io/tx/0x3aef9c43d4a96fba54c82312386fcefbb6d6d5da8a0756739f98042c86a046d2",
+      "status": "success",
+      "blockNumber": "24191596",
+      "blockTimestamp": "2026-10-04T08:27:44.000Z",
+      "from": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "to": "0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e",
+      "valueUsdc": "0",
+      "gasUsed": "245297",
+      "effectiveGasPriceWei": "20000000000",
+      "feeUsdc": "0.00490594",
+      "stateVerification": {
+        "parentMandateId": "1",
+        "childMandateId": "2",
+        "childAgent": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+        "recipient": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+        "delegatedBudgetBaseUnits": "100000",
+        "childSpentBaseUnits": "0",
+        "parentAllocatedBaseUnits": "100000",
+        "authorized": true,
+        "allowanceBaseUnits": "0",
+        "senderNonce": "32"
       }
     }
   ]
