@@ -1,11 +1,11 @@
 {
   "version": 1,
   "mode": "read-only-preflight",
-  "generatedAt": "2026-10-04T05:16:28.225Z",
+  "generatedAt": "2026-10-04T07:39:40.263Z",
   "network": "Arc Mainnet",
   "chainId": 5042,
   "rpcUrl": "https://rpc.mainnet.arc.io",
-  "latestBlock": "24168977",
+  "latestBlock": "24185910",
   "officialContracts": {
     "usdc": {
       "address": "0x3600000000000000000000000000000000000000",
