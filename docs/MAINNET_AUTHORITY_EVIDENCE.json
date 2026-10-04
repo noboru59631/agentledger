@@ -1,11 +1,11 @@
 {
   "version": 1,
   "mode": "read-only-preflight",
-  "generatedAt": "2026-10-04T08:33:06.892Z",
+  "generatedAt": "2026-10-04T08:39:27.673Z",
   "network": "Arc Mainnet",
   "chainId": 5042,
   "rpcUrl": "https://rpc.mainnet.arc.io",
-  "latestBlock": "24192232",
+  "latestBlock": "24192983",
   "officialContracts": {
     "usdc": {
       "address": "0x3600000000000000000000000000000000000000",
@@ -30,9 +30,9 @@
   },
   "sender": {
     "address": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
-    "nonce": "33",
-    "nativeUsdc18": "3.41112186682496053",
-    "erc20Usdc6": "3.411121",
+    "nonce": "34",
+    "nativeUsdc18": "3.40171670682496053",
+    "erc20Usdc6": "3.401716",
     "erc8004IdentityBalance": "1",
     "testnetAgentIdOnMainnet": {
       "agentId": "897002",
@@ -155,6 +155,7 @@
     "rejectedPaymentBaseUnits": "26000",
     "exactApprovalBaseUnits": "25000",
     "totalExecutedPaymentBaseUnits": "25000",
+    "executedPaymentBaseUnits": "5000",
     "rejectedPaymentMode": "eth_call only",
     "reinstatementRequiredForCapSpecificReject": true
   },
@@ -173,7 +174,7 @@
     "transactionsSent": true,
     "transactionsSentByAutomation": false,
     "productionApproved": false,
-    "status": "MINIMAL_APPROVAL_CONFIRMED_STOP_BEFORE_SMALL_PAYMENT_SIGNATURE"
+    "status": "SMALL_PAYMENT_CONFIRMED_STOP_BEFORE_WORK_PROOF_SIGNATURE"
   },
   "transactions": [
     {
@@ -343,6 +344,37 @@
         "allowanceUsdc": "0.025000",
         "recipientBalanceBeforeBaseUnits": "10000",
         "senderNonce": "33"
+      }
+    },
+    {
+      "sequence": 8,
+      "action": "small_payment",
+      "hash": "0xc3b12fe6981c8bfb9e5c8ae9677a4083a7db9c3b41fa1d3e2abd985e953d9956",
+      "explorerUrl": "https://explorer.arc.io/tx/0xc3b12fe6981c8bfb9e5c8ae9677a4083a7db9c3b41fa1d3e2abd985e953d9956",
+      "status": "success",
+      "blockNumber": "24192629",
+      "blockTimestamp": "2026-10-04T08:36:28.000Z",
+      "from": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "to": "0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e",
+      "recipient": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+      "paymentUsdc": "0.005000",
+      "paymentBaseUnits": "5000",
+      "gasUsed": "220258",
+      "effectiveGasPriceWei": "20000000000",
+      "feeUsdc": "0.00440516",
+      "stateVerification": {
+        "paymentId": "0x9ee0348ad45c9b064c65fd70048c557a81e61dc94476a51e4f7108b424ad6c1f",
+        "paymentUsed": true,
+        "paymentMandateId": "2",
+        "outcomeHash": "0x08706a7c1b89c0352c169bb4829490111f6cf55e4b8687c5751afb2f26ad3a63",
+        "taskSpentBaseUnits": "5000",
+        "rootSpentBaseUnits": "5000",
+        "rootAllocatedBaseUnits": "95000",
+        "childSpentBaseUnits": "5000",
+        "remainingAllowanceBaseUnits": "20000",
+        "recipientBalanceBaseUnits": "15000",
+        "recipientPaymentDeltaBaseUnits": "5000",
+        "senderNonce": "34"
       }
     }
   ]
