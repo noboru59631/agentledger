@@ -17,7 +17,7 @@ AgentLedger is a task-native financial governance prototype for multi-agent syst
 
 ## Current status
 
-The repository includes an experimental, unaudited Solidity contract candidate, a public live app, a real Gemini-backed orchestration route, a wallet-connected Arc Mainnet Demo Mode, and documented evidence from an earlier deployed contract version. The ERC-8004/Authority candidate in this branch is deployed on Arc Testnet only at `0x8135c6E750E240FB352ee6701F2976fF8BA63ea3`; it is not deployed on Mainnet. The earlier mainnet lifecycle used a separately controlled demo wallet; it is not evidence of an independent vendor relationship or service delivery.
+The repository includes an experimental, unaudited Solidity contract candidate, a public live app, a real Gemini-backed orchestration route, a read-only Arc Mainnet evidence surface, and documented evidence from an earlier deployed contract version. The ERC-8004/Authority candidate in this branch is deployed on Arc Testnet only at `0x8135c6E750E240FB352ee6701F2976fF8BA63ea3`; it is not deployed on Mainnet. The earlier mainnet lifecycle used a separately controlled demo wallet; it is not evidence of an independent vendor relationship or service delivery.
 
 The three product surfaces are intentionally separate:
 
@@ -25,9 +25,9 @@ The three product surfaces are intentionally separate:
 | --- | --- | --- |
 | Illustrative Simulation | Local fixture state for task, mandate, payment lineage, and revoke/blocked retry | Does not read from Arc or use a wallet |
 | AI Orchestrated Demo | Real Gemini proposal when configured, followed by deterministic budget/scope/STOP checks; shows `GEMINI PLAN · POLICY APPROVED` for an accepted live plan | Simulates service costs and never authorizes, settles, or writes to Arc |
-| Arc Mainnet Demo Mode | Injected-wallet connection, live balance/read checks, and explicit user-confirmed `createTask`, `delegate`, `approve`, `executePayment`, and `revokeTask` writes | Does not verify vendors, service delivery, or outcome quality |
+| Arc Mainnet Read-only Mode | Injected-wallet connection plus chain, address, and USDC balance reads; historical Explorer evidence | Cannot create, delegate, approve, pay, revoke, deploy, or broadcast |
 
-The Arc Mainnet Demo Mode documents the legacy deployed contract and can spend real USDC if a user deliberately confirms writes. This audit does not authorize or execute Mainnet writes; repository deployment automation is Testnet-only and Mainnet preflight is read-only.
+The Arc Mainnet read-only surface documents the legacy deployed contract without exposing transaction controls. Repository lifecycle/deployment automation is Testnet-only and Mainnet preflight is read-only.
 
 ## AI Orchestrated Demo
 
@@ -87,12 +87,12 @@ Circle/Arc wallets and other wallet products are complementary wallet and settle
 ## Limitations and caveats
 
 - The legacy Mainnet contract and the Arc Testnet ERC-8004 candidate are experimental and unaudited.
-- Mainnet writes require explicit wallet confirmation and can spend real USDC.
+- Mainnet writes are disabled in the browser and automation; historical Mainnet transactions remain linked as evidence.
 - AI demo service costs are simulated; the AI route never writes to the chain.
 - The mainnet recipient was a controlled demo wallet, not a verified vendor.
 - Outcome hashes are caller-supplied lineage, not independent proof of service delivery.
 - Validation Registry is not an MVP dependency; Reputation Registry feedback remains external to AgentLedger's performance-to-Authority conversion.
-- The live app separates fixture simulation, AI orchestration, and wallet-confirmed Mainnet actions; they are not presented as one end-to-end automated settlement system.
+- The live app separates fixture simulation, AI orchestration, read-only Mainnet evidence, and Arc Testnet lifecycle evidence.
 
 ## Remaining hardening / Roadmap
 

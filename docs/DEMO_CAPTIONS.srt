@@ -20,7 +20,7 @@ The illustrative fixture view shows the same bounded lineage and blocked retry a
 
 6
 00:00:51,000 --> 00:01:04,000
-Arc Mainnet Demo Mode requires a wallet and explicit confirmation for each write; evidence is shown separately.
+Arc Mainnet mode is read-only; historical transaction evidence is shown separately.
 
 7
 00:01:04,000 --> 00:01:15,000

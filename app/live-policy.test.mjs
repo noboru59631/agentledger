@@ -1,9 +1,32 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ARC_CHAIN_ID, CONTRACT_ADDRESS, DEMO_PAYMENT_CAP, assertArcChain, assertDistinctRecipient, assertDemoPaymentAmount, buildConfirmationPayload, validateTaskPermissions } from './live-policy.mjs';
+import { readFileSync } from 'node:fs';
+import {
+  ARC_CHAIN_ID, ARC_EXPLORER_URL, ARC_RPC_URL, CONTRACT_ADDRESS, USDC_ADDRESS, USDC_DECIMALS, assertArcChain,
+} from './live-policy.mjs';
 
-test('chain guard accepts Arc Mainnet and rejects other chains', () => { assert.equal(assertArcChain(5042), true); assert.throws(() => assertArcChain(1), /Arc Mainnet/); });
-test('recipient must be distinct from sender', () => { assert.equal(assertDistinctRecipient('0x0000000000000000000000000000000000000001', '0x0000000000000000000000000000000000000002'), true); assert.throws(() => assertDistinctRecipient('0x0000000000000000000000000000000000000001', '0x0000000000000000000000000000000000000001'), /separate/); });
-test('demo payment is capped at 0.01 USDC', () => { assert.equal(assertDemoPaymentAmount(10_000), DEMO_PAYMENT_CAP); assert.throws(() => assertDemoPaymentAmount(10_001), /0.01/); });
-test('confirmation payload is explicit and bound to deployed contract', () => { const payload = buildConfirmationPayload('Approve USDC', { amount: '10000' }); assert.deepEqual(payload, { action: 'Approve USDC', chainId: '5042', contract: CONTRACT_ADDRESS, args: { amount: '10000' } }); });
-test('task permissions require plain-language boundaries', () => { assert.equal(validateTaskPermissions({ budget: '1', deadline: Math.floor(Date.now() / 1000) + 3600, serviceScope: 'research', recipient: '0x2', delegationDepth: '2' }), true); assert.throws(() => validateTaskPermissions({ budget: '1', deadline: 1, serviceScope: 'research', recipient: '0x2', delegationDepth: '2' }), /deadline/); });
+const liveDemoSource = readFileSync(new URL('./live-demo.mjs', import.meta.url), 'utf8');
+const pageSource = readFileSync(new URL('./index.html', import.meta.url), 'utf8');
+
+test('chain guard accepts Arc Mainnet and rejects other chains', () => {
+  assert.equal(assertArcChain(5042), true);
+  assert.throws(() => assertArcChain(1), /Arc Mainnet/);
+});
+
+test('read-only Mainnet parameters are pinned', () => {
+  assert.equal(ARC_CHAIN_ID, 5042n);
+  assert.equal(ARC_RPC_URL, 'https://rpc.mainnet.arc.io');
+  assert.equal(ARC_EXPLORER_URL, 'https://explorer.arc.io');
+  assert.equal(CONTRACT_ADDRESS, '0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da');
+  assert.equal(USDC_ADDRESS, '0x3600000000000000000000000000000000000000');
+  assert.equal(USDC_DECIMALS, 6);
+});
+
+test('Mainnet browser surface is read-only with no contract write client', () => {
+  assert.doesNotMatch(liveDemoSource, /writeContract|createWalletClient|eth_sendTransaction/);
+  assert.match(liveDemoSource, /functionName: 'balanceOf'/);
+  for (const id of ['liveCreate', 'liveDelegate', 'liveApprove', 'liveExecute', 'liveRevoke']) {
+    assert.match(pageSource, new RegExp(`id="${id}" disabled`));
+  }
+  assert.match(pageSource, /READ ONLY · NO BROADCAST/);
+});
