@@ -1,11 +1,11 @@
 {
   "version": 1,
   "mode": "read-only-preflight",
-  "generatedAt": "2026-10-04T08:44:29.099Z",
+  "generatedAt": "2026-10-04T08:49:24.470Z",
   "network": "Arc Mainnet",
   "chainId": 5042,
   "rpcUrl": "https://rpc.mainnet.arc.io",
-  "latestBlock": "24193577",
+  "latestBlock": "24194159",
   "officialContracts": {
     "usdc": {
       "address": "0x3600000000000000000000000000000000000000",
@@ -30,9 +30,9 @@
   },
   "sender": {
     "address": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
-    "nonce": "35",
-    "nativeUsdc18": "3.40031572682496053",
-    "erc20Usdc6": "3.400315",
+    "nonce": "36",
+    "nativeUsdc18": "3.398871784271088138",
+    "erc20Usdc6": "3.398871",
     "erc8004IdentityBalance": "1",
     "testnetAgentIdOnMainnet": {
       "agentId": "897002",
@@ -144,8 +144,8 @@
     "serviceScope": "3",
     "maxDepth": 3,
     "initialAuthorityCapBaseUnits": "10000",
-    "currentCareer": "Trainee",
-    "currentAuthorityCapBaseUnits": "10000",
+    "currentCareer": "Associate",
+    "currentAuthorityCapBaseUnits": "50000",
     "completedWorks": "1",
     "smallPaymentBaseUnits": "5000",
     "smallPaymentId": "0x9ee0348ad45c9b064c65fd70048c557a81e61dc94476a51e4f7108b424ad6c1f",
@@ -154,6 +154,10 @@
     "smallPaymentNonce": "1",
     "promotedAuthorityCapBaseUnits": "50000",
     "largerPaymentBaseUnits": "20000",
+    "largerPaymentId": "0x47996b056a0478c864c28a73b44257e9a8d4c2b7cc0701e96c29f6408649e139",
+    "largerPaymentResourceHash": "0xe40a02c81e2b2bedaf72aeb37a53f9175b3e2a0c5b0c70e5c5529a1b015a7669",
+    "largerPaymentOutcomeHash": "0xcf62885d8ae15e67a0191d798a557a04e0701eee2d2c13293995a8629cf76d01",
+    "largerPaymentNonce": "2",
     "demotedAuthorityCapBaseUnits": "25000",
     "rejectedPaymentBaseUnits": "26000",
     "exactApprovalBaseUnits": "25000",
@@ -177,7 +181,7 @@
     "transactionsSent": true,
     "transactionsSentByAutomation": false,
     "productionApproved": false,
-    "status": "WORK_PROOF_CONFIRMED_STOP_BEFORE_HUMAN_APPROVED_PROMOTION_SIGNATURE"
+    "status": "AUTHORITY_UP_CONFIRMED_STOP_BEFORE_LARGER_PAYMENT_SIGNATURE"
   },
   "transactions": [
     {
@@ -402,6 +406,31 @@
         "lastPromotionWorkCount": "0",
         "promotionEligible": true,
         "senderNonce": "35"
+      }
+    },
+    {
+      "sequence": 10,
+      "action": "human_approved_promotion",
+      "hash": "0x0a492d04a14cf638dfb0bc7638ba4557307fbe3f2ee27ffd328924dbaa0be8fc",
+      "explorerUrl": "https://explorer.arc.io/tx/0x0a492d04a14cf638dfb0bc7638ba4557307fbe3f2ee27ffd328924dbaa0be8fc",
+      "status": "success",
+      "blockNumber": "24193893",
+      "blockTimestamp": "2026-10-04T08:47:09.000Z",
+      "from": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "to": "0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e",
+      "valueUsdc": "0",
+      "gasUsed": "72419",
+      "effectiveGasPriceWei": "20000000000",
+      "feeUsdc": "0.00144838",
+      "stateVerification": {
+        "previousCareer": "Trainee",
+        "currentCareer": "Associate",
+        "previousAuthorityCapBaseUnits": "10000",
+        "currentAuthorityCapBaseUnits": "50000",
+        "lastPromotionWorkCount": "1",
+        "stopped": false,
+        "remainingAllowanceBaseUnits": "20000",
+        "senderNonce": "36"
       }
     }
   ]
