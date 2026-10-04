@@ -1,11 +1,11 @@
 {
   "version": 1,
   "mode": "read-only-preflight",
-  "generatedAt": "2026-10-04T07:44:15.867Z",
+  "generatedAt": "2026-10-04T07:52:15.890Z",
   "network": "Arc Mainnet",
   "chainId": 5042,
   "rpcUrl": "https://rpc.mainnet.arc.io",
-  "latestBlock": "24186455",
+  "latestBlock": "24187401",
   "officialContracts": {
     "usdc": {
       "address": "0x3600000000000000000000000000000000000000",
@@ -30,10 +30,10 @@
   },
   "sender": {
     "address": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
-    "nonce": "27",
-    "nativeUsdc18": "3.48342220682496053",
-    "erc20Usdc6": "3.483422",
-    "erc8004IdentityBalance": "0",
+    "nonce": "28",
+    "nativeUsdc18": "3.47894188682496053",
+    "erc20Usdc6": "3.478941",
+    "erc8004IdentityBalance": "1",
     "testnetAgentIdOnMainnet": {
       "agentId": "897002",
       "exists": false,
@@ -62,7 +62,9 @@
     "exactLocalCommand": "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send 0x3600000000000000000000000000000000000000 'approve(address,uint256)' 0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da 0 --from 0x03607de69C487BcC460eaD7C4Bdfd25805658b75 --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 53795 --gas-price 20000000000 --json"
   },
   "agentRegistration": {
-    "required": true,
+    "required": false,
+    "registeredAgentId": "1395",
+    "registeredOwner": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
     "agentUri": "https://raw.githubusercontent.com/noboru59631/agentledger/bef7831a49127e22d1d1cabd68f18d2e0484d695/app/agent-registration.json",
     "destination": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
     "valueUsdc": "0",
@@ -148,7 +150,7 @@
     "transactionsSent": true,
     "transactionsSentByAutomation": false,
     "productionApproved": false,
-    "status": "LEGACY_ALLOWANCE_CLEANUP_CONFIRMED_STOP_BEFORE_NEXT_SIGNATURE"
+    "status": "IDENTITY_REGISTRATION_CONFIRMED_STOP_BEFORE_DEPLOY_SIGNATURE"
   },
   "transactions": [
     {
@@ -168,6 +170,28 @@
       "stateVerification": {
         "legacyAllowanceBaseUnits": "0",
         "senderNonce": "27"
+      }
+    },
+    {
+      "sequence": 2,
+      "action": "erc8004_identity_registration",
+      "hash": "0xf611588bdbcb232d007c0b8d3b559409d51b88acf2ec3ab240486f3ca69fb39a",
+      "explorerUrl": "https://explorer.arc.io/tx/0xf611588bdbcb232d007c0b8d3b559409d51b88acf2ec3ab240486f3ca69fb39a",
+      "status": "success",
+      "blockNumber": "24187260",
+      "blockTimestamp": "2026-10-04T07:51:04.000Z",
+      "from": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "to": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+      "valueUsdc": "0",
+      "gasUsed": "224016",
+      "effectiveGasPriceWei": "20000000000",
+      "feeUsdc": "0.00448032",
+      "stateVerification": {
+        "agentId": "1395",
+        "owner": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+        "agentUri": "https://raw.githubusercontent.com/noboru59631/agentledger/bef7831a49127e22d1d1cabd68f18d2e0484d695/app/agent-registration.json",
+        "identityBalance": "1",
+        "senderNonce": "28"
       }
     }
   ]
