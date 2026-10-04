@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import {
   ARC_CHAIN_ID, ARC_EXPLORER_URL, ARC_RPC_URL, IDENTITY_REGISTRY_ADDRESS,
-  PUBLIC_CONTRACT_ADDRESS, REFERENCE_AGENT_ID, REFERENCE_CONTRACT_ADDRESS,
+  PUBLIC_CONTRACT_ADDRESS, PUBLIC_DEPLOYMENT_STATUS, REFERENCE_AGENT_ID, REFERENCE_CONTRACT_ADDRESS,
   USDC_ADDRESS, USDC_DECIMALS, assertArcChain, assertOwnedAgent,
   assertWriteReady, exactApprovalAmount,
 } from './live-policy.mjs';
@@ -24,6 +24,10 @@ test('Mainnet parameters and reference demo are pinned separately', () => {
   assert.equal(REFERENCE_CONTRACT_ADDRESS, '0xdc321eb50cff0239a2c43532ecc8b0c41d969a9e');
   assert.equal(REFERENCE_AGENT_ID, 1395n);
   assert.equal(PUBLIC_CONTRACT_ADDRESS, null);
+  assert.equal(PUBLIC_DEPLOYMENT_STATUS.testnet.verification, 'pass');
+  assert.equal(PUBLIC_DEPLOYMENT_STATUS.testnet.contractAddress, '0x3757ac538e8416388be609c0ca5543abe6072101');
+  assert.equal(PUBLIC_DEPLOYMENT_STATUS.mainnet.writesEnabled, false);
+  assert.equal(PUBLIC_DEPLOYMENT_STATUS.mainnet.contractAddress, null);
   assert.equal(USDC_ADDRESS, '0x3600000000000000000000000000000000000000');
   assert.equal(USDC_DECIMALS, 6);
 });

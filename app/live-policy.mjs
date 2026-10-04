@@ -1,9 +1,12 @@
+import { V2_DEPLOYMENT_STATUS } from './deployment-status.mjs';
+
 export const ARC_CHAIN_ID = 5042n;
 export const ARC_CHAIN_HEX = '0x13b2';
 export const ARC_RPC_URL = 'https://rpc.mainnet.arc.io';
 export const ARC_EXPLORER_URL = 'https://explorer.arc.io';
 export const IDENTITY_REGISTRY_ADDRESS = '0x8004A169FB4a3325136EB29fA0ceB6D2e539a432';
 export const PUBLIC_CONTRACT_ADDRESS = null;
+export const PUBLIC_DEPLOYMENT_STATUS = V2_DEPLOYMENT_STATUS;
 export const REFERENCE_CONTRACT_ADDRESS = '0xdc321eb50cff0239a2c43532ecc8b0c41d969a9e';
 export const REFERENCE_AGENT_ID = 1395n;
 export const REFERENCE_OPERATIONAL_AGENT = '0x03607de69C487BcC460eaD7C4Bdfd25805658b75';

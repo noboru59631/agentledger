@@ -74,6 +74,18 @@ The prior Mainnet contract at [`0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da`](htt
 
 The verified path covered identity registration, candidate deployment, Trainee registration, task/delegation, 0.01 USDC payment, payment-bound work proof, human-approved promotion and Authority increase, 0.02 USDC payment, violation/demotion with STOP and Authority reduction, explicit remediation/reinstatement, and a read-only rejection above the reduced cap. All 12 submitted transactions succeeded; the final over-cap call reverted with `AuthorityCapExceeded`. Full hashes and independently checked final state are in [`docs/TESTNET_EVIDENCE.json`](docs/TESTNET_EVIDENCE.json).
 
+### V2 Testnet self-custody verification
+
+**Status: PASS on Arc Testnet.** `MandateGraphV2` is deployed at [`0x3757ac538e8416388be609c0ca5543abe6072101`](https://testnet.arcscan.app/address/0x3757ac538e8416388be609c0ca5543abe6072101). The deployed runtime is 12,377 bytes, its normalized hash is `0xc546ab56c555c9d661c10795752f51457e7226fde6af9d1c3bbd7ce1395e2689`, and it matches the local artifact.
+
+Wallet A (`0x03607de69C487BcC460eaD7C4Bdfd25805658b75`, Agent `897002`) and Wallet B (`0x5e22d5E018ba54f257917527Ad9FC77094919414`, Agent `897006`) completed the live two-wallet lifecycle. Authority moved from `0.01` to `0.05` USDC after an owner-signed promotion, then down to `0.025` USDC after STOP/demotion and stayed reduced after reinstatement. The run executed `0.025` USDC in payments, consumed `0.141374691947062374` in receipt-derived native fees, submitted 16 successful transactions, and broadcast zero intentionally failing transactions.
+
+Read-only simulations proved cross-user isolation for administration, task, payment, work-proof, and delegation actions. A dedicated Agent B NFT transfer proved that old-owner administration and its old task freeze after transfer, new-owner administration follows `ownerOf`, and ownership can be safely restored. The final allowance is zero, both Agent NFTs are back with their original wallets, and a `0.026` USDC over-cap payment was rejected with `AuthorityCapExceeded` through `eth_call` only. Full transaction links, calldata, revert data, state transitions, bytecode checks, and fee totals are in [`docs/TESTNET_V2_SELF_CUSTODY_EVIDENCE.json`](docs/TESTNET_V2_SELF_CUSTODY_EVIDENCE.json).
+
+The Testnet runner remains resumable and requires two encrypted Foundry keystores plus an explicit `ARC_TESTNET_V2_ONLY` broadcast confirmation. It performs read-only chain, sender, recipient, registry, USDC, nonce, balance, allowance, simulation, and bytecode checks before every transaction; the helper `scripts/run-arc-testnet-v2-phase.ps1` prompts for each keystore password without printing or saving it. **Public interactive Mainnet remains NOT READY, production Mainnet remains NO-GO, and Mainnet writes remain locked until a separate V2 deployment is explicitly approved and verified.**
+
+The read-only V2 Mainnet deployment preparation is recorded in [`docs/MAINNET_V2_DEPLOYMENT_PLAN.json`](docs/MAINNET_V2_DEPLOYMENT_PLAN.json). It pins the intended bytecode and constructor configuration, checks the official Mainnet contracts, estimates gas and fees, and cannot sign or broadcast a transaction.
+
 ## Implemented contract behavior
 
 - Task-rooted mandates with deadline, service bitmap, and bounded delegation depth.
