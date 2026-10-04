@@ -260,8 +260,8 @@ async function preflight() {
       exactLocalCommands: [
         '$initCode = node scripts/print-mainnet-init-code.mjs',
         powershellCastCommand([
-          'send', '--create', '$initCode', '--from', sender, '--account', '$env:ARC_MAINNET_ACCOUNT', '--rpc-url', rpcUrl,
-          '--gas-limit', deploymentCost.gasLimit, '--gas-price', deploymentCost.gasPrice, '--json',
+          'send', '--from', sender, '--account', '$env:ARC_MAINNET_ACCOUNT', '--rpc-url', rpcUrl,
+          '--gas-limit', deploymentCost.gasLimit, '--gas-price', deploymentCost.gasPrice, '--json', '--create', '$initCode',
         ]),
       ],
     },

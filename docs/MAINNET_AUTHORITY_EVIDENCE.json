@@ -120,7 +120,7 @@
     },
     "exactLocalCommands": [
       "$initCode = node scripts/print-mainnet-init-code.mjs",
-      "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send --create $initCode --from 0x03607de69C487BcC460eaD7C4Bdfd25805658b75 --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 4103412 --gas-price 20000000000 --json"
+      "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send --from 0x03607de69C487BcC460eaD7C4Bdfd25805658b75 --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 4103412 --gas-price 20000000000 --json --create $initCode"
     ]
   },
   "lifecyclePlan": {
