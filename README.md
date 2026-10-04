@@ -6,6 +6,8 @@
 
 AgentLedger is an earned-authority layer for individuals and companies that want AI agents to complete real work and make bounded USDC payments. A new agent starts with a small task-bound cap, recorded work can support a human-approved increase, and a violation triggers STOP plus an enforceable reduction.
 
+> **Public Mainnet status (2026-10-04): NOT READY.** The deployed V1 contract remains a controlled, read-only reference because its operational-agent/payer model is not safe for public multi-user self-custody. `MandateGraphV2` adds ERC-8004-owner-bound tasks, task-owner USDC payment, NFT-transfer invalidation, and two-wallet isolation. Mainnet writes stay disabled until a real V2 Arc Testnet lifecycle succeeds and a new Mainnet deployment is explicitly approved. See [`docs/PUBLIC_MAINNET_SECURITY_REVIEW.md`](docs/PUBLIC_MAINNET_SECURITY_REVIEW.md).
+
 **AI proposes. Humans approve progression. AgentLedger enforces.** Gemini may propose a plan. ERC-8004 provides portable identity and external reputation or validation inputs. The AgentLedger contract—not ERC-8004—enforces budgets, Authority caps, scope, delegation, replay protection, STOP, and payment rejection.
 
 ## Public links

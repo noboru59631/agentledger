@@ -12,26 +12,6 @@ if (heroActions) {
 }
 
 const livePanel = document.getElementById('live-demo');
-if (heroActions && livePanel) {
-  const launch = document.createElement('a');
-  launch.className = 'button button-primary launch-live';
-  launch.href = '#live-demo';
-  launch.innerHTML = 'Open Mainnet Read-only View <span>↘</span>';
-  heroActions.prepend(launch);
-}
-if (livePanel) {
-  const intro = document.createElement('div');
-  intro.className = 'live-how';
-  intro.innerHTML = '<strong>Read-only Mainnet view</strong><ol><li>Connect your wallet and switch to Arc Mainnet.</li><li>Review your address and USDC balance.</li><li>Open the controlled PoC evidence in Arc Explorer.</li></ol>';
-  livePanel.querySelector('.live-warning').before(intro);
-  const steps = document.createElement('div');
-  steps.className = 'wizard-steps';
-  steps.setAttribute('aria-label', 'Read-only Mainnet checks');
-  ['Connect wallet', 'Network & balance', 'Review PoC evidence'].forEach((label, index) => {
-    const item = document.createElement('span'); item.dataset.step = String(index + 1); item.textContent = `${index + 1} ${label}`; steps.append(item);
-  });
-  livePanel.querySelector('.live-card').prepend(steps);
-}
 
 const state = { revoked: false, spent: 0.2, failed: 0 };
 const byId = (id) => document.getElementById(id);
@@ -71,11 +51,12 @@ document.querySelectorAll('.nav-links a').forEach((link) => link.addEventListene
 }));
 render();
 
-initLiveDemo({ ui: {
-  connect: byId('liveConnect'), switchButton: byId('liveSwitch'), chain: byId('liveChain'), address: byId('liveAddress'), balance: byId('liveBalance'),
-  recipient: byId('liveRecipient'), amount: byId('liveAmount'), budget: byId('liveBudget'), deadline: byId('liveDeadline'), scope: byId('liveScope'), depth: byId('liveDepth'), cap: byId('liveCap'), create: byId('liveCreate'), delegate: byId('liveDelegate'),
-  approve: byId('liveApprove'), execute: byId('liveExecute'), revoke: byId('liveRevoke'), root: byId('liveRoot'), child: byId('liveChild'), tx: byId('liveTx'), message: byId('liveMessage'),
-  modal: byId('liveModal'), modalTitle: byId('liveModalTitle'), modalBody: byId('liveModalBody'), modalConfirm: byId('liveModalConfirm'), modalCancel: byId('liveModalCancel'), steps: document.querySelectorAll('.wizard-steps span'),
-} }).catch((error) => { const message = byId('liveMessage'); message.textContent = `Live mode unavailable until the wallet client loads: ${error.message}`; message.className = 'live-message error'; message.setAttribute('role', 'alert'); });
+initLiveDemo({ container: livePanel }).catch((error) => {
+  const message = byId('liveMessage');
+  if (!message) return;
+  message.textContent = `Live mode unavailable until the wallet client loads: ${error.message}`;
+  message.className = 'live-message error';
+  message.setAttribute('role', 'alert');
+});
 
 initAIDemo();
