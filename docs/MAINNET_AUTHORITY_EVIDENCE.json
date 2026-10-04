@@ -1,11 +1,11 @@
 {
   "version": 1,
   "mode": "read-only-preflight",
-  "generatedAt": "2026-10-04T07:52:15.890Z",
+  "generatedAt": "2026-10-04T08:09:13.399Z",
   "network": "Arc Mainnet",
   "chainId": 5042,
   "rpcUrl": "https://rpc.mainnet.arc.io",
-  "latestBlock": "24187401",
+  "latestBlock": "24189393",
   "officialContracts": {
     "usdc": {
       "address": "0x3600000000000000000000000000000000000000",
@@ -30,9 +30,9 @@
   },
   "sender": {
     "address": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
-    "nonce": "28",
-    "nativeUsdc18": "3.47894188682496053",
-    "erc20Usdc6": "3.478941",
+    "nonce": "29",
+    "nativeUsdc18": "3.42468368682496053",
+    "erc20Usdc6": "3.424683",
     "erc8004IdentityBalance": "1",
     "testnetAgentIdOnMainnet": {
       "agentId": "897002",
@@ -79,7 +79,8 @@
     "exactLocalCommand": "& \"$env:USERPROFILE\\.foundry\\bin\\cast.exe\" send 0x8004A169FB4a3325136EB29fA0ceB6D2e539a432 'register(string)(uint256)' 'https://raw.githubusercontent.com/noboru59631/agentledger/bef7831a49127e22d1d1cabd68f18d2e0484d695/app/agent-registration.json' --from 0x03607de69C487BcC460eaD7C4Bdfd25805658b75 --account $env:ARC_MAINNET_ACCOUNT --rpc-url https://rpc.mainnet.arc.io --gas-limit 344862 --gas-price 20000000000 --json"
   },
   "candidateDeployment": {
-    "required": true,
+    "required": false,
+    "deployedAddress": "0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e",
     "destination": null,
     "valueUsdc": "0",
     "constructor": {
@@ -105,6 +106,15 @@
       "codeBytes": 12154,
       "normalizedRuntimeHash": "0x1c27f49450e7f9bf29643a2fde4284e7295e5e12f6f57ea8a14c681747d9f431",
       "normalizedBytecodeMatch": true
+    },
+    "mainnetCandidate": {
+      "address": "0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e",
+      "codeBytes": 12154,
+      "normalizedRuntimeHash": "0x1c27f49450e7f9bf29643a2fde4284e7295e5e12f6f57ea8a14c681747d9f431",
+      "normalizedBytecodeMatch": true,
+      "usdc": "0x3600000000000000000000000000000000000000",
+      "identityRegistry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+      "nextMandateId": "1"
     },
     "legacyMainnet": {
       "address": "0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da",
@@ -150,7 +160,7 @@
     "transactionsSent": true,
     "transactionsSentByAutomation": false,
     "productionApproved": false,
-    "status": "IDENTITY_REGISTRATION_CONFIRMED_STOP_BEFORE_DEPLOY_SIGNATURE"
+    "status": "CANDIDATE_DEPLOYMENT_CONFIRMED_STOP_BEFORE_LIFECYCLE_SIGNATURE"
   },
   "transactions": [
     {
@@ -192,6 +202,30 @@
         "agentUri": "https://raw.githubusercontent.com/noboru59631/agentledger/bef7831a49127e22d1d1cabd68f18d2e0484d695/app/agent-registration.json",
         "identityBalance": "1",
         "senderNonce": "28"
+      }
+    },
+    {
+      "sequence": 3,
+      "action": "candidate_deployment",
+      "hash": "0x24c2f75b9db21297c92c1e317383a866d074112a9c684eb520228a87baadb5d4",
+      "explorerUrl": "https://explorer.arc.io/tx/0x24c2f75b9db21297c92c1e317383a866d074112a9c684eb520228a87baadb5d4",
+      "status": "success",
+      "blockNumber": "24189204",
+      "blockTimestamp": "2026-10-04T08:07:31.000Z",
+      "from": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "to": null,
+      "contractAddress": "0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e",
+      "valueUsdc": "0",
+      "gasUsed": "2712910",
+      "effectiveGasPriceWei": "20000000000",
+      "feeUsdc": "0.0542582",
+      "stateVerification": {
+        "codeBytes": 12154,
+        "normalizedRuntimeHash": "0x1c27f49450e7f9bf29643a2fde4284e7295e5e12f6f57ea8a14c681747d9f431",
+        "testnetCandidateBytecodeMatch": true,
+        "usdc": "0x3600000000000000000000000000000000000000",
+        "identityRegistry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+        "senderNonce": "29"
       }
     }
   ]
