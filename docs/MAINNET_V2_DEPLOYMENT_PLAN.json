@@ -1,7 +1,7 @@
 {
   "version": 1,
   "status": "ready-for-explicit-approval",
-  "generatedAt": "2026-10-04T14:14:46.664Z",
+  "generatedAt": "2026-10-04T14:29:31.090Z",
   "safety": {
     "readOnly": true,
     "transactionSigned": false,
@@ -12,7 +12,7 @@
     "name": "Arc Mainnet",
     "chainId": "5042",
     "rpcUrl": "https://rpc.mainnet.arc.io",
-    "observedBlock": "24232627"
+    "observedBlock": "24234358"
   },
   "deployment": {
     "contract": "MandateGraphV2",
@@ -29,11 +29,11 @@
     "gas": {
       "estimatedGas": "2784346",
       "proposedGasLimit": "3341216",
-      "gasPriceWei": "20000000000",
-      "estimatedFeeWei": "55686920000000000",
-      "bufferedMaximumFeeWei": "66824320000000000",
-      "estimatedFeeNative": "0.05568692",
-      "bufferedMaximumFeeNative": "0.06682432"
+      "gasPriceWei": "20000010000",
+      "estimatedFeeWei": "55686947843460000",
+      "bufferedMaximumFeeWei": "66824353412160000",
+      "estimatedFeeNative": "0.05568694784346",
+      "bufferedMaximumFeeNative": "0.06682435341216"
     },
     "initialSettings": {
       "agentsRegistered": 0,
