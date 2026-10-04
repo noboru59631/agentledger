@@ -1,11 +1,11 @@
 {
   "version": 1,
   "mode": "read-only-preflight",
-  "generatedAt": "2026-10-04T08:39:27.673Z",
+  "generatedAt": "2026-10-04T08:44:29.099Z",
   "network": "Arc Mainnet",
   "chainId": 5042,
   "rpcUrl": "https://rpc.mainnet.arc.io",
-  "latestBlock": "24192983",
+  "latestBlock": "24193577",
   "officialContracts": {
     "usdc": {
       "address": "0x3600000000000000000000000000000000000000",
@@ -30,9 +30,9 @@
   },
   "sender": {
     "address": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
-    "nonce": "34",
-    "nativeUsdc18": "3.40171670682496053",
-    "erc20Usdc6": "3.401716",
+    "nonce": "35",
+    "nativeUsdc18": "3.40031572682496053",
+    "erc20Usdc6": "3.400315",
     "erc8004IdentityBalance": "1",
     "testnetAgentIdOnMainnet": {
       "agentId": "897002",
@@ -144,6 +144,9 @@
     "serviceScope": "3",
     "maxDepth": 3,
     "initialAuthorityCapBaseUnits": "10000",
+    "currentCareer": "Trainee",
+    "currentAuthorityCapBaseUnits": "10000",
+    "completedWorks": "1",
     "smallPaymentBaseUnits": "5000",
     "smallPaymentId": "0x9ee0348ad45c9b064c65fd70048c557a81e61dc94476a51e4f7108b424ad6c1f",
     "smallPaymentResourceHash": "0x4181d4fb0d9c875ba08e3e7fc86b3f86d4ccd184dfd9e6875cc8c4bf1e34579a",
@@ -174,7 +177,7 @@
     "transactionsSent": true,
     "transactionsSentByAutomation": false,
     "productionApproved": false,
-    "status": "SMALL_PAYMENT_CONFIRMED_STOP_BEFORE_WORK_PROOF_SIGNATURE"
+    "status": "WORK_PROOF_CONFIRMED_STOP_BEFORE_HUMAN_APPROVED_PROMOTION_SIGNATURE"
   },
   "transactions": [
     {
@@ -375,6 +378,30 @@
         "recipientBalanceBaseUnits": "15000",
         "recipientPaymentDeltaBaseUnits": "5000",
         "senderNonce": "34"
+      }
+    },
+    {
+      "sequence": 9,
+      "action": "work_proof",
+      "hash": "0x4f95c1fda801598a6b0a635000f0c22b0f3474cad189108bae8a2408a8b8f440",
+      "explorerUrl": "https://explorer.arc.io/tx/0x4f95c1fda801598a6b0a635000f0c22b0f3474cad189108bae8a2408a8b8f440",
+      "status": "success",
+      "blockNumber": "24193369",
+      "blockTimestamp": "2026-10-04T08:42:44.000Z",
+      "from": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "to": "0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e",
+      "valueUsdc": "0",
+      "gasUsed": "70049",
+      "effectiveGasPriceWei": "20000000000",
+      "feeUsdc": "0.00140098",
+      "stateVerification": {
+        "paymentId": "0x9ee0348ad45c9b064c65fd70048c557a81e61dc94476a51e4f7108b424ad6c1f",
+        "proofHash": "0x08706a7c1b89c0352c169bb4829490111f6cf55e4b8687c5751afb2f26ad3a63",
+        "workProofRecorded": true,
+        "completedWorks": "1",
+        "lastPromotionWorkCount": "0",
+        "promotionEligible": true,
+        "senderNonce": "35"
       }
     }
   ]
