@@ -1,7 +1,8 @@
 import { randomBytes } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
-import { dirname, resolve } from 'node:path';
+import { homedir } from 'node:os';
+import { dirname, join, resolve } from 'node:path';
 
 const rpcUrl = process.env.LIFECYCLE_RPC_URL ?? 'https://rpc.testnet.arc.io';
 const account = process.env.LIFECYCLE_ACCOUNT;
@@ -64,8 +65,9 @@ function run(command, args) {
   });
 }
 
-const forge = process.platform === 'win32' ? 'forge.exe' : 'forge';
-const cast = process.platform === 'win32' ? 'cast.exe' : 'cast';
+const foundryBin = process.env.FOUNDRY_BIN ?? join(homedir(), '.foundry', 'bin');
+const forge = process.platform === 'win32' ? join(foundryBin, 'forge.exe') : 'forge';
+const cast = process.platform === 'win32' ? join(foundryBin, 'cast.exe') : 'cast';
 
 async function castOutput(args) {
   const rpcSubcommands = new Set(['call']);

@@ -18,6 +18,8 @@ test('Arc runner is pinned to testnet and validates chain, token code, and balan
 test('Arc runner uses encrypted account signing and never broadcasts the cap rejection check', () => {
   assert.match(runner, /'--account', account/);
   assert.doesNotMatch(runner, /--private-key|PRIVATE_KEY/);
+  assert.match(runner, /join\(homedir\(\), '\.foundry', 'bin'\)/);
+  assert.match(runner, /process\.env\.FOUNDRY_BIN/);
   assert.match(runner, /rpc\('eth_call', \[\{ from: sender, to: contract, data: retryData \}/);
   assert.match(runner, /const signerOutput = await run\(cast, \['wallet', 'address', '--account', account\]\)/);
   assert.match(runner, /capExceededCheck/);
