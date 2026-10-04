@@ -16,7 +16,7 @@ export const V2_DEPLOYMENT_STATUS = Object.freeze({
   mainnet: Object.freeze({
     network: 'Arc Mainnet',
     chainId: 5_042,
-    deployment: 'deployed-verification-pass-smoke-pending',
+    deployment: 'deployed-source-exact-match-smoke-pending',
     contractAddress: '0x015099f831c247460b467154c73028804Ea38a10',
     evidencePath: 'docs/MAINNET_V2_DEPLOYMENT_EVIDENCE.json',
     writesEnabled: false,

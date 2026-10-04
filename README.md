@@ -88,9 +88,9 @@ The read-only V2 Mainnet deployment preparation is recorded in [`docs/MAINNET_V2
 
 ### V2 Mainnet deployment status
 
-**Deployment verification: PASS; controlled smoke lifecycle: pending; public writes: locked.** `MandateGraphV2` was explicitly approved and deployed at [`0x015099f831c247460b467154c73028804Ea38a10`](https://explorer.arc.io/address/0x015099f831c247460b467154c73028804Ea38a10). The successful deployment transaction used the reviewed init code and nonce, the deployed normalized runtime matches the local artifact, and the immutable USDC and official Identity Registry configuration match the deployment plan. Receipt, bytecode, configuration, and fee evidence are stored separately in [`docs/MAINNET_V2_DEPLOYMENT_EVIDENCE.json`](docs/MAINNET_V2_DEPLOYMENT_EVIDENCE.json).
+**Deployment and source verification: PASS; controlled smoke lifecycle: pending; public writes: locked.** `MandateGraphV2` was explicitly approved and deployed at [`0x015099f831c247460b467154c73028804Ea38a10`](https://explorer.arc.io/address/0x015099f831c247460b467154c73028804Ea38a10). The successful deployment transaction used the reviewed init code and nonce, the deployed normalized runtime matches the local artifact, and the immutable USDC and official Identity Registry configuration match the deployment plan. [Sourcify verification](https://sourcify.dev/server/v2/contract/5042/0x015099f831c247460b467154c73028804ea38a10) reports exact creation and runtime matches. Receipt, bytecode, configuration, source-verification, and fee evidence are stored separately in [`docs/MAINNET_V2_DEPLOYMENT_EVIDENCE.json`](docs/MAINNET_V2_DEPLOYMENT_EVIDENCE.json).
 
-`PUBLIC_CONTRACT_ADDRESS` remains `null`, so the browser cannot submit Mainnet writes. Source publication, a separately approved minimal Mainnet smoke lifecycle, zero-residual-allowance verification, and a separate UI-unlock approval remain required. Production Mainnet remains unaudited and NO-GO.
+`PUBLIC_CONTRACT_ADDRESS` remains `null`, so the browser cannot submit Mainnet writes. A separately approved minimal Mainnet smoke lifecycle, zero-residual-allowance verification, and a separate UI-unlock approval remain required. Production Mainnet remains unaudited and NO-GO.
 
 ## Implemented contract behavior
 

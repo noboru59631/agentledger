@@ -15,6 +15,7 @@ test('V2 Mainnet deployment verifier checks receipt, init code, runtime, and con
   assert.match(source, /nextMandateId/);
   assert.match(source, /Sourcify/);
   assert.match(source, /status === 404/);
+  assert.match(source, /sourceVerification\.status === 'exact_match'/);
 });
 
 test('V2 Mainnet deployment evidence keeps smoke and UI writes disabled', () => {

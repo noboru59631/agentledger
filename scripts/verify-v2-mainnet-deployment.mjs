@@ -13,6 +13,7 @@ const expectedContract = '0x015099f831c247460b467154c73028804Ea38a10';
 const expectedNonce = 39n;
 const outputPath = resolve('docs/MAINNET_V2_DEPLOYMENT_EVIDENCE.json');
 const sourcifyApiUrl = `https://sourcify.dev/server/v2/contract/${arcMainnet.chainId}/${expectedContract.toLowerCase()}`;
+const sourcifyJobId = '897518d7-6bf7-4cbf-92c2-0d59fbb848ae';
 const castBinary = process.env.CAST_BIN
   ?? (process.platform === 'win32' ? resolve(process.env.USERPROFILE, '.foundry/bin/cast.exe') : 'cast');
 const artifact = JSON.parse(await readFile('out/MandateGraphV2.sol/MandateGraphV2.json', 'utf8'));
@@ -132,7 +133,7 @@ const evidence = {
   },
   sourceVerification,
   remainingGates: [
-    'publish explorer or Sourcify source verification',
+    ...(sourceVerification.status === 'exact_match' ? [] : ['publish explorer or Sourcify source verification']),
     'run an explicitly approved controlled Mainnet smoke lifecycle with minimal funds',
     'verify smoke evidence and zero residual allowance',
     'obtain separate approval before enabling the public UI contract address',
@@ -176,5 +177,7 @@ async function readSourcifyStatus() {
     matchId: result.matchId,
     verifiedAt: result.verifiedAt,
     apiUrl: sourcifyApiUrl,
+    jobId: sourcifyJobId,
+    jobUrl: `https://sourcify.dev/server/verify-ui/jobs/${sourcifyJobId}`,
   };
 }

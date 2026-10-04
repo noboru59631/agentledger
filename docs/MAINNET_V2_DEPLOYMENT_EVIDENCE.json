@@ -1,7 +1,7 @@
 {
   "version": 1,
   "status": "pass",
-  "verifiedAt": "2026-10-04T15:37:55.362Z",
+  "verifiedAt": "2026-10-04T15:46:02.572Z",
   "safety": {
     "explicitDeployApprovalReceived": true,
     "transactionSignedLocallyWithEncryptedKeystore": true,
@@ -59,12 +59,16 @@
   },
   "sourceVerification": {
     "provider": "Sourcify",
-    "status": "not_found",
-    "checkedAt": "2026-10-04T15:37:55.361Z",
-    "apiUrl": "https://sourcify.dev/server/v2/contract/5042/0x015099f831c247460b467154c73028804ea38a10"
+    "status": "exact_match",
+    "creationMatch": "exact_match",
+    "runtimeMatch": "exact_match",
+    "matchId": "54611987",
+    "verifiedAt": "2026-10-04T15:44:47Z",
+    "apiUrl": "https://sourcify.dev/server/v2/contract/5042/0x015099f831c247460b467154c73028804ea38a10",
+    "jobId": "897518d7-6bf7-4cbf-92c2-0d59fbb848ae",
+    "jobUrl": "https://sourcify.dev/server/verify-ui/jobs/897518d7-6bf7-4cbf-92c2-0d59fbb848ae"
   },
   "remainingGates": [
-    "publish explorer or Sourcify source verification",
     "run an explicitly approved controlled Mainnet smoke lifecycle with minimal funds",
     "verify smoke evidence and zero residual allowance",
     "obtain separate approval before enabling the public UI contract address"
