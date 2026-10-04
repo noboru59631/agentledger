@@ -1,11 +1,11 @@
 {
   "version": 1,
   "mode": "read-only-preflight",
-  "generatedAt": "2026-10-04T08:19:41.565Z",
+  "generatedAt": "2026-10-04T08:24:11.716Z",
   "network": "Arc Mainnet",
   "chainId": 5042,
   "rpcUrl": "https://rpc.mainnet.arc.io",
-  "latestBlock": "24190645",
+  "latestBlock": "24191177",
   "officialContracts": {
     "usdc": {
       "address": "0x3600000000000000000000000000000000000000",
@@ -30,9 +30,9 @@
   },
   "sender": {
     "address": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
-    "nonce": "30",
-    "nativeUsdc18": "3.42257744682496053",
-    "erc20Usdc6": "3.422577",
+    "nonce": "31",
+    "nativeUsdc18": "3.41713632682496053",
+    "erc20Usdc6": "3.417136",
     "erc8004IdentityBalance": "1",
     "testnetAgentIdOnMainnet": {
       "agentId": "897002",
@@ -138,6 +138,7 @@
     "taskHash": "0xeb927e0596f7056441e9569434d430dc39bf4c246d25ad4ae0853c2eebb4f09e",
     "taskBudgetBaseUnits": "100000",
     "delegatedBudgetBaseUnits": "100000",
+    "rootMandateId": "1",
     "deadline": "1793750399",
     "serviceScope": "3",
     "maxDepth": 3,
@@ -167,7 +168,7 @@
     "transactionsSent": true,
     "transactionsSentByAutomation": false,
     "productionApproved": false,
-    "status": "TRAINEE_REGISTRATION_CONFIRMED_STOP_BEFORE_TASK_SIGNATURE"
+    "status": "TASK_CREATION_CONFIRMED_STOP_BEFORE_DELEGATION_SIGNATURE"
   },
   "transactions": [
     {
@@ -259,6 +260,35 @@
         "active": true,
         "identityAgent": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
         "senderNonce": "30"
+      }
+    },
+    {
+      "sequence": 5,
+      "action": "task_creation",
+      "hash": "0xf2d21736f5f80a3316ca5abe7f6515897b48929579c79d687135b090a4527176",
+      "explorerUrl": "https://explorer.arc.io/tx/0xf2d21736f5f80a3316ca5abe7f6515897b48929579c79d687135b090a4527176",
+      "status": "success",
+      "blockNumber": "24190935",
+      "blockTimestamp": "2026-10-04T08:22:09.000Z",
+      "from": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "to": "0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e",
+      "valueUsdc": "0",
+      "gasUsed": "272056",
+      "effectiveGasPriceWei": "20000000000",
+      "feeUsdc": "0.00544112",
+      "stateVerification": {
+        "taskId": "0xdcebbecdd7c326e42e8dce6e7c43f2419ecef6a125df573d42134d43d98232cf",
+        "taskHash": "0xeb927e0596f7056441e9569434d430dc39bf4c246d25ad4ae0853c2eebb4f09e",
+        "taskOwner": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+        "taskBudgetBaseUnits": "100000",
+        "taskSpentBaseUnits": "0",
+        "deadline": "1793750399",
+        "rootMandateId": "1",
+        "rootAgent": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+        "recipient": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+        "serviceScope": "3",
+        "maxDepth": 3,
+        "senderNonce": "31"
       }
     }
   ]
