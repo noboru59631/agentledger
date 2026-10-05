@@ -1,12 +1,18 @@
-# AgentLedger
+# AgentLedger — Task-Native Financial Governance for AI Agents on Arc
 
-> **Don’t give a new AI agent the keys to your wallet. Let it earn authority.**
+> **Give AI a budget for the job, not a wallet full of money.**
 
-AgentLedger is a self-custodial authority layer for autonomous AI workers on Arc. A new agent starts with a small, contract-enforced USDC limit. Proven work can make it eligible for a human-approved promotion. A violation triggers STOP and reduces its authority.
+**AI proposes. AgentLedger decides.**
+
+AgentLedger is a self-custodial authority and control layer for autonomous AI workers on Arc. A new agent receives task-bound authority with a small, contract-enforced USDC limit. Payment-bound work proof can make it eligible for an owner-approved promotion. A violation triggers STOP/demotion and reduces its authority; reinstatement does not restore the old cap.
 
 [**Open the public Arc Mainnet dApp**](https://agentledger-livid.vercel.app/) · [V2 contract](https://explorer.arc.io/address/0x015099f831c247460b467154c73028804Ea38a10) · [Sourcify exact match](https://sourcify.dev/server/v2/contract/5042/0x015099f831c247460b467154c73028804ea38a10)
 
 **Public interactive Mainnet dApp: READY.** The dApp is experimental and unaudited, accepts only wallet-signed actions, and is intended for small demo amounts. **Production custody: NO-GO.**
+
+## Demo video status
+
+A new V2 Mainnet demo is being produced from the verified public dApp and completed lifecycle evidence. The [previous demo](https://youtu.be/aXnjAd3mFsE) is retained only as a **legacy/reference video** and does not represent the current V2 self-custodial product.
 
 ## Why it exists
 
@@ -35,7 +41,8 @@ Every write is simulated first and then confirmed in the connected wallet. Agent
 |---|---:|---|---|
 | Arc Mainnet | `5042` | [`MandateGraphV2` `0x015099…38a10`](https://explorer.arc.io/address/0x015099f831c247460b467154c73028804Ea38a10) | Current public self-custodial contract |
 | Arc Testnet | `5042002` | [`MandateGraphV2` `0x3757…72101`](https://testnet.arcscan.app/address/0x3757ac538e8416388be609c0ca5543abe6072101) | Two-wallet lifecycle and ownership-transfer verification |
-| Arc Mainnet | `5042` | [`MandateGraph` V1 `0xdC321…969A9e`](https://explorer.arc.io/address/0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e) | Legacy controlled reference demo; read-only in the UI |
+| Arc Mainnet | `5042` | [`MandateGraph` V1 `0xdC321…969A9e`](https://explorer.arc.io/address/0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e) | Legacy Agent `#1395` Authority reference; read-only in the UI |
+| Arc Mainnet | `5042` | [`MandateGraph` predecessor `0x235d…CE0Da`](https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da) | Archived pre-Authority lifecycle evidence; not used by V2 |
 
 Pinned Arc Mainnet dependencies:
 
@@ -151,8 +158,16 @@ The Mainnet recipient is a separately controlled demo wallet, not an independent
 
 ## Legacy V1 reference
 
-The V1 Arc Mainnet contract at [`0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e`](https://explorer.arc.io/address/0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e) and Agent `#1395` remain visible as a read-only reference. That controlled PoC proved the Authority story but used an operational-agent/payer model that is not appropriate for public multi-user self-custody. V1 is **not** the current public write contract.
+The V1 Arc Mainnet contract at [`0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e`](https://explorer.arc.io/address/0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e) and Agent `#1395` remain visible as a read-only reference. That controlled PoC proved the Authority story but used an operational-agent/payer model that is not appropriate for public multi-user self-custody. The earlier contract at [`0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da`](https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da) is older pre-Authority lifecycle evidence. Neither V1 address is the current public write contract.
 
 ## Arc Microgrants story
 
 AgentLedger is deployed and working on Arc Mainnet, uses official Arc USDC and ERC-8004 infrastructure, exposes a public repository and login-free dApp, and records a real `0.025` USDC economic lifecycle. The demo shows the complete product thesis onchain: start small, bind payment to work, let a human approve increased Authority, reduce Authority after a violation, and reject spending above the new cap.
+
+## Links
+
+- Live app: <https://agentledger-livid.vercel.app/>
+- GitHub: <https://github.com/noboru59631/agentledger>
+- Current Arc Mainnet V2 contract: <https://explorer.arc.io/address/0x015099f831c247460b467154c73028804Ea38a10>
+- Sourcify exact match: <https://sourcify.dev/server/v2/contract/5042/0x015099f831c247460b467154c73028804ea38a10>
+- Previous demo — legacy/reference only: <https://youtu.be/aXnjAd3mFsE>
