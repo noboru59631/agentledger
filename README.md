@@ -12,7 +12,7 @@ AgentLedger is a self-custodial authority and control layer for autonomous AI wo
 
 ## Demo video status
 
-A new V2 Mainnet demo is being produced from the verified public dApp and completed lifecycle evidence. The [previous demo](https://youtu.be/aXnjAd3mFsE) is retained only as a **legacy/reference video** and does not represent the current V2 self-custodial product.
+The new V2 Mainnet demo has been completed from the verified public dApp and lifecycle evidence and is awaiting publication. The [previous demo](https://youtu.be/aXnjAd3mFsE) is retained only as a **legacy/reference video** and does not represent the current V2 self-custodial product.
 
 ## Why it exists
 

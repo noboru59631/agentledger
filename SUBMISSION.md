@@ -56,7 +56,7 @@ The product is usable as a public demonstration today, while the contract remain
 ## Submission links
 
 - Live app: https://agentledger-livid.vercel.app/
-- Demo video: https://youtu.be/aXnjAd3mFsE
+- Demo video: publish the completed V2 Mainnet demo and replace this line with its YouTube URL
 - Repository: https://github.com/noboru59631/agentledger
 - Builder profile: https://x.com/noboru59631
 - Arc Mainnet V2 contract: https://explorer.arc.io/address/0x015099f831c247460b467154c73028804Ea38a10
