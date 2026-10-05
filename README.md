@@ -108,7 +108,7 @@ ERC-8004 provides portable Agent identity plus reputation and validation inputs.
 
 ## Security properties and tests
 
-- Foundry: **63/63 tests PASS** with fuzz runs `>=256`.
+- Foundry: **68/68 tests PASS** with fuzz runs `>=256`.
 - V1 invariant suite: **8,192 calls, 0 reverts**.
 - V2 invariant suite: **8,192 calls, 0 reverts**.
 - Node: **66/66 tests PASS**.
