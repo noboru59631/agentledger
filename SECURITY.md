@@ -2,7 +2,7 @@
 
 ## Status
 
-MandateGraph is experimental, unaudited software. It has not been deployed. The JavaScript demo is fixture-only and makes no chain calls. Do not use this contract to custody or authorize production funds.
+MandateGraph is experimental, unaudited software. A legacy version was deployed on Mainnet for evidence, and the ERC-8004/Authority candidate in this branch was deployed on Arc Testnet for lifecycle verification. The candidate has not been deployed on Mainnet. Do not use either version to custody or authorize production funds.
 
 ## Controls in source
 
@@ -12,18 +12,21 @@ MandateGraph is experimental, unaudited software. It has not been deployed. The 
 - Delegation cannot extend expiry, widen service bitmap, widen a fixed recipient, or exceed bounded depth.
 - A payment caller must be the mandate agent; request expiry, recipient, service scope, unique request ID, task budget, and each ancestor's available budget are checked.
 - Revocation and expiry are validated over the full ancestry. Mandates are revoked leaf-first, releasing only unused reservation; spent authority remains spent.
+- Agent registration verifies ERC-8004 token existence/current ownership, binds each `agentId` once, and rechecks current ownership for career administration.
+- Authority caps and STOP are enforced across the full ancestry; promotion consumes fresh successful-payment-bound proof and demotion invalidates old proof.
 - The payment ID is recomputed onchain from request fields, preventing callers from changing fields while reusing an arbitrary ID.
-- Payment effects are committed before external token interaction; the transfer function is guarded against reentrancy.
-- Zero-address or no-code USDC constructor inputs and empty outcome hashes are rejected.
+- Payment effects and event evidence are committed before external token interaction; every state-changing entry point shares one reentrancy guard.
+- Zero-address or no-code USDC/Identity Registry constructor inputs and empty outcome hashes are rejected.
 
 ## Known limits and risks
 
-- This is not an audit. Foundry fuzz and invariant tests have been added but still require an executable Foundry run; Slither and independent review also remain outstanding.
+- This is not an independent audit. Foundry unit, fuzz, invariant, same-function reentrancy, and cross-function reentrancy coverage is present; Slither/formal verification and independent review remain outstanding.
 - `outcomeHash` is caller-supplied and is not evidence that a vendor delivered anything.
 - The contract's `IERC20` integration is conventional ERC-20 `transferFrom`; Arc-specific USDC behavior, 6-decimal token units versus 18-decimal native gas units, blocklist behavior, and transfer failure semantics need live documentation and test validation.
 - Mandate ancestry checks are linear in depth. Root depth is capped at 32, which bounds but does not eliminate gas considerations.
 - Direct agent-held USDC and allowances expose operational key and approval risk. A production smart-account or wallet-policy integration is needed.
 - Token blocklisting, malicious tokens, compromised agent keys, owner-key loss, bad task metadata, false service claims, refunds, and vendor disputes are not resolved by this prototype.
+- Identity Registry upgrades or compromise can change ownership answers; the candidate intentionally trusts the immutable official registry address supplied at deployment.
 - Contract may need additional hardening around task-root lookup, nonzero owner/recipient policy, event completeness, explicit payment receipt state, and exact Arc token interface before deployment.
 
 ## Required test matrix before deployment

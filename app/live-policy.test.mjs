@@ -1,9 +1,95 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ARC_CHAIN_ID, CONTRACT_ADDRESS, DEMO_PAYMENT_CAP, assertArcChain, assertDistinctRecipient, assertDemoPaymentAmount, buildConfirmationPayload, validateTaskPermissions } from './live-policy.mjs';
+import { readFileSync } from 'node:fs';
+import {
+  ARC_CHAIN_ID, ARC_EXPLORER_URL, ARC_RPC_URL, IDENTITY_REGISTRY_ADDRESS,
+  PUBLIC_CONTRACT_ADDRESS, PUBLIC_DEPLOYMENT_STATUS, REFERENCE_AGENT_ID, REFERENCE_CONTRACT_ADDRESS,
+  USDC_ADDRESS, USDC_DECIMALS, assertArcChain, assertOwnedAgent,
+  assertWriteReady, exactApprovalAmount, taskBudgetBreakdown, taskBudgetDecision,
+} from './live-policy.mjs';
 
-test('chain guard accepts Arc Mainnet and rejects other chains', () => { assert.equal(assertArcChain(5042), true); assert.throws(() => assertArcChain(1), /Arc Mainnet/); });
-test('recipient must be distinct from sender', () => { assert.equal(assertDistinctRecipient('0x0000000000000000000000000000000000000001', '0x0000000000000000000000000000000000000002'), true); assert.throws(() => assertDistinctRecipient('0x0000000000000000000000000000000000000001', '0x0000000000000000000000000000000000000001'), /separate/); });
-test('demo payment is capped at 0.01 USDC', () => { assert.equal(assertDemoPaymentAmount(10_000), DEMO_PAYMENT_CAP); assert.throws(() => assertDemoPaymentAmount(10_001), /0.01/); });
-test('confirmation payload is explicit and bound to deployed contract', () => { const payload = buildConfirmationPayload('Approve USDC', { amount: '10000' }); assert.deepEqual(payload, { action: 'Approve USDC', chainId: '5042', contract: CONTRACT_ADDRESS, args: { amount: '10000' } }); });
-test('task permissions require plain-language boundaries', () => { assert.equal(validateTaskPermissions({ budget: '1', deadline: Math.floor(Date.now() / 1000) + 3600, serviceScope: 'research', recipient: '0x2', delegationDepth: '2' }), true); assert.throws(() => validateTaskPermissions({ budget: '1', deadline: 1, serviceScope: 'research', recipient: '0x2', delegationDepth: '2' }), /deadline/); });
+const liveDemoSource = readFileSync(new URL('./live-demo.mjs', import.meta.url), 'utf8');
+const pageSource = readFileSync(new URL('./index.html', import.meta.url), 'utf8');
+
+test('chain guard accepts Arc Mainnet and rejects other chains', () => {
+  assert.equal(assertArcChain(5042), true);
+  assert.throws(() => assertArcChain(1), /Arc Mainnet/);
+});
+
+test('Mainnet parameters and reference demo are pinned separately', () => {
+  assert.equal(ARC_CHAIN_ID, 5042n);
+  assert.equal(ARC_RPC_URL, 'https://rpc.mainnet.arc.io');
+  assert.equal(ARC_EXPLORER_URL, 'https://explorer.arc.io');
+  assert.equal(IDENTITY_REGISTRY_ADDRESS, '0x8004A169FB4a3325136EB29fA0ceB6D2e539a432');
+  assert.equal(REFERENCE_CONTRACT_ADDRESS, '0xdc321eb50cff0239a2c43532ecc8b0c41d969a9e');
+  assert.equal(REFERENCE_AGENT_ID, 1395n);
+  assert.equal(PUBLIC_CONTRACT_ADDRESS, '0x015099f831c247460b467154c73028804Ea38a10');
+  assert.equal(PUBLIC_DEPLOYMENT_STATUS.testnet.verification, 'pass');
+  assert.equal(PUBLIC_DEPLOYMENT_STATUS.testnet.contractAddress, '0x3757ac538e8416388be609c0ca5543abe6072101');
+  assert.equal(PUBLIC_DEPLOYMENT_STATUS.mainnet.writesEnabled, true);
+  assert.equal(PUBLIC_DEPLOYMENT_STATUS.mainnet.contractAddress, '0x015099f831c247460b467154c73028804Ea38a10');
+  assert.equal(PUBLIC_DEPLOYMENT_STATUS.mainnet.deployment, 'public-v2-smoke-pass');
+  assert.equal(USDC_ADDRESS, '0x3600000000000000000000000000000000000000');
+  assert.equal(USDC_DECIMALS, 6);
+});
+
+test('write readiness requires chain, wallet, and upgraded deployment', () => {
+  const wallet = '0x0000000000000000000000000000000000000001';
+  assert.throws(() => assertWriteReady({ chainId: 1n, account: wallet, contractAddress: REFERENCE_CONTRACT_ADDRESS }), /Arc Mainnet/);
+  assert.throws(() => assertWriteReady({ chainId: ARC_CHAIN_ID, account: null, contractAddress: REFERENCE_CONTRACT_ADDRESS }), /Connect a wallet/);
+  assert.equal(assertWriteReady({ chainId: ARC_CHAIN_ID, account: wallet }), true);
+  assert.equal(assertWriteReady({ chainId: ARC_CHAIN_ID, account: wallet, contractAddress: '0x0000000000000000000000000000000000000002' }), true);
+});
+
+test('only connected owner can add an Agent and approvals are positive exact values', () => {
+  const wallet = '0x0000000000000000000000000000000000000001';
+  assert.equal(assertOwnedAgent(wallet, wallet.toUpperCase()), true);
+  assert.throws(() => assertOwnedAgent(wallet, '0x0000000000000000000000000000000000000002'), /does not own/);
+  assert.equal(exactApprovalAmount(25_000n), 25_000n);
+  assert.throws(() => exactApprovalAmount(0n), /greater than zero/);
+});
+
+test('task budget separates available, reserved, and spent authority', () => {
+  assert.deepEqual(taskBudgetBreakdown({ budget: 5_000_000n, spent: 1_000_000n, reserved: 2_000_000n }), {
+    budget: 5_000_000n,
+    available: 2_000_000n,
+    reserved: 2_000_000n,
+    spent: 1_000_000n,
+    status: 'active',
+  });
+  assert.equal(taskBudgetBreakdown({ budget: 5n, spent: 1n, reserved: 4n }).status, 'fully-committed');
+  assert.equal(taskBudgetBreakdown({ budget: 5n, spent: 5n, reserved: 0n }).status, 'exhausted');
+  assert.throws(() => taskBudgetBreakdown({ budget: 5n, spent: 3n, reserved: 3n }), /Invalid task budget/);
+});
+
+test('budget exhaustion and oversized requests require human approval', () => {
+  const exhausted = taskBudgetDecision({ budget: 5n, spent: 5n, reserved: 0n }, 1n);
+  assert.equal(exhausted.paymentAllowed, false);
+  assert.equal(exhausted.humanApprovalRequired, true);
+  const oversized = taskBudgetDecision({ budget: 5n, spent: 1n, reserved: 2n }, 3n);
+  assert.equal(oversized.requestBlocked, true);
+  assert.equal(oversized.humanApprovalRequired, true);
+  const allowed = taskBudgetDecision({ budget: 5n, spent: 1n, reserved: 2n }, 2n);
+  assert.equal(allowed.paymentAllowed, true);
+  assert.equal(allowed.humanApprovalRequired, false);
+});
+
+test('browser surface simulates every contract write and never embeds a signer', () => {
+  assert.match(liveDemoSource, /simulateContract/);
+  assert.match(liveDemoSource, /writeContract/);
+  assert.match(liveDemoSource, /eth_requestAccounts/);
+  assert.match(liveDemoSource, /ownerOf/);
+  assert.match(liveDemoSource, /ownerOf must match this wallet/);
+  assert.match(liveDemoSource, /Approve exact amount/);
+  assert.match(liveDemoSource, /0n/);
+  assert.match(liveDemoSource, /AuthorityCapExceeded/);
+  assert.match(liveDemoSource, /Available/);
+  assert.match(liveDemoSource, /Reserved/);
+  assert.match(liveDemoSource, /Spent/);
+  assert.match(liveDemoSource, /Increase budget/);
+  assert.match(liveDemoSource, /Keep paused/);
+  assert.match(liveDemoSource, /revokeTask/);
+  assert.doesNotMatch(liveDemoSource, /privateKey|mnemonic|seed phrase|backend signer/i);
+  assert.match(pageSource, /Don’t give a new AI agent the keys to your wallet/);
+  assert.match(pageSource, /AgentLedger is the authority layer for autonomous AI workers/);
+});

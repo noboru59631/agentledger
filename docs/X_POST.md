@@ -13,7 +13,7 @@ Delegation only gets narrower. Revocation cascades. Every dollar has a reason.
 AI proposes. AgentLedger decides: task-native financial governance for multi-agent systems, built on complementary Arc/Circle wallet and settlement rails.
 
 Live app: https://agentledger-livid.vercel.app/
-Demo: https://youtu.be/aXnjAd3mFsE
+Demo: [replace with the published V2 Mainnet demo URL]
 Repo: https://github.com/noboru59631/agentledger
 
 #Arc #USDC #AIagents

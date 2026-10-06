@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">AgentLedger</title>
+  <rect width="128" height="128" rx="28" fill="#101916"/>
+  <path d="M25 74c7 20 25 31 47 28 18-3 31-15 35-32-9 7-20 10-31 8-9-2-16-7-21-15-4 8-13 13-23 13-2 0-5-1-7-2Z" fill="#b6ff58"/>
+  <path d="M45 60c8-15 24-24 41-22-8 5-14 12-16 21 9-4 19-4 28 0-11 4-19 12-23 23-4-11-15-20-30-22Z" fill="#f4f1e8"/>
+  <circle cx="83" cy="49" r="4" fill="#101916"/>
+</svg>

@@ -1,0 +1,19 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "AgentLedger Authority Agent",
+  "description": "Experimental AgentLedger demonstration agent. It starts with limited USDC authority, earns a higher cap after recorded work, and loses authority after a violation. Controlled demonstration amounts only; not for production custody.",
+  "image": "https://github.com/noboru59631.png",
+  "services": [
+    {
+      "name": "web",
+      "endpoint": "https://agentledger-livid.vercel.app/"
+    }
+  ],
+  "x402Support": false,
+  "active": true,
+  "registrations": [],
+  "supportedTrust": [
+    "reputation",
+    "validation"
+  ]
+}

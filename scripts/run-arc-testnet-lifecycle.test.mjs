@@ -9,19 +9,24 @@ test('Arc runner is pinned to testnet and validates chain, token code, and balan
   assert.match(runner, /expectedChainId = 5042002n/);
   assert.match(runner, /eth_getCode/);
   assert.match(runner, /balanceOf\(address\)\(uint256\)/);
+  assert.match(runner, /0x8004A818BFB912233c491871b3d84c89A494BD9e/);
+  assert.match(runner, /ownerOf\(uint256\)\(address\)/);
+  assert.match(runner, /ERC8004_AGENT_ID/);
   assert.match(runner, /new URL\(rpcUrl\)\.href !== 'https:\/\/rpc\.testnet\.arc\.io\/'/);
 });
 
-test('Arc runner uses encrypted account signing and never broadcasts the revoked retry', () => {
+test('Arc runner uses encrypted account signing and never broadcasts the cap rejection check', () => {
   assert.match(runner, /'--account', account/);
   assert.doesNotMatch(runner, /--private-key|PRIVATE_KEY/);
+  assert.match(runner, /join\(homedir\(\), '\.foundry', 'bin'\)/);
+  assert.match(runner, /process\.env\.FOUNDRY_BIN/);
   assert.match(runner, /rpc\('eth_call', \[\{ from: sender, to: contract, data: retryData \}/);
   assert.match(runner, /const signerOutput = await run\(cast, \['wallet', 'address', '--account', account\]\)/);
-  assert.match(runner, /'revokeTask'/);
+  assert.match(runner, /capExceededCheck/);
 });
 
 test('Arc deployment places variadic constructor arguments after Forge options', () => {
-  assert.match(runner, /'--broadcast', '--json', '--constructor-args', token/);
+  assert.match(runner, /'--broadcast', '--json', '--constructor-args', token, identityRegistry/);
 });
 
 test('Arc resume mode reads evidence, validates the existing contract, and never deploys', () => {
@@ -30,7 +35,7 @@ test('Arc resume mode reads evidence, validates the existing contract, and never
   assert.match(runner, /validateExistingContract/);
   assert.match(runner, /evidence\.contractAddress/);
   const resumeBranch = runner.slice(runner.indexOf('if (resumeMode)'));
-  assert.doesNotMatch(resumeBranch.split('const { chainId }')[0], /deployFresh\(/);
+  assert.doesNotMatch(resumeBranch.split('const { chainId, agentId }')[0], /deployFresh\(/);
 });
 
 test('Arc runner polls receipt and transaction presence and records dropped transactions', () => {
@@ -42,11 +47,23 @@ test('Arc runner polls receipt and transaction presence and records dropped tran
 });
 
 test('Arc runner reconciles on-chain state before sending lifecycle steps', () => {
+  assert.match(runner, /readAgent\(contract, sender\)/);
   assert.match(runner, /readTask\(contract, evidence\.taskId\)/);
   assert.match(runner, /nextMandateId\(\)\(uint256\)/);
   assert.match(runner, /allowance\(address,address\)\(uint256\)/);
   assert.match(runner, /usedPaymentIds\(bytes32\)\(bool\)/);
-  assert.match(runner, /if \(task\.revoked\)/);
+  assert.match(runner, /workProofRecorded\(bytes32\)\(bool\)/);
+  assert.match(runner, /stoppedAgents\(address\)\(bool\)/);
+});
+
+test('Arc runner covers the full career lifecycle and authority reduction', () => {
+  assert.match(runner, /registerAgent\(address,uint256,uint128\)/);
+  assert.match(runner, /recordWorkProof\(address,bytes32,bytes32,bytes32\)/);
+  assert.match(runner, /promoteAgent\(address,uint8,uint128\)/);
+  assert.match(runner, /executeLargerPayment/);
+  assert.match(runner, /demoteAgent\(address,bytes32\)/);
+  assert.match(runner, /reinstateAgent\(address,bytes32\)/);
+  assert.match(runner, /rejectedAmount = promotedAuthorityCap \/ 2n \+ 1n/);
 });
 
 test('Arc evidence is persisted before and after transaction confirmation', () => {

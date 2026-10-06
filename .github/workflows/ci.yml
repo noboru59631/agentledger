@@ -19,6 +19,23 @@ jobs:
       - uses: foundry-rs/foundry-toolchain@v1
         with:
           version: v1.3.6
+      - name: Install Arc Foundry v0.8.0-2
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/arc-foundry.tar.gz"
+          extract="$RUNNER_TEMP/arc-foundry"
+          bin="$RUNNER_TEMP/arc-foundry-bin"
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            'https://github.com/circlefin/arc-foundry/releases/download/v0.8.0-2/arc-foundry-v0.8.0-2-x86_64-unknown-linux-gnu.tar.gz' \
+            --output "$archive"
+          echo '088bdb96a84418b757f9825d491e702792f1d1d1e29a9145af305a6600a79556  '"$archive" | sha256sum --check --strict
+          mkdir -p "$extract" "$bin"
+          tar -xzf "$archive" -C "$extract"
+          install -m 0755 "$extract/forge" "$bin/arc-forge"
+          install -m 0755 "$extract/cast" "$bin/arc-cast"
+          install -m 0755 "$extract/anvil" "$bin/arc-anvil"
+          echo "$bin" >> "$GITHUB_PATH"
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -26,6 +43,8 @@ jobs:
       - run: npm ci
       - run: forge build
       - run: forge test -vvv --fuzz-runs 256
+      - run: FOUNDRY_PROFILE=arc arc-forge build
+      - run: FOUNDRY_PROFILE=arc arc-forge test -vvv --fuzz-runs 256
       - name: Run full lifecycle against local Anvil
         shell: bash
         run: |
@@ -47,6 +66,9 @@ jobs:
       - run: node --check scripts/arc-mainnet-config.mjs
       - run: node --check scripts/run-arc-mainnet-lifecycle.mjs
       - run: node --check scripts/deployment-init-code.mjs
+      - run: node --check scripts/runtime-bytecode.mjs
+      - run: node --check scripts/print-mainnet-init-code.mjs
+      - run: node --check scripts/run-arc-mainnet-v2-smoke.mjs
 
   arc-readonly-preflight:
     if: github.event_name == 'workflow_dispatch'
@@ -55,6 +77,8 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
-      - name: Check Arc mainnet and USDC using read-only RPC calls
+      - name: Check Arc Testnet, USDC, and ERC-8004 using read-only RPC calls
+        env:
+          ARC_NETWORK: testnet
         run: node scripts/arc-readonly-preflight.mjs
 
