@@ -2,7 +2,7 @@ import {
   ARC_CHAIN_HEX, ARC_CHAIN_ID, ARC_EXPLORER_URL, ARC_RPC_URL,
   IDENTITY_REGISTRY_ADDRESS, PUBLIC_CONTRACT_ADDRESS, PUBLIC_DEPLOYMENT_STATUS, REFERENCE_AGENT_ID,
   REFERENCE_CONTRACT_ADDRESS, REFERENCE_OPERATIONAL_AGENT, USDC_ADDRESS, USDC_DECIMALS,
-  assertOwnedAgent, assertWriteReady, exactApprovalAmount,
+  assertOwnedAgent, assertWriteReady, exactApprovalAmount, taskBudgetDecision,
 } from './live-policy.mjs';
 
 const VIEM_URL = 'https://esm.sh/viem@2.21.54';
@@ -22,8 +22,11 @@ const graphAbi = [
   { type: 'function', name: 'stoppedAgents', stateMutability: 'view', inputs: [{ name: 'agentId', type: 'uint256' }], outputs: [{ name: '', type: 'bool' }] },
   { type: 'function', name: 'isPromotionEligible', stateMutability: 'view', inputs: [{ name: 'agentId', type: 'uint256' }], outputs: [{ name: '', type: 'bool' }] },
   { type: 'function', name: 'nextMandateId', stateMutability: 'view', inputs: [], outputs: [{ name: '', type: 'uint256' }] },
+  { type: 'function', name: 'tasks', stateMutability: 'view', inputs: [{ name: 'taskId', type: 'bytes32' }], outputs: [{ name: 'owner', type: 'address' }, { name: 'rootAgentId', type: 'uint256' }, { name: 'budget', type: 'uint128' }, { name: 'spent', type: 'uint128' }, { name: 'deadline', type: 'uint64' }, { name: 'taskHash', type: 'bytes32' }, { name: 'revoked', type: 'bool' }] },
+  { type: 'function', name: 'mandates', stateMutability: 'view', inputs: [{ name: 'mandateId', type: 'uint256' }], outputs: [{ name: 'taskId', type: 'bytes32' }, { name: 'parentId', type: 'uint256' }, { name: 'agentId', type: 'uint256' }, { name: 'recipient', type: 'address' }, { name: 'budget', type: 'uint128' }, { name: 'spent', type: 'uint128' }, { name: 'allocated', type: 'uint128' }, { name: 'expiry', type: 'uint64' }, { name: 'depth', type: 'uint8' }, { name: 'serviceScope', type: 'uint256' }, { name: 'revoked', type: 'bool' }, { name: 'activeChildren', type: 'uint256' }] },
   { type: 'function', name: 'registerAgent', stateMutability: 'nonpayable', inputs: [{ name: 'agentId', type: 'uint256' }, { name: 'operationalAgent', type: 'address' }, { name: 'initialAuthorityCap', type: 'uint128' }], outputs: [] },
   { type: 'function', name: 'createTask', stateMutability: 'nonpayable', inputs: [{ name: 'taskSalt', type: 'bytes32' }, { name: 'taskHash', type: 'bytes32' }, { name: 'budget', type: 'uint128' }, { name: 'deadline', type: 'uint64' }, { name: 'serviceScope', type: 'uint256' }, { name: 'rootAgentId', type: 'uint256' }, { name: 'recipient', type: 'address' }, { name: 'depth', type: 'uint8' }], outputs: [{ name: 'taskId', type: 'bytes32' }, { name: 'rootMandateId', type: 'uint256' }] },
+  { type: 'function', name: 'revokeTask', stateMutability: 'nonpayable', inputs: [{ name: 'taskId', type: 'bytes32' }], outputs: [] },
   { type: 'function', name: 'computePaymentId', stateMutability: 'view', inputs: [{ name: 'taskId', type: 'bytes32' }, { name: 'mandateId', type: 'uint256' }, { name: 'recipient', type: 'address' }, { name: 'amount', type: 'uint128' }, { name: 'serviceClass', type: 'uint256' }, { name: 'resourceHash', type: 'bytes32' }, { name: 'requestExpiry', type: 'uint64' }, { name: 'nonce', type: 'uint256' }], outputs: [{ name: '', type: 'bytes32' }] },
   { type: 'function', name: 'executePayment', stateMutability: 'nonpayable', inputs: [{ name: 'mandateId', type: 'uint256' }, { name: 'paymentId', type: 'bytes32' }, { name: 'recipient', type: 'address' }, { name: 'amount', type: 'uint128' }, { name: 'serviceClass', type: 'uint256' }, { name: 'resourceHash', type: 'bytes32' }, { name: 'requestExpiry', type: 'uint64' }, { name: 'nonce', type: 'uint256' }, { name: 'outcomeHash', type: 'bytes32' }], outputs: [] },
   { type: 'function', name: 'recordWorkProof', stateMutability: 'nonpayable', inputs: [{ name: 'agentId', type: 'uint256' }, { name: 'taskId', type: 'bytes32' }, { name: 'paymentId', type: 'bytes32' }, { name: 'proofHash', type: 'bytes32' }], outputs: [] },
@@ -46,6 +49,8 @@ function template() {
       <div class="deployment-gate ${deployed ? 'ready' : ''}"><b>${deployed ? 'Verified public V2 contract active' : 'Mainnet writes intentionally locked'}</b><span>${deployed ? `<a href="${ARC_EXPLORER_URL}/address/${PUBLIC_CONTRACT_ADDRESS}" target="_blank" rel="noreferrer">${short(PUBLIC_CONTRACT_ADDRESS)}</a> · controlled smoke PASS · wallet-signed only` : `V2 deployment or controlled smoke evidence is incomplete.`}</span></div>
       <div class="public-grid"><section class="permission-card"><div class="eyebrow">MY AGENTS</div><h3>Onchain-owned only</h3><p>Enter an ERC-8004 agentId. It appears only after ownerOf matches the connected wallet. Reference Demo #1395 stays separate.</p><div class="inline-form"><input id="agentIdInput" inputmode="numeric" placeholder="ERC-8004 agentId"><button class="button button-dark" id="agentAdd">Verify & add</button></div><div id="agentList" class="agent-list"><span>Connect a wallet to verify ownership.</span></div><div class="permission-grid"><label>Initial Authority cap (USDC)<input id="initialCap" value="0.01" inputmode="decimal"></label><button class="button button-primary align-end" id="agentRegister" disabled>Register selected Agent</button></div></section>
         <section class="authority-hero"><div class="eyebrow">CURRENT AUTHORITY</div><strong id="authorityCap">—</strong><span>USDC per payment</span><div class="authority-stats"><b id="authorityStatus">Not loaded</b><span id="authorityCareer">Career —</span><span id="authorityWorks">Completed —</span><span id="authorityViolations">Violations —</span><span id="authorityOwner">Owner —</span></div></section></div>
+      <section class="budget-overview" id="budgetOverview" hidden><div class="budget-heading"><div><div class="eyebrow">TASK BUDGET · ONCHAIN</div><h3>Committed funds are not available funds.</h3></div><span class="budget-status" id="budgetStatus">Active</span></div><div class="budget-metrics"><div class="available"><span>Available</span><strong id="budgetAvailable">—</strong><small>Uncommitted capacity</small></div><div class="reserved"><span>Reserved</span><strong id="budgetReserved">—</strong><small>Committed to child mandates</small></div><div class="spent"><span>Spent</span><strong id="budgetSpent">—</strong><small>Settled onchain</small></div></div><p class="budget-guard" id="budgetGuard">Loading task accounting…</p><div class="pending-panel"><div class="pending-heading"><span>Pending actions / commitments</span><b id="pendingCount">0</b></div><div id="pendingItems"></div></div></section>
+      <section class="budget-approval" id="budgetApproval" hidden><div><div class="eyebrow">HUMAN APPROVAL REQUIRED</div><h3 id="budgetApprovalTitle">Budget exhausted · task paused</h3><p id="budgetApprovalCopy">No additional funds are granted automatically. The contract rejects spending beyond the remaining budget.</p></div><label>Additional budget for successor task (USDC)<input id="budgetIncrease" value="0.01" inputmode="decimal"></label><div class="budget-actions"><button class="button button-primary" id="budgetIncreaseAction">Increase budget</button><button class="revoke" id="taskEnd">End task</button><button class="button button-quiet" id="taskKeepPaused">Keep paused</button></div><small>Increase budget prepares a new owner-signed successor task; it never mutates this deployed V2 task. Reputation may inform a future proposal, but never authorizes an automatic increase.</small></section>
       <div class="workflow-grid"><section class="permission-card"><div class="eyebrow">1 · CREATE TASK</div><h3>Bound the work first</h3><div class="permission-grid"><label>Task budget (USDC)<input id="taskBudget" value="0.05" inputmode="decimal"></label><label>Payment amount (USDC)<input id="paymentAmount" value="0.005" inputmode="decimal"></label><label>Recipient<input id="taskRecipient" placeholder="0x…"></label><label>Service scope bit<input id="taskScope" value="1" inputmode="numeric"></label><label>Task description<input id="taskDescription" value="Public demo task"></label><label>Deadline hours<input id="taskDeadline" value="24" inputmode="numeric"></label></div><button class="button button-primary" id="taskCreate" disabled>Simulate → Create Task</button><p class="mini-state" id="taskState">No task created in this session.</p></section>
         <section class="permission-card"><div class="eyebrow">2 · APPROVE & WORK</div><h3>Exact allowance, then payment</h3><p>Approval is never unlimited. The button sets allowance to the exact payment amount; Revoke sets it to zero.</p><div class="allowance-row"><span>Allowance <b id="allowanceValue">—</b></span><button class="button button-quiet" id="approveExact" disabled>Approve exact amount</button><button class="quiet" id="approveRevoke" disabled>Revoke allowance</button></div><button class="button button-primary" id="paymentExecute" disabled>Simulate → Sign Work / Payment</button><button class="button button-dark" id="proofRecord" disabled>Record Work Proof</button><p class="mini-state" id="paymentState">No payment in this session.</p></section>
         <section class="permission-card"><div class="eyebrow">3 · AUTHORITY REVIEW</div><h3>Human-signed progression</h3><div class="permission-grid"><label>Next Authority cap (USDC)<input id="promotionCap" value="0.02" inputmode="decimal"></label><label>Reason / remediation<input id="authorityReason" value="Public demo review"></label></div><div class="live-actions"><button class="button button-primary" id="agentPromote" disabled>Promote & raise Authority</button><button class="revoke" id="agentDemote" disabled>STOP / Demote</button><button class="button button-quiet" id="agentReinstate" disabled>Reinstate reduced cap</button></div><button class="quiet test-limit" id="testLimit" disabled>Test over-cap with eth_call only</button><p class="mini-state" id="authorityMessage">Promotion is never automatic.</p></section></div>
@@ -57,8 +62,8 @@ export async function initLiveDemo({ container }) {
   if (!container) return;
   container.innerHTML = template();
   const byId = (id) => container.querySelector(`#${id}`);
-  const controlIds = ['agentAdd', 'agentRegister', 'taskCreate', 'approveExact', 'approveRevoke', 'paymentExecute', 'proofRecord', 'agentPromote', 'agentDemote', 'agentReinstate', 'testLimit'];
-  const state = { provider: null, account: null, walletClient: null, selectedAgentId: null, profile: null, task: null, payment: null, chainId: null };
+  const controlIds = ['agentAdd', 'agentRegister', 'taskCreate', 'approveExact', 'approveRevoke', 'paymentExecute', 'proofRecord', 'agentPromote', 'agentDemote', 'agentReinstate', 'testLimit', 'budgetIncreaseAction', 'taskEnd', 'taskKeepPaused'];
+  const state = { provider: null, account: null, walletClient: null, selectedAgentId: null, profile: null, task: null, payment: null, allowance: 0n, chainId: null };
   const setMessage = (message, type = '') => { byId('walletMessage').textContent = message; byId('walletMessage').className = `live-message ${type}`; };
   const setAction = (id, message, type = '') => { byId(id).textContent = message; byId(id).className = `mini-state ${type}`; };
   const showTransaction = (hash) => { byId('walletTx').href = `${ARC_EXPLORER_URL}/tx/${hash}`; byId('walletTx').hidden = false; };
@@ -75,10 +80,57 @@ export async function initLiveDemo({ container }) {
   const saveAgentId = (agentId) => localStorage.setItem(STORAGE_KEY, JSON.stringify([...new Set([...savedAgentIds().map(String), agentId.toString()])]));
   const writeGuard = () => assertWriteReady({ chainId: state.chainId, account: state.account, contractAddress: PUBLIC_CONTRACT_ADDRESS });
 
+  function requestedPayment() {
+    try { return amount('paymentAmount'); } catch { return 0n; }
+  }
+
+  function renderTaskBudget() {
+    const overview = byId('budgetOverview'); const approval = byId('budgetApproval');
+    if (!state.task || state.task.spent === undefined || state.task.reserved === undefined) { overview.hidden = true; approval.hidden = true; return; }
+    overview.hidden = false;
+    const decision = taskBudgetDecision(state.task, requestedPayment());
+    const format = (value) => `${formatUnits(value, USDC_DECIMALS)} USDC`;
+    byId('budgetAvailable').textContent = format(decision.available);
+    byId('budgetReserved').textContent = format(decision.reserved);
+    byId('budgetSpent').textContent = format(decision.spent);
+    const ended = state.task.revoked;
+    byId('budgetStatus').textContent = ended ? 'Ended' : decision.status === 'exhausted' ? 'Paused · exhausted' : decision.status === 'fully-committed' ? 'Fully committed' : 'Active';
+    byId('budgetStatus').className = `budget-status ${ended || decision.status === 'exhausted' ? 'stopped' : decision.status === 'fully-committed' ? 'committed' : ''}`;
+    byId('budgetGuard').textContent = ended ? 'Task ended by its owner. No further payment can execute.' : decision.status === 'exhausted' ? 'Hard stop: the full task budget is spent. Further payment is rejected onchain.' : decision.status === 'fully-committed' ? 'No unused capacity remains: every unspent unit is reserved to active child mandates.' : `${format(decision.available)} remains after subtracting both settled spend and reserved commitments.`;
+    const pending = [];
+    if (decision.reserved > 0n) pending.push(`<div><span>Reserved to ${state.task.activeChildren} active child mandate${state.task.activeChildren === 1n ? '' : 's'}</span><b>${format(decision.reserved)} · not available</b></div>`);
+    if (decision.requested > 0n) pending.push(`<div class="${decision.requestBlocked ? 'blocked-request' : ''}"><span>Next payment request</span><b>${format(decision.requested)} · ${decision.requestBlocked ? 'blocked' : state.allowance >= decision.requested ? 'exact allowance ready' : 'awaiting approval'}</b></div>`);
+    byId('pendingCount').textContent = String(pending.length);
+    byId('pendingItems').innerHTML = pending.length ? pending.join('') : '<div><span>No pending actions</span><b>Clear</b></div>';
+    approval.hidden = ended || !decision.humanApprovalRequired;
+    byId('budgetApprovalTitle').textContent = decision.status === 'exhausted' ? 'Budget exhausted · task paused' : 'Payment exceeds available budget · task paused';
+    byId('budgetApprovalCopy').textContent = decision.status === 'exhausted' ? 'No additional funds are granted automatically. The contract rejects all further spending for this task.' : `The ${format(decision.requested)} request exceeds ${format(decision.available)} available. Reserved funds cannot be reused.`;
+    byId('budgetIncreaseAction').disabled = ended || decision.reserved > 0n;
+    byId('taskEnd').disabled = ended;
+    byId('taskKeepPaused').disabled = ended || state.task.paused === true;
+    const canPay = !ended && !state.task.paused && decision.paymentAllowed && state.chainId === ARC_CHAIN_ID;
+    byId('approveExact').disabled = !canPay;
+    byId('approveRevoke').disabled = ended || state.chainId !== ARC_CHAIN_ID;
+    byId('paymentExecute').disabled = !canPay;
+    byId('testLimit').disabled = ended || state.chainId !== ARC_CHAIN_ID;
+  }
+
+  async function refreshTaskBudget() {
+    if (!state.task || !hasPublicContract) { renderTaskBudget(); return; }
+    const [task, mandate] = await Promise.all([
+      publicClient.readContract({ address: PUBLIC_CONTRACT_ADDRESS, abi: graphAbi, functionName: 'tasks', args: [state.task.taskId] }),
+      publicClient.readContract({ address: PUBLIC_CONTRACT_ADDRESS, abi: graphAbi, functionName: 'mandates', args: [state.task.mandateId] }),
+    ]);
+    Object.assign(state.task, { budget: task[2], spent: task[3], deadline: task[4], revoked: task[6] || mandate[10], recipient: mandate[3], reserved: mandate[6], scope: mandate[9], activeChildren: mandate[11] });
+    renderTaskBudget();
+  }
+
   async function refreshAllowance() {
-    if (!state.account || !hasPublicContract) { byId('allowanceValue').textContent = '—'; return; }
+    if (!state.account || !hasPublicContract) { state.allowance = 0n; byId('allowanceValue').textContent = '—'; renderTaskBudget(); return; }
     const value = await publicClient.readContract({ address: USDC_ADDRESS, abi: erc20Abi, functionName: 'allowance', args: [state.account, PUBLIC_CONTRACT_ADDRESS] });
+    state.allowance = value;
     byId('allowanceValue').textContent = `${formatUnits(value, USDC_DECIMALS)} USDC`;
+    renderTaskBudget();
   }
 
   async function refreshWallet() {
@@ -161,11 +213,12 @@ export async function initLiveDemo({ container }) {
 
   byId('walletConnect').onclick = () => connect().catch((error) => setMessage(error.shortMessage || error.message, 'error'));
   byId('walletDisconnect').onclick = () => {
-    Object.assign(state, { account: null, walletClient: null, selectedAgentId: null, profile: null, task: null, payment: null, chainId: null });
+    Object.assign(state, { account: null, walletClient: null, selectedAgentId: null, profile: null, task: null, payment: null, allowance: 0n, chainId: null });
     byId('walletConnect').textContent = 'Connect Wallet'; byId('walletDisconnect').hidden = true; byId('walletSwitch').hidden = true;
     byId('walletChain').textContent = 'Not connected'; byId('walletAddress').textContent = '—'; byId('walletBalance').textContent = 'USDC —'; byId('walletGas').textContent = 'Gas —';
     byId('agentList').textContent = 'Connect a wallet to verify ownership.';
     controlIds.forEach((id) => { byId(id).disabled = true; });
+    renderTaskBudget();
     setMessage('Disconnected locally. Use your wallet settings to revoke site permissions.', 'ok');
   };
   byId('walletSwitch').onclick = () => switchNetwork().catch((error) => setMessage(error.message, 'error'));
@@ -192,9 +245,9 @@ export async function initLiveDemo({ container }) {
       let taskId; let mandateId = nextMandateId;
       for (const log of result.receipt.logs) { try { const decoded = decodeEventLog({ abi: graphAbi, data: log.data, topics: log.topics }); if (decoded.eventName === 'TaskCreated') { taskId = decoded.args.taskId; mandateId = decoded.args.rootMandateId; } } catch {} }
       if (!taskId) throw new Error('TaskCreated event was not found in the receipt.');
-      state.task = { taskId, mandateId, recipient, budget, deadline, scope: BigInt(byId('taskScope').value) };
+      state.task = { taskId, mandateId, recipient, budget, spent: 0n, reserved: 0n, activeChildren: 0n, deadline, scope: BigInt(byId('taskScope').value), revoked: false, paused: false };
       setAction('taskState', `Task ${short(taskId)} · mandate ${mandateId}`, 'ok');
-      byId('approveExact').disabled = false; byId('approveRevoke').disabled = false; byId('paymentExecute').disabled = false; byId('testLimit').disabled = false;
+      await refreshTaskBudget();
     } catch (error) { setAction('taskState', error.shortMessage || error.message, 'error'); }
   };
   byId('approveExact').onclick = async () => {
@@ -221,7 +274,7 @@ export async function initLiveDemo({ container }) {
       const paymentId = await publicClient.readContract({ address: PUBLIC_CONTRACT_ADDRESS, abi: graphAbi, functionName: 'computePaymentId', args: [state.task.taskId, state.task.mandateId, state.task.recipient, paymentAmount, state.task.scope, resourceHash, state.task.deadline, nonce] });
       const result = await submit('executePayment', [state.task.mandateId, paymentId, state.task.recipient, paymentAmount, state.task.scope, resourceHash, state.task.deadline, nonce, outcomeHash], 'Work / Payment');
       state.payment = { paymentId, outcomeHash, hash: result.hash }; setAction('paymentState', `Paid ${formatUnits(paymentAmount, USDC_DECIMALS)} USDC · ${short(result.hash)}`, 'ok');
-      byId('proofRecord').disabled = false; await refreshAllowance();
+      byId('proofRecord').disabled = false; await Promise.all([refreshAllowance(), refreshTaskBudget()]);
     } catch (error) { setAction('paymentState', error.shortMessage || error.message, 'error'); }
   };
   byId('proofRecord').onclick = async () => {
@@ -251,6 +304,32 @@ export async function initLiveDemo({ container }) {
       catch (error) { const serialized = `${error} ${error.cause ?? ''} ${error.data ?? ''}`; if (!serialized.includes(AUTHORITY_CAP_EXCEEDED_SELECTOR) && !serialized.includes('AuthorityCapExceeded')) throw error; }
       setAction('authorityMessage', `AuthorityCapExceeded confirmed for ${formatUnits(overCap, USDC_DECIMALS)} USDC via eth_call. No transaction sent.`, 'ok');
     } catch (error) { setAction('authorityMessage', error.shortMessage || error.message, 'error'); }
+  };
+  byId('paymentAmount').addEventListener('input', renderTaskBudget);
+  byId('budgetIncreaseAction').onclick = () => {
+    try {
+      if (!state.task) throw new Error('Create a task first.');
+      if (state.task.reserved > 0n) throw new Error('Review or release reserved child mandates before preparing more budget.');
+      const additional = exactApprovalAmount(amount('budgetIncrease'));
+      byId('taskBudget').value = formatUnits(state.task.budget + additional, USDC_DECIMALS);
+      byId('taskDescription').value = `Successor to ${short(state.task.taskId)} — ${byId('taskDescription').value.trim()}`;
+      setAction('taskState', 'Increase budget prepared as a new successor task. Review the fields, then simulate and sign Create Task.', 'ok');
+      byId('taskCreate').focus();
+    } catch (error) { setAction('taskState', error.message, 'error'); }
+  };
+  byId('taskEnd').onclick = async () => {
+    try {
+      if (!state.task) throw new Error('Create a task first.');
+      await submit('revokeTask', [state.task.taskId], 'End Task');
+      await refreshTaskBudget();
+      setAction('taskState', `Task ${short(state.task.taskId)} ended by explicit owner signature.`, 'ok');
+    } catch (error) { setAction('taskState', error.shortMessage || error.message, 'error'); }
+  };
+  byId('taskKeepPaused').onclick = () => {
+    if (!state.task) return;
+    state.task.paused = true;
+    renderTaskBudget();
+    setAction('taskState', 'Kept paused in this session. No transaction was sent; onchain budget limits remain enforced.', 'ok');
   };
 
   async function loadReference() {

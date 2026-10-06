@@ -5,7 +5,7 @@ import {
   ARC_CHAIN_ID, ARC_EXPLORER_URL, ARC_RPC_URL, IDENTITY_REGISTRY_ADDRESS,
   PUBLIC_CONTRACT_ADDRESS, PUBLIC_DEPLOYMENT_STATUS, REFERENCE_AGENT_ID, REFERENCE_CONTRACT_ADDRESS,
   USDC_ADDRESS, USDC_DECIMALS, assertArcChain, assertOwnedAgent,
-  assertWriteReady, exactApprovalAmount,
+  assertWriteReady, exactApprovalAmount, taskBudgetBreakdown, taskBudgetDecision,
 } from './live-policy.mjs';
 
 const liveDemoSource = readFileSync(new URL('./live-demo.mjs', import.meta.url), 'utf8');
@@ -49,6 +49,31 @@ test('only connected owner can add an Agent and approvals are positive exact val
   assert.throws(() => exactApprovalAmount(0n), /greater than zero/);
 });
 
+test('task budget separates available, reserved, and spent authority', () => {
+  assert.deepEqual(taskBudgetBreakdown({ budget: 5_000_000n, spent: 1_000_000n, reserved: 2_000_000n }), {
+    budget: 5_000_000n,
+    available: 2_000_000n,
+    reserved: 2_000_000n,
+    spent: 1_000_000n,
+    status: 'active',
+  });
+  assert.equal(taskBudgetBreakdown({ budget: 5n, spent: 1n, reserved: 4n }).status, 'fully-committed');
+  assert.equal(taskBudgetBreakdown({ budget: 5n, spent: 5n, reserved: 0n }).status, 'exhausted');
+  assert.throws(() => taskBudgetBreakdown({ budget: 5n, spent: 3n, reserved: 3n }), /Invalid task budget/);
+});
+
+test('budget exhaustion and oversized requests require human approval', () => {
+  const exhausted = taskBudgetDecision({ budget: 5n, spent: 5n, reserved: 0n }, 1n);
+  assert.equal(exhausted.paymentAllowed, false);
+  assert.equal(exhausted.humanApprovalRequired, true);
+  const oversized = taskBudgetDecision({ budget: 5n, spent: 1n, reserved: 2n }, 3n);
+  assert.equal(oversized.requestBlocked, true);
+  assert.equal(oversized.humanApprovalRequired, true);
+  const allowed = taskBudgetDecision({ budget: 5n, spent: 1n, reserved: 2n }, 2n);
+  assert.equal(allowed.paymentAllowed, true);
+  assert.equal(allowed.humanApprovalRequired, false);
+});
+
 test('browser surface simulates every contract write and never embeds a signer', () => {
   assert.match(liveDemoSource, /simulateContract/);
   assert.match(liveDemoSource, /writeContract/);
@@ -58,6 +83,12 @@ test('browser surface simulates every contract write and never embeds a signer',
   assert.match(liveDemoSource, /Approve exact amount/);
   assert.match(liveDemoSource, /0n/);
   assert.match(liveDemoSource, /AuthorityCapExceeded/);
+  assert.match(liveDemoSource, /Available/);
+  assert.match(liveDemoSource, /Reserved/);
+  assert.match(liveDemoSource, /Spent/);
+  assert.match(liveDemoSource, /Increase budget/);
+  assert.match(liveDemoSource, /Keep paused/);
+  assert.match(liveDemoSource, /revokeTask/);
   assert.doesNotMatch(liveDemoSource, /privateKey|mnemonic|seed phrase|backend signer/i);
   assert.match(pageSource, /Don’t give a new AI agent the keys to your wallet/);
   assert.match(pageSource, /AgentLedger is the authority layer for autonomous AI workers/);

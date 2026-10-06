@@ -42,3 +42,29 @@ export function exactApprovalAmount(value) {
   if (amount <= 0n) throw new Error('Approval amount must be greater than zero.');
   return amount;
 }
+
+export function taskBudgetBreakdown({ budget, spent, reserved }) {
+  const total = BigInt(budget);
+  const used = BigInt(spent);
+  const committed = BigInt(reserved);
+  if (total < 0n || used < 0n || committed < 0n || used > total || committed > total - used) {
+    throw new Error('Invalid task budget accounting.');
+  }
+  const available = total - used - committed;
+  const status = used === total ? 'exhausted' : available === 0n ? 'fully-committed' : 'active';
+  return { budget: total, available, reserved: committed, spent: used, status };
+}
+
+export function taskBudgetDecision(accounting, requested = 0n) {
+  const breakdown = taskBudgetBreakdown(accounting);
+  const request = BigInt(requested);
+  if (request < 0n) throw new Error('Requested payment cannot be negative.');
+  const requestBlocked = request > breakdown.available;
+  return {
+    ...breakdown,
+    requested: request,
+    requestBlocked,
+    paymentAllowed: request > 0n && !requestBlocked && breakdown.status === 'active',
+    humanApprovalRequired: breakdown.status === 'exhausted' || requestBlocked,
+  };
+}

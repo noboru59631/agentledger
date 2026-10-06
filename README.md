@@ -111,7 +111,7 @@ ERC-8004 provides portable Agent identity plus reputation and validation inputs.
 - Foundry: **68/68 tests PASS** with fuzz runs `>=256`.
 - V1 invariant suite: **8,192 calls, 0 reverts**.
 - V2 invariant suite: **8,192 calls, 0 reverts**.
-- Node: **66/66 tests PASS**.
+- Node: **68/68 tests PASS**.
 - Coverage includes reentrancy, replay, transfer failure rollback, reservation conservation, nested delegation, scope/recipient/expiry attenuation, exact approvals, ownership transfer, payment-bound proof, promotion, STOP/demotion, reinstatement, and Wallet A/B isolation.
 - V2 deployment runtime matches the local artifact after compiler-reported immutable normalization.
 - Sourcify reports exact creation and runtime matches, match ID `54611987`.
@@ -139,6 +139,12 @@ npm run smoke:arc-mainnet:v2:verify
 ```
 
 The Mainnet smoke runner is hard-pinned to chain `5042`, the deployed V2 address, official USDC and Identity Registry addresses, a `0.025` USDC payment total, a gas-price ceiling, and a lifecycle fee ceiling. It cannot deploy a contract and refuses duplicate broadcasts.
+
+## External builder feedback
+
+The public dApp now separates every task budget into **Available / Reserved / Spent**, and surfaces pending payment requests and child-mandate commitments so reserved authority is never presented as unused capacity. When a budget is exhausted or a request exceeds the available amount, payment controls pause by default and the owner must explicitly choose to prepare a newly signed successor task, end the current task, or keep it paused. Reputation can inform a future recommendation, but never grants additional funds automatically.
+
+This improvement is derived entirely from the existing V2 `Task` and `Mandate` state. It does not replace the verified Mainnet V2 contract or introduce a new Mainnet write path; task termination uses the existing owner-only `revokeTask`, while any larger budget requires a separate owner-signed task creation.
 
 ## Evidence
 
