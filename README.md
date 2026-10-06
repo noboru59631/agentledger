@@ -138,6 +138,8 @@ Read-only V2 Mainnet smoke verification:
 npm run smoke:arc-mainnet:v2:verify
 ```
 
+The deployment compiler input is pinned in `foundry.toml`: Solidity `0.8.28`, optimizer runs `200`, Prague EVM, `via_ir = false`, IPFS/CBOR metadata, literal content disabled, and the two remappings recorded by Sourcify. The remappings do not affect this import-free contract's executable instructions, but they are part of Solidity metadata and therefore its appended metadata hash. Keeping them explicit makes a clean checkout reproduce the exact-match creation and normalized runtime hashes instead of depending on Foundry's environment-sensitive auto-detection.
+
 The Mainnet smoke runner is hard-pinned to chain `5042`, the deployed V2 address, official USDC and Identity Registry addresses, a `0.025` USDC payment total, a gas-price ceiling, and a lifecycle fee ceiling. It cannot deploy a contract and refuses duplicate broadcasts.
 
 ## External builder feedback
