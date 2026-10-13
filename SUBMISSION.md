@@ -2,11 +2,23 @@
 
 ## One-line pitch
 
-**Don’t give a new AI agent the keys to the company wallet. Let it earn them.** AgentLedger starts an agent with small, task-bound USDC authority, lets recorded work support a human-approved increase, and reduces authority after a violation.
+**Give AI a budget for the job, while keeping control of the money.** AgentLedger makes permitted payments, reserved funds, spending, and human decisions visible for a task such as competitor research with a 5 USDC cap.
+
+## Copy-ready English form description
+
+AgentLedger is a self-custodial spending-control prototype for AI tasks on Arc. Imagine asking AI to research competitors with a 5 USDC budget: AI proposes payments, policy checks what is permitted, and Available / Reserved / Spent makes every commitment visible. An over-budget request pauses for a human decision; AI cannot increase the budget automatically.
+
+The website explains this through a 30-second, wallet-free simulation. Separately, the deployed Arc Mainnet V2 contract is Sourcify exact-match verified, with an existing controlled 0.025 USDC lifecycle demonstrating bounded payments, payment-bound proof, owner-approved promotion, and STOP/demotion. Mainnet actions require explicit wallet confirmation. Gemini is proposal-only; autonomous vendor purchasing and independent delivery verification are future work. The contract is experimental and unaudited, and outcome hashes do not prove service quality.
+
+## 30-second judge walkthrough
+
+Open the research example without connecting a wallet. Simulate the permitted 0.20 USDC helper payment: Available / Reserved / Spent changes from **4.00 / 1.00 / 0.00** to **4.00 / 0.80 / 0.20 USDC**. Try the **4.80 USDC parent request**: it exceeds the 4 USDC available, so it is blocked with no additional spend. Choose **Keep paused** or **End simulated task**. Then inspect the separate Mainnet evidence and Sourcify link.
+
+The 5 USDC task is explanatory fixture data, not the amount settled on Mainnet, an AI-generated research run, or a vendor payment.
 
 ## Problem
 
-Unlimited wallet authority is unsafe, while asking a human to approve every action removes the autonomy people and companies want from AI agents. A wallet spend limit also cannot explain which task authorized a payment, which agent delegated it, or what authority remains.
+An AI research task may need paid data or translation. A wallet balance alone cannot explain which task authorized a payment, which helper has already reserved funds, or when a human must intervene.
 
 ## Solution
 
@@ -22,8 +34,8 @@ Arc’s USDC-native settlement environment is a natural rail for bounded agent s
 
 The public app has three clearly separated modes:
 
-1. **Illustrative Simulation:** local fixture task and lineage state; no wallet or Arc reads.
-2. **AI Orchestrated Demo:** real Gemini proposal when configured, deterministic policy approval/rejection, simulated service costs, and STOP propagation; no automatic chain writes.
+1. **5 USDC Research Simulation:** scripted non-AI fixtures show a permitted payment, reservation accounting, over-budget pause, human decisions, and STOP; no wallet, vendor call, or Arc reads.
+2. **Optional AI Proposal Demo:** real Gemini proposal when configured, labeled non-AI fallback, deterministic policy approval/rejection, simulated service costs, illustrative report preview, and STOP propagation; no researched report or chain writes.
 3. **Public Arc Mainnet V2 dApp:** wallet connection, network switching, owner-verified Agents, task creation, exact USDC approval/revoke, payment, work proof, promotion, STOP/demotion, reinstatement, and read-only cap testing.
 
 The self-custodial V2 contract is deployed, Sourcify exact-match verified, lifecycle-tested, and active in the public dApp. Its controlled Mainnet smoke completed `0.005` and `0.02 USDC` payments, exact `0.025 USDC` approval, and a read-only `0.026 USDC` cap rejection with final allowance zero.
@@ -50,6 +62,8 @@ The recipient was a separately controlled demo wallet, not a verified vendor. Th
 The exact test result belongs to the CI run for the submitted commit; no test count is hard-coded here.
 
 ## Quality and next step
+
+**Future, not implemented:** connecting AI proposals to autonomous vendor purchases, independent service-delivery verification, and durable event indexing. The implemented wallet controls and the proposal-only AI route are separate today.
 
 The product is usable as a public demonstration today, while the contract remains experimental and unaudited. The next hardening steps are independent review, broader adversarial testing, durable event indexing, canonical signing, independent service evidence, and production-grade wallet/account abstraction. Production Mainnet remains NO-GO.
 

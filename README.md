@@ -4,11 +4,29 @@
 
 **AI proposes. AgentLedger decides.**
 
-AgentLedger is a self-custodial authority and control layer for autonomous AI workers on Arc. A new agent receives task-bound authority with a small, contract-enforced USDC limit. Payment-bound work proof can make it eligible for an owner-approved promotion. A violation triggers STOP/demotion and reduces its authority; reinstatement does not restore the old cap.
+AgentLedger lets a human give AI a task budget while keeping control of the money. For example: **research competing projects on Arc with a 5 USDC cap**. AI proposes a payment; policy checks whether it is permitted. **Available / Reserved / Spent** shows where the budget stands. A request above the available amount pauses for a human decision.
+
+The current Mainnet dApp is self-custodial and wallet-signed. The AI planner proposes only; it is not connected to autonomous vendor purchasing or Mainnet settlement. Payment-bound proof can support an owner-approved authority increase; STOP/demotion reduces authority.
 
 [**Open the public Arc Mainnet dApp**](https://agentledger-livid.vercel.app/) · [V2 contract](https://explorer.arc.io/address/0x015099f831c247460b467154c73028804Ea38a10) · [Sourcify exact match](https://sourcify.dev/server/v2/contract/5042/0x015099f831c247460b467154c73028804ea38a10)
 
 **Public interactive Mainnet dApp: READY.** The dApp is experimental and unaudited, accepts only wallet-signed actions, and is intended for small demo amounts. **Production custody: NO-GO.**
+
+## Understand it in 30 seconds — no wallet needed
+
+1. Open the [5 USDC research example](https://agentledger-livid.vercel.app/#demo). A human assigns competitor research; 1 USDC is reserved for a helper. Available / Reserved / Spent starts at **4.00 / 1.00 / 0.00 USDC**.
+2. Click **Simulate permitted payment**. A permitted 0.20 USDC helper request converts Reserved into Spent: **4.00 / 0.80 / 0.20 USDC**. The task cap still totals 5 USDC.
+3. Try the **4.80 USDC parent request**. Only 4 USDC is available; the helper reservation cannot be spent twice. The request is blocked, spending stays unchanged, and the task pauses.
+4. A human chooses **Keep paused** or **End simulated task**. A larger budget requires an explicit new task; AI cannot increase it automatically. STOP blocks further requests.
+
+This is a **scripted local simulation**, not an AI research run, vendor purchase, payment receipt, or Mainnet transaction. Reset starts a fresh illustrative example.
+
+| Status | What it does today | Boundary |
+|---|---|---|
+| Implemented — Arc Mainnet V2 | Wallet-signed task/payment controls, exact approvals, budget accounting, owner permissions, STOP, payment-bound proof, owner-approved promotion | Experimental and unaudited; existing controlled lifecycle paid **0.025 USDC**, not 5 USDC |
+| Explanation — local simulation | The 5 USDC competitor research journey, permitted payment, over-budget pause, human decision | Scripted non-AI fixtures; no wallet, vendor call, Arc read, or settlement |
+| Optional AI proposal demo | Gemini proposes when configured; deterministic checks; clearly labeled non-AI fallback | Simulated service costs and illustrative report preview; no researched report or chain write |
+| Future — not implemented | AI-to-vendor autonomous execution, independent delivery evidence, durable indexing, production hardening | Roadmap, not a current product claim |
 
 ## Demo video status
 
@@ -25,7 +43,9 @@ AgentLedger provides a third option: **Work → Proof → Authority.** A human b
 
 It is designed for individuals and companies delegating real economic work to AI agents while retaining wallet custody and policy control.
 
-## Try it in five steps
+## Explore the separate Mainnet dApp
+
+The wallet-free example above is the recommended first visit. The following controls are for intentional, user-confirmed Mainnet interaction with small demo amounts; they are not required to understand the product.
 
 1. Open the [public dApp](https://agentledger-livid.vercel.app/) and connect an injected EVM wallet.
 2. Switch or add **Arc Mainnet (chain ID 5042)** when prompted.
@@ -108,10 +128,10 @@ ERC-8004 provides portable Agent identity plus reputation and validation inputs.
 
 ## Security properties and tests
 
-- Foundry: **68/68 tests PASS** with fuzz runs `>=256`.
+- Foundry contract tests and V1/V2 stateful invariants run with fuzz runs `>=256`; use the CI result for the submitted commit for the current count.
 - V1 invariant suite: **8,192 calls, 0 reverts**.
 - V2 invariant suite: **8,192 calls, 0 reverts**.
-- Node: **68/68 tests PASS**.
+- Node tests cover the existing policies and lifecycle tooling plus the research example's reservation accounting, blocked retries, and STOP behavior.
 - Coverage includes reentrancy, replay, transfer failure rollback, reservation conservation, nested delegation, scope/recipient/expiry attenuation, exact approvals, ownership transfer, payment-bound proof, promotion, STOP/demotion, reinstatement, and Wallet A/B isolation.
 - V2 deployment runtime matches the local artifact after compiler-reported immutable normalization.
 - Sourcify reports exact creation and runtime matches, match ID `54611987`.
@@ -170,7 +190,7 @@ The V1 Arc Mainnet contract at [`0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e`](ht
 
 ## Arc Microgrants story
 
-AgentLedger is deployed and working on Arc Mainnet, uses official Arc USDC and ERC-8004 infrastructure, exposes a public repository and login-free dApp, and records a real `0.025` USDC economic lifecycle. The demo shows the complete product thesis onchain: start small, bind payment to work, let a human approve increased Authority, reduce Authority after a violation, and reject spending above the new cap.
+AgentLedger gives AI a task budget under human control. The wallet-free 5 USDC research simulation explains the product in 30 seconds. Separately, the verified Arc Mainnet V2 deployment records a controlled, wallet-signed **0.025 USDC** lifecycle with payment-bound proof, owner-approved promotion, STOP/demotion, and read-only over-cap rejection. It does not demonstrate end-to-end autonomous AI research or vendor purchasing. Copy-ready English form text is in [SUBMISSION.md](SUBMISSION.md).
 
 ## Links
 

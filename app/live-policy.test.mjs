@@ -90,6 +90,6 @@ test('browser surface simulates every contract write and never embeds a signer',
   assert.match(liveDemoSource, /Keep paused/);
   assert.match(liveDemoSource, /revokeTask/);
   assert.doesNotMatch(liveDemoSource, /privateKey|mnemonic|seed phrase|backend signer/i);
-  assert.match(pageSource, /Don’t give a new AI agent the keys to your wallet/);
-  assert.match(pageSource, /AgentLedger is the authority layer for autonomous AI workers/);
+  assert.match(pageSource, /Ask AI to research competitors/);
+  assert.match(pageSource, /Give it 5 USDC/);
 });
