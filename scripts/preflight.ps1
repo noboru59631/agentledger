@@ -7,6 +7,9 @@ if (-not $env:ARC_RPC_URL) {
 }
 if (-not $env:USDC_ADDRESS -or $env:USDC_ADDRESS -notmatch '^0x[0-9a-fA-F]{40}$') { throw "Set USDC_ADDRESS to a valid 20-byte USDC contract address." }
 if ($Network -eq "mainnet" -and $env:USDC_ADDRESS -ine "0x3600000000000000000000000000000000000000") { throw "Mainnet requires Arc native USDC at 0x3600000000000000000000000000000000000000." }
+$officialIdentityRegistry = if ($Network -eq "mainnet") { "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432" } else { "0x8004A818BFB912233c491871b3d84c89A494BD9e" }
+if (-not $env:IDENTITY_REGISTRY_ADDRESS) { $env:IDENTITY_REGISTRY_ADDRESS = $officialIdentityRegistry }
+if ($env:IDENTITY_REGISTRY_ADDRESS -ine $officialIdentityRegistry) { throw "IDENTITY_REGISTRY_ADDRESS does not match the official Arc $Network ERC-8004 deployment." }
 if (-not (Get-Command cast -ErrorAction SilentlyContinue)) { throw "Foundry cast is required for preflight." }
 
 $expected = if ($Network -eq "mainnet") { "5042" } else { "5042002" }
@@ -30,6 +33,12 @@ $symbolOutput = cast call $env:USDC_ADDRESS "symbol()(string)" --rpc-url $env:AR
 if ($LASTEXITCODE -ne 0) { throw "USDC symbol read failed." }
 $symbol = ($symbolOutput | Out-String).Trim()
 if ($symbol -notmatch 'USDC') { throw "Unexpected token symbol: expected USDC, received '$symbol'." }
+$identityCodeOutput = cast code $env:IDENTITY_REGISTRY_ADDRESS --rpc-url $env:ARC_RPC_URL
+if ($LASTEXITCODE -ne 0) { throw "Identity Registry code read failed." }
+$identityCode = ($identityCodeOutput | Out-String).Trim()
+if (-not $identityCode -or $identityCode -eq "0x") { throw "No contract bytecode found at the official Identity Registry address." }
+$identityName = ((cast call $env:IDENTITY_REGISTRY_ADDRESS "name()(string)" --rpc-url $env:ARC_RPC_URL) | Out-String).Trim()
+if ($LASTEXITCODE -ne 0 -or $identityName -notmatch 'AgentIdentity') { throw "Unexpected Identity Registry name: '$identityName'." }
 $threshold = [decimal]0
 if ($env:MIN_USDC_BALANCE) {
   $parsed = [decimal]0
@@ -44,4 +53,4 @@ if ($threshold -gt 0) {
   $rawBalance = [decimal](($balanceOutput | Out-String).Trim())
   if ($rawBalance -lt ($threshold * 1000000)) { throw "USDC balance below configurable MIN_USDC_BALANCE=$threshold (balance=$([decimal]$rawBalance / 1000000)); deployment stopped." }
 }
-Write-Output "Read-only preflight passed: network=$Network chainId=$actual block=$block USDC=$env:USDC_ADDRESS symbol=$symbol decimals=$decimals minBalanceGate=$threshold USDC; no transaction sent."
+Write-Output "Read-only preflight passed: network=$Network chainId=$actual block=$block USDC=$env:USDC_ADDRESS symbol=$symbol decimals=$decimals IdentityRegistry=$env:IDENTITY_REGISTRY_ADDRESS minBalanceGate=$threshold USDC; no transaction sent."

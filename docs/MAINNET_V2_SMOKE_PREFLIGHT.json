@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "status": "ready",
+  "generatedAt": "2026-10-04T16:02:36.079Z",
+  "mode": "read-only",
+  "gitHead": "d4456b4042b6e8d56cfcbd966032b725e0cf9dd1",
+  "network": {
+    "name": "Arc Mainnet",
+    "chainId": 5042,
+    "rpcUrl": "https://rpc.mainnet.arc.io",
+    "explorerUrl": "https://explorer.arc.io"
+  },
+  "safety": {
+    "transactionsSent": false,
+    "privateKeyRead": false,
+    "passwordRequested": false,
+    "contractDeployment": false,
+    "paymentBaseUnits": "25000",
+    "paymentUsdc": "0.025",
+    "maximumLifecycleFeeWei": "120000000000000000",
+    "maximumLifecycleFeeNative": "0.12",
+    "maximumGasPriceWei": "25000000000",
+    "failedTransactionsBroadcast": 0
+  },
+  "addresses": {
+    "contract": "0x015099f831c247460b467154c73028804Ea38a10",
+    "sender": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+    "recipient": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+    "isolationWallet": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+    "agentId": "1395",
+    "usdc": "0x3600000000000000000000000000000000000000",
+    "identityRegistry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
+  },
+  "artifact": {
+    "path": "out/MandateGraphV2.sol/MandateGraphV2.json",
+    "creationHash": "0x5dec88089cacd7ab0e0f03eceb35c28e11c4895efc9ae12125fadb9c468df75f",
+    "normalizedRuntimeHash": "0xc546ab56c555c9d661c10795752f51457e7226fde6af9d1c3bbd7ce1395e2689"
+  },
+  "initialState": {
+    "checkedAt": "2026-10-04T16:02:36.017Z",
+    "chainId": 5042,
+    "latestBlock": "24245382",
+    "latestBlockTimestamp": "1791129754",
+    "sender": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+    "recipient": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+    "agentId": "1395",
+    "nonce": "40",
+    "nativeBalanceWei": "3316812676658448138",
+    "nativeBalance": "3.316812676658448138",
+    "usdcBalanceBaseUnits": "3316812",
+    "usdcBalance": "3.316812",
+    "allowanceBaseUnits": "0",
+    "agent": {
+      "operationalAgent": "0x0000000000000000000000000000000000000000",
+      "career": 0,
+      "authorityCapBaseUnits": "0",
+      "completedWorks": 0,
+      "violations": 0,
+      "registered": false,
+      "stopped": false,
+      "promotionEligible": false
+    },
+    "nextMandateId": "1",
+    "contracts": {
+      "usdc": {
+        "address": "0x3600000000000000000000000000000000000000",
+        "bytes": 1798,
+        "hash": "0xc9987bd3af6b26a030951faa7eacc017b68343aeedf3ce5fe68f821c4b93939d"
+      },
+      "identityRegistry": {
+        "address": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+        "bytes": 130,
+        "hash": "0xd0e45b1d89fa9b6cc7e97c1f155d64180e5c232aaccf9900ef9d4fd738c02b41"
+      },
+      "mandateGraphV2": {
+        "address": "0x015099f831c247460b467154c73028804Ea38a10",
+        "bytes": 12377,
+        "normalizedHash": "0xc546ab56c555c9d661c10795752f51457e7226fde6af9d1c3bbd7ce1395e2689",
+        "matchesLocalArtifact": true
+      }
+    },
+    "sourceVerification": {
+      "provider": "Sourcify",
+      "status": "exact_match",
+      "creationMatch": "exact_match",
+      "runtimeMatch": "exact_match",
+      "matchId": "54611987",
+      "verifiedAt": "2026-10-04T15:44:47Z",
+      "apiUrl": "https://sourcify.dev/server/v2/contract/5042/0x015099f831c247460b467154c73028804ea38a10",
+      "jobUrl": "https://sourcify.dev/server/verify-ui/jobs/897518d7-6bf7-4cbf-92c2-0d59fbb848ae"
+    }
+  },
+  "lifecycle": {
+    "taskSalt": "0x824fade1ea4967c8707df476ea7d8dfcb7c76e30ab4bf438e17ada33b5cf5571",
+    "taskHash": "0x07fc62f40e082ae551383028e973e730492887af3da26d49f972e7b2feaa37d8",
+    "deadline": "1791734554",
+    "taskBudgetBaseUnits": "100000",
+    "rootServiceScope": "3",
+    "childServiceScope": "1",
+    "initialAuthorityBaseUnits": "10000",
+    "promotedAuthorityBaseUnits": "50000",
+    "reducedAuthorityBaseUnits": "25000",
+    "exactAllowanceBaseUnits": "25000",
+    "smallPaymentBaseUnits": "5000",
+    "largerPaymentBaseUnits": "20000",
+    "totalPaymentBaseUnits": "25000",
+    "overCapAmountBaseUnits": "26000",
+    "resourceOneHash": "0xc5a63eba262b144b69faa137d6da7380db9845e81cae5c83bebc9054b3747a95",
+    "outcomeOneHash": "0x672b297289f4483ea608cf626317c0bdbf04feb2f8d2fdf3477e1a3a47150e59",
+    "resourceTwoHash": "0x96d6437208c7b37805605d9dd8a61834f7714b0520ffa073cc76ce050913bd00",
+    "outcomeTwoHash": "0x142767c1da70883dac70643616f6704bc7569cd0794990f5362e32b32c990c63",
+    "violationReasonHash": "0x9ead4322b3aaffddc9aec3331cd8d938b982ade0d1ade11b815905f3e93006f0",
+    "remediationHash": "0x57e937ecd40c5dab45e0740d8ed5f4ffc0740bdbcebc58b50c5fa8e046b45500",
+    "overCapResourceHash": "0xb28c06f173e0a9d1f5ab9879291a17b105a6b78faab04cbd507674fc949326ae",
+    "overCapOutcomeHash": "0x9f4c553404359c226e79e946311bde45c8bd2ad61e42d7bb4d40d9ec0693d82d"
+  }
+}

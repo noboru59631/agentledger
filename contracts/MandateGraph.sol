@@ -5,6 +5,10 @@ interface IERC20 {
     function transferFrom(address from, address to, uint256 amount) external returns (bool);
 }
 
+interface IERC8004IdentityRegistry {
+    function ownerOf(uint256 agentId) external view returns (address);
+}
+
 /// @title MandateGraph
 /// @notice Task-bound delegation and request-bound USDC payment authorization.
 contract MandateGraph {
@@ -13,7 +17,11 @@ contract MandateGraph {
     error RecipientWidened(); error DelegationDepthExhausted(); error AuthorityRevoked(uint256 mandateId);
     error AuthorityExpired(uint256 mandateId); error BudgetExceeded(); error PaymentExpired();
     error Replay(bytes32 paymentId); error InvalidRecipient(); error UsdcTransferFailed();
-    error InvalidUsdc(); error InvalidOutcome(); error ReentrantCall(); error InvalidTaskHash();
+    error InvalidUsdc(); error InvalidIdentityRegistry(); error InvalidOutcome(); error ReentrantCall(); error InvalidTaskHash();
+    error AuthorityCapExceeded(); error AgentStopped(); error UnknownAgent();
+    error AgentAlreadyRegistered(); error NotAgentOwner(); error InvalidPromotion();
+    error IdentityAlreadyRegistered(uint256 agentId);
+    error WorkProofAlreadyRecorded(bytes32 paymentId);
     error ActiveDelegations();
 
     struct Task { address owner; uint128 budget; uint128 spent; uint64 deadline; bytes32 taskHash; bool revoked; }
@@ -23,12 +31,22 @@ contract MandateGraph {
         uint256 serviceScope; bool revoked; uint256 activeChildren;
     }
 
+    enum Career { Trainee, Associate, Manager, Director }
+    struct AgentProfile { uint256 agentId; Career career; uint128 authorityCap; uint32 completedWorks; uint32 violations; bool active; }
+
     IERC20 public immutable usdc;
+    IERC8004IdentityRegistry public immutable identityRegistry;
     mapping(bytes32 => Task) public tasks;
     mapping(uint256 => Mandate) public mandates;
     mapping(bytes32 => bool) public usedPaymentIds;
     mapping(bytes32 => bytes32) public paymentRequestHashes;
     mapping(bytes32 => bytes32) public paymentOutcomeHashes;
+    mapping(bytes32 => uint256) public paymentMandateIds;
+    mapping(bytes32 => bool) public workProofRecorded;
+    mapping(address => AgentProfile) public agents;
+    mapping(uint256 => address) public identityAgents;
+    mapping(address => bool) public stoppedAgents;
+    mapping(address => uint32) public lastPromotionWorkCount;
     uint256 public nextMandateId = 1;
     uint256 private entered;
 
@@ -36,32 +54,113 @@ contract MandateGraph {
     event MandateDelegated(uint256 indexed parentId, uint256 indexed mandateId, address indexed agent, uint128 budget, uint64 expiry);
     event MandateRevoked(uint256 indexed mandateId, bytes32 indexed taskId);
     event PaymentExecuted(bytes32 indexed paymentId, bytes32 indexed taskId, uint256 indexed mandateId, address recipient, uint128 amount, uint256 serviceClass, bytes32 resourceHash, bytes32 outcomeHash);
+    event AgentRegistered(address indexed agent, uint256 indexed agentId, Career career, uint128 authorityCap);
+    event WorkProofRecorded(address indexed agent, bytes32 indexed taskId, bytes32 indexed paymentId, bytes32 proofHash, uint32 completedWorks);
+    event Promotion(address indexed agent, Career fromCareer, Career toCareer, uint128 authorityCap);
+    event Demotion(address indexed agent, Career fromCareer, Career toCareer, uint128 authorityCap, bytes32 reasonHash);
+    event AgentReinstated(address indexed agent, bytes32 indexed remediationHash);
 
-    constructor(IERC20 usdc_) {
+    constructor(IERC20 usdc_, IERC8004IdentityRegistry identityRegistry_) {
         if (address(usdc_) == address(0) || address(usdc_).code.length == 0) revert InvalidUsdc();
+        if (address(identityRegistry_) == address(0) || address(identityRegistry_).code.length == 0) {
+            revert InvalidIdentityRegistry();
+        }
         usdc = usdc_;
+        identityRegistry = identityRegistry_;
+    }
+
+    function registerAgent(address agent, uint256 agentId, uint128 initialAuthorityCap) external nonReentrant {
+        if (agent == address(0) || initialAuthorityCap == 0) revert UnknownAgent();
+        if (agents[agent].active) revert AgentAlreadyRegistered();
+        if (identityAgents[agentId] != address(0)) revert IdentityAlreadyRegistered(agentId);
+        if (_identityOwner(agentId) != msg.sender) revert NotAgentOwner();
+        agents[agent] = AgentProfile(agentId, Career.Trainee, initialAuthorityCap, 0, 0, true);
+        identityAgents[agentId] = agent;
+        emit AgentRegistered(agent, agentId, Career.Trainee, initialAuthorityCap);
+    }
+
+    function recordWorkProof(address agent, bytes32 taskId, bytes32 paymentId, bytes32 proofHash) external nonReentrant {
+        AgentProfile storage profile = agents[agent];
+        if (!profile.active) revert UnknownAgent();
+        Task storage task = tasks[taskId];
+        if (task.owner == address(0)) revert UnknownTask();
+        if (task.owner != msg.sender) revert NotTaskOwner();
+        uint256 mandateId = paymentMandateIds[paymentId];
+        if (
+            mandateId == 0 || mandates[mandateId].taskId != taskId || mandates[mandateId].agent != agent
+                || proofHash == bytes32(0) || paymentOutcomeHashes[paymentId] != proofHash
+        ) revert InvalidOutcome();
+        if (workProofRecorded[paymentId]) revert WorkProofAlreadyRecorded(paymentId);
+        workProofRecorded[paymentId] = true;
+        profile.completedWorks += 1;
+        emit WorkProofRecorded(agent, taskId, paymentId, proofHash, profile.completedWorks);
+    }
+
+    function promoteAgent(address agent, Career nextCareer, uint128 nextAuthorityCap) external nonReentrant {
+        AgentProfile storage profile = agents[agent];
+        if (!profile.active) revert UnknownAgent();
+        _assertAgentOwner(profile);
+        if (stoppedAgents[agent]) revert AgentStopped();
+        if (
+            profile.career == Career.Director || uint8(nextCareer) != uint8(profile.career) + 1
+                || nextAuthorityCap <= profile.authorityCap || profile.completedWorks <= lastPromotionWorkCount[agent]
+        ) revert InvalidPromotion();
+        Career previous = profile.career;
+        profile.career = nextCareer;
+        profile.authorityCap = nextAuthorityCap;
+        lastPromotionWorkCount[agent] = profile.completedWorks;
+        emit Promotion(agent, previous, nextCareer, nextAuthorityCap);
+    }
+
+    function demoteAgent(address agent, bytes32 reasonHash) external nonReentrant {
+        AgentProfile storage profile = agents[agent];
+        if (!profile.active) revert UnknownAgent();
+        _assertAgentOwner(profile);
+        if (reasonHash == bytes32(0)) revert InvalidOutcome();
+        Career previous = profile.career;
+        if (previous != Career.Trainee) {
+            profile.career = Career(uint8(previous) - 1);
+        }
+        profile.authorityCap = profile.authorityCap / 2;
+        profile.violations += 1;
+        lastPromotionWorkCount[agent] = profile.completedWorks;
+        stoppedAgents[agent] = true;
+        emit Demotion(agent, previous, profile.career, profile.authorityCap, reasonHash);
+    }
+
+    function reinstateAgent(address agent, bytes32 remediationHash) external nonReentrant {
+        AgentProfile storage profile = agents[agent];
+        if (!profile.active) revert UnknownAgent();
+        _assertAgentOwner(profile);
+        if (!stoppedAgents[agent] || remediationHash == bytes32(0)) revert InvalidOutcome();
+        stoppedAgents[agent] = false;
+        emit AgentReinstated(agent, remediationHash);
     }
 
     function createTask(
         bytes32 taskId, bytes32 taskHash, uint128 budget, uint64 deadline, uint256 serviceScope,
         address rootAgent, address recipient, uint8 depth
-    ) external returns (uint256 rootMandateId) {
+    ) external nonReentrant returns (uint256 rootMandateId) {
         if (tasks[taskId].owner != address(0)) revert TaskAlreadyExists();
         if (budget == 0 || deadline <= block.timestamp || serviceScope == 0 || rootAgent == address(0) || depth > 32) revert InvalidBudget();
         if (taskHash == bytes32(0)) revert InvalidTaskHash();
+        if (!agents[rootAgent].active) revert UnknownAgent();
+        if (stoppedAgents[rootAgent]) revert AgentStopped();
         tasks[taskId] = Task(msg.sender, budget, 0, deadline, taskHash, false);
         rootMandateId = nextMandateId++;
         mandates[rootMandateId] = Mandate(taskId, 0, rootAgent, recipient, budget, 0, 0, deadline, depth, serviceScope, false, 0);
         emit TaskCreated(taskId, rootMandateId, msg.sender, budget, taskHash);
     }
 
-    function delegate(uint256 parentId, address childAgent, uint128 childBudget, uint64 childExpiry, uint256 childScope, address childRecipient) external returns (uint256 childId) {
+    function delegate(uint256 parentId, address childAgent, uint128 childBudget, uint64 childExpiry, uint256 childScope, address childRecipient) external nonReentrant returns (uint256 childId) {
         Mandate storage parent = mandates[parentId];
         if (parent.agent == address(0)) revert UnknownMandate();
         if (msg.sender != parent.agent) revert NotMandateAgent();
         _assertLive(parentId);
         if (childAgent == address(0) || childAgent == address(this) || childBudget == 0 || parent.spent > parent.budget || parent.allocated > parent.budget - parent.spent || childBudget > parent.budget - parent.spent - parent.allocated) revert InvalidBudget();
-        if (childExpiry > parent.expiry) revert InvalidExpiry();
+        if (!agents[childAgent].active) revert UnknownAgent();
+        if (stoppedAgents[childAgent]) revert AgentStopped();
+        if (childExpiry < block.timestamp || childExpiry > parent.expiry) revert InvalidExpiry();
         if ((childScope | parent.serviceScope) != parent.serviceScope || childScope == 0) revert ScopeWidened();
         if (parent.recipient != address(0) && childRecipient != parent.recipient) revert RecipientWidened();
         if (parent.depth == 0) revert DelegationDepthExhausted();
@@ -72,7 +171,7 @@ contract MandateGraph {
         emit MandateDelegated(parentId, childId, childAgent, childBudget, childExpiry);
     }
 
-    function revokeTask(bytes32 taskId) external {
+    function revokeTask(bytes32 taskId) external nonReentrant {
         Task storage task = tasks[taskId];
         if (task.owner == address(0)) revert UnknownTask();
         if (msg.sender != task.owner) revert NotTaskOwner();
@@ -80,7 +179,7 @@ contract MandateGraph {
         emit MandateRevoked(0, taskId);
     }
 
-    function revokeMandate(uint256 mandateId) external {
+    function revokeMandate(uint256 mandateId) external nonReentrant {
         Mandate storage mandate = mandates[mandateId];
         if (mandate.agent == address(0)) revert UnknownMandate();
         if (msg.sender != mandate.agent) revert NotMandateAgent();
@@ -102,6 +201,7 @@ contract MandateGraph {
         Mandate storage mandate = mandates[mandateId];
         if (mandate.agent == address(0)) revert UnknownMandate();
         if (msg.sender != mandate.agent) revert NotMandateAgent();
+        _assertPaymentAuthority(mandateId, amount);
         if (requestExpiry < block.timestamp || requestExpiry > mandate.expiry || requestExpiry > tasks[mandate.taskId].deadline) revert PaymentExpired();
         if (usedPaymentIds[paymentId]) revert Replay(paymentId);
         if (recipient == address(0) || (mandate.recipient != address(0) && recipient != mandate.recipient)) revert InvalidRecipient();
@@ -123,10 +223,11 @@ contract MandateGraph {
         usedPaymentIds[paymentId] = true;
         paymentRequestHashes[paymentId] = requestHash;
         paymentOutcomeHashes[paymentId] = outcomeHash;
+        paymentMandateIds[paymentId] = mandateId;
         task.spent += amount;
         _recordSpendAndReleaseReservations(mandateId, amount);
-        if (!usdc.transferFrom(msg.sender, recipient, amount)) revert UsdcTransferFailed();
         emit PaymentExecuted(paymentId, mandate.taskId, mandateId, recipient, amount, serviceClass, resourceHash, outcomeHash);
+        _transferUsdc(msg.sender, recipient, amount);
     }
 
     modifier nonReentrant() {
@@ -141,10 +242,16 @@ contract MandateGraph {
         uint256 cursor = mandateId;
         while (cursor != 0) {
             Mandate storage mandate = mandates[cursor];
-            if (mandate.revoked || mandate.expiry < block.timestamp || tasks[mandate.taskId].revoked) return false;
+            if (mandate.revoked || mandate.expiry < block.timestamp || tasks[mandate.taskId].revoked || stoppedAgents[mandate.agent]) return false;
             cursor = mandate.parentId;
         }
         return true;
+    }
+
+    function isPromotionEligible(address agent) external view returns (bool) {
+        AgentProfile storage profile = agents[agent];
+        return profile.active && !stoppedAgents[agent] && profile.career != Career.Director
+            && profile.completedWorks > lastPromotionWorkCount[agent];
     }
 
     function _assertLive(uint256 mandateId) internal view {
@@ -153,7 +260,32 @@ contract MandateGraph {
             Mandate storage mandate = mandates[cursor];
             if (mandate.revoked || tasks[mandate.taskId].revoked) revert AuthorityRevoked(cursor);
             if (mandate.expiry < block.timestamp) revert AuthorityExpired(cursor);
+            if (stoppedAgents[mandate.agent]) revert AgentStopped();
             cursor = mandate.parentId;
+        }
+    }
+
+    function _assertPaymentAuthority(uint256 mandateId, uint128 amount) internal view {
+        uint256 cursor = mandateId;
+        while (cursor != 0) {
+            AgentProfile storage profile = agents[mandates[cursor].agent];
+            if (!profile.active) revert UnknownAgent();
+            if (stoppedAgents[mandates[cursor].agent]) revert AgentStopped();
+            if (amount > profile.authorityCap) revert AuthorityCapExceeded();
+            cursor = mandates[cursor].parentId;
+        }
+    }
+
+    function _assertAgentOwner(AgentProfile storage profile) internal view {
+        if (_identityOwner(profile.agentId) != msg.sender) revert NotAgentOwner();
+    }
+
+    function _identityOwner(uint256 agentId) internal view returns (address owner) {
+        try identityRegistry.ownerOf(agentId) returns (address currentOwner) {
+            if (currentOwner == address(0)) revert UnknownAgent();
+            owner = currentOwner;
+        } catch {
+            revert UnknownAgent();
         }
     }
 
@@ -164,6 +296,15 @@ contract MandateGraph {
             node.spent += amount;
             if (node.parentId != 0) mandates[node.parentId].allocated -= amount;
             cursor = node.parentId;
+        }
+    }
+
+    function _transferUsdc(address from, address recipient, uint128 amount) internal {
+        (bool success, bytes memory returnData) = address(usdc).call(
+            abi.encodeCall(IERC20.transferFrom, (from, recipient, amount))
+        );
+        if (!success || (returnData.length != 0 && (returnData.length < 32 || !abi.decode(returnData, (bool))))) {
+            revert UsdcTransferFailed();
         }
     }
 }

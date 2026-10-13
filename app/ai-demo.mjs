@@ -19,7 +19,7 @@ function render(result, source, reason) {
   byId('aiAgents').innerHTML = `<li><b>Human task</b><span>${money(byId('aiBudget').value)} cap</span><ul><li><b>${plan.rootAgent.role}</b><span>${money(plan.rootAgent.budget)} allocated</span>${(plan.subAgents || []).map((agent) => `<ul><li><b>${agent.role}</b><span>${money(agent.budget)} reserved</span></li></ul>`).join('')}</li></ul></li>`;
   byId('aiServices').innerHTML = result.decisions.map((decision) => `<li class="${decision.status === 'blocked' ? 'blocked-row' : ''}"><b>${decision.category}</b><span>${decision.status} · ${money(decision.estimatedCost)}</span><small>${decision.reason}</small></li>`).join('');
   byId('aiBlocked').innerHTML = result.blockedActions.length ? result.blockedActions.map((item) => `<li>${item}</li>`).join('') : '<li>No blocked actions in the valid proposal.</li>';
-  byId('aiReport').textContent = revoked ? 'STOP received. The report remains readable, but no queued descendant action can execute.' : `Draft ${plan.finalOutputType}: ${plan.taskSummary} Two simulated service requests were evaluated against the task budget and allowlist. No vendor was contacted and no USDC was settled.`;
+  byId('aiReport').textContent = revoked ? 'STOP received. This illustrative preview remains readable; queued simulated actions are blocked.' : `Illustrative ${plan.finalOutputType} preview: ${plan.taskSummary}. This text is a template, not a researched report. Service requests were checked against the simulated budget and allowlist. No vendor was contacted and no USDC was settled.`;
   byId('aiDashboard').hidden = false;
 }
 

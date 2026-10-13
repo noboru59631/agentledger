@@ -1,78 +1,185 @@
 {
-  "version": 2,
+  "version": 3,
   "network": "Arc Testnet",
   "chainId": 5042002,
   "rpcUrl": "https://rpc.testnet.arc.io",
   "token": "0x3600000000000000000000000000000000000000",
+  "identityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+  "agentId": "897002",
+  "identityRegistration": {
+    "status": "success",
+    "hash": "0x9606f8bd02dd21c76c5a3eb58468b18421227f91911cef77bc3eff59b868fcef",
+    "explorerUrl": "https://testnet.arcscan.app/tx/0x9606f8bd02dd21c76c5a3eb58468b18421227f91911cef77bc3eff59b868fcef"
+  },
   "sender": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
-  "recipient": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
-  "contractAddress": "0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da",
-  "taskId": "0x09bc403d8cfec6410b6a26ccf0e0ab1138418c016f0374f10d73b8e7b448df7a",
-  "taskHash": "0xa279c608c903cc3802a59b7bca1aeb8dc9447c4a4ca4977897222e5879020422",
+  "recipient": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+  "contractAddress": "0x8135c6E750E240FB352ee6701F2976fF8BA63ea3",
+  "taskId": "0x55e780e168cab133d76034b544a7e32a2262d5b8636f260ff8456ccb8bbb94bf",
+  "taskHash": "0x10f16112a575bf0b04272e112af1b3cf5ed4c79ca2209be396a04685557ec9db",
   "rootMandateId": 1,
   "childMandateId": 2,
-  "deadline": "1790082670",
+  "deadline": "1791173046",
   "scope": "3",
-  "resourceHash": "0xd1ed586b5b7d5afce65ae9c28e518e00b3075ab93e890053db66c9d229d7c859",
+  "resourceHash": "0x95e0640ceded44c43ecbc3de63294eb11db99d4514fd3ec2b67c55f34c16f1b5",
   "paymentNonce": "1",
-  "paymentId": "0xe994c7f9477936e6ce3b5401320a85515d966a5f1de0e11669894d413b65947c",
-  "outcomeHash": "0x343d772e09fb6cadc3a8f93e87a4fcdd6dff56d0191d90f9f7c97918ebbd807e",
+  "paymentId": "0xf6c3ee1245c603c3a2a414cda1d3e406e400386cfc045510741ace69d3eccfb5",
+  "outcomeHash": "0xeaf76e03aa90b0b518da0539e3b762aa68dbb6163cb8fc8e6196edbc657e998f",
+  "largerResourceHash": "0x7a88e206cae260dd31683f31252158484fe6a0843132a929db64853c507279fd",
+  "largerOutcomeHash": "0x9fce89d8a4a1a1d97867d245e9c9378a8d207042509c6955a741e79ce94d38bf",
+  "largerPaymentNonce": "2",
+  "largerPaymentId": "0x372bfeca5cf8b286446dd3f9efc866c8f353a54b37bef446279c485d16987440",
+  "violationReasonHash": "0xf598b03e319a8f59a012a98c24f166cd6b163f37b40f092b2e6925c6fbd83b87",
+  "remediationHash": "0xd45df46a52e218243575ca93f70ce7b831bfb302b7747ebcc27307acf19dd07d",
   "paymentAmountBaseUnits": "10000",
+  "largerPaymentAmountBaseUnits": "20000",
+  "initialAuthorityCapBaseUnits": "10000",
+  "promotedAuthorityCapBaseUnits": "50000",
   "taskBudgetBaseUnits": "1000000",
   "delegatedBudgetBaseUnits": "500000",
-  "retryBlocked": true,
+  "retryBlocked": false,
   "steps": {
+    "registerIdentity": {
+      "status": "success",
+      "hash": "0x9606f8bd02dd21c76c5a3eb58468b18421227f91911cef77bc3eff59b868fcef",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x9606f8bd02dd21c76c5a3eb58468b18421227f91911cef77bc3eff59b868fcef"
+    },
+    "deploy": {
+      "status": "success",
+      "hash": "0xa02ee658b19caa68771577634041b97bba5305230ce0e0960010da45c597db83",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xa02ee658b19caa68771577634041b97bba5305230ce0e0960010da45c597db83"
+    },
+    "registerAgent": {
+      "status": "success",
+      "hash": "0x59d0a0bd9e2100fdfe62f14a7f86a10ff82bc6041af095c02e98a0ea5c0c78b7",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x59d0a0bd9e2100fdfe62f14a7f86a10ff82bc6041af095c02e98a0ea5c0c78b7"
+    },
     "createTask": {
       "status": "success",
-      "inferredOnchain": true
+      "hash": "0x0e06f3196937936c8cecac742c6260c396bc629916c610731f45bae0536c8257",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x0e06f3196937936c8cecac742c6260c396bc629916c610731f45bae0536c8257"
     },
     "delegate": {
       "status": "success",
-      "hash": "0xada88a185ec2f880ffcf71f5cf8d9e3e5a7b91a163201c8cadd505426f1bee46",
-      "explorerUrl": "https://testnet.arcscan.app/tx/0xada88a185ec2f880ffcf71f5cf8d9e3e5a7b91a163201c8cadd505426f1bee46"
+      "hash": "0x694644e56061fec0d59c672f8c0bfb36b0061f62c5489000e5a3953c7a387750",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x694644e56061fec0d59c672f8c0bfb36b0061f62c5489000e5a3953c7a387750"
     },
     "approve": {
       "status": "success",
-      "hash": "0xba8d67e6a9d26ff3295462c7399a0df254b0ebc8701067807823374c4b317f39",
-      "explorerUrl": "https://testnet.arcscan.app/tx/0xba8d67e6a9d26ff3295462c7399a0df254b0ebc8701067807823374c4b317f39"
+      "hash": "0x8430d84c9b585045f33165b964c5820dd2e6df1025cc85bc24cd297b029da90e",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x8430d84c9b585045f33165b964c5820dd2e6df1025cc85bc24cd297b029da90e"
     },
     "executePayment": {
       "status": "success",
-      "hash": "0xa4415362a54581faa4afb40cfe367397143aa5969e6227ce501c7e9508e02a00",
-      "explorerUrl": "https://testnet.arcscan.app/tx/0xa4415362a54581faa4afb40cfe367397143aa5969e6227ce501c7e9508e02a00"
+      "hash": "0x8e2291d6ca18f0d4fa779baf7fb52169b9d81414df9e8e89996c28bcb4925e6a",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x8e2291d6ca18f0d4fa779baf7fb52169b9d81414df9e8e89996c28bcb4925e6a"
     },
-    "revokeTask": {
+    "recordWorkProof": {
       "status": "success",
-      "hash": "0x12fbc23a88ccb864e7cca6bba1bfadcc61f9fdaad347ddef29c4df3458a31e0a",
-      "explorerUrl": "https://testnet.arcscan.app/tx/0x12fbc23a88ccb864e7cca6bba1bfadcc61f9fdaad347ddef29c4df3458a31e0a"
+      "hash": "0xb21cc6cb14f70afa45d7789b610adc392eb63238f4b0a480a97828c05572ab16",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xb21cc6cb14f70afa45d7789b610adc392eb63238f4b0a480a97828c05572ab16"
+    },
+    "promoteAgent": {
+      "status": "success",
+      "hash": "0x24f0ac2b190518140442740c97626a088305c4b1a6047556ae7c5b7368fdde86",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x24f0ac2b190518140442740c97626a088305c4b1a6047556ae7c5b7368fdde86"
+    },
+    "executeLargerPayment": {
+      "status": "success",
+      "hash": "0xc4e898ae5539ceca80f3cba5e5df561aec57c4e98cc8db41db75579b861f70f5",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xc4e898ae5539ceca80f3cba5e5df561aec57c4e98cc8db41db75579b861f70f5"
+    },
+    "demoteAgent": {
+      "status": "success",
+      "hash": "0x049278adf0f620d96cb4f71f0c19693fbbe6d55a0a50d623ea0cd438876f992a",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x049278adf0f620d96cb4f71f0c19693fbbe6d55a0a50d623ea0cd438876f992a"
+    },
+    "reinstateAgent": {
+      "status": "success",
+      "hash": "0x3d47b27c32112ed9f6b9a5cc079a5725d062c9cc69afb163d2ba2cdd758a0cce",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x3d47b27c32112ed9f6b9a5cc079a5725d062c9cc69afb163d2ba2cdd758a0cce"
+    },
+    "capExceededCheck": {
+      "status": "success",
+      "readOnly": true,
+      "amount": "25001"
     }
   },
   "transactions": [
     {
+      "action": "registerIdentity",
+      "hash": "0x9606f8bd02dd21c76c5a3eb58468b18421227f91911cef77bc3eff59b868fcef",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x9606f8bd02dd21c76c5a3eb58468b18421227f91911cef77bc3eff59b868fcef"
+    },
+    {
       "action": "deploy",
-      "hash": "0x1254630d843426f6bea89e034e99a3f8366ede7b30bc4725a99b733eb8dd7da5",
-      "explorerUrl": "https://testnet.arcscan.app/tx/0x1254630d843426f6bea89e034e99a3f8366ede7b30bc4725a99b733eb8dd7da5"
+      "hash": "0xa02ee658b19caa68771577634041b97bba5305230ce0e0960010da45c597db83",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xa02ee658b19caa68771577634041b97bba5305230ce0e0960010da45c597db83"
+    },
+    {
+      "action": "registerAgent",
+      "hash": "0x59d0a0bd9e2100fdfe62f14a7f86a10ff82bc6041af095c02e98a0ea5c0c78b7",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x59d0a0bd9e2100fdfe62f14a7f86a10ff82bc6041af095c02e98a0ea5c0c78b7"
+    },
+    {
+      "action": "createTask",
+      "hash": "0x0e06f3196937936c8cecac742c6260c396bc629916c610731f45bae0536c8257",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x0e06f3196937936c8cecac742c6260c396bc629916c610731f45bae0536c8257"
     },
     {
       "action": "delegate",
-      "hash": "0xada88a185ec2f880ffcf71f5cf8d9e3e5a7b91a163201c8cadd505426f1bee46",
-      "explorerUrl": "https://testnet.arcscan.app/tx/0xada88a185ec2f880ffcf71f5cf8d9e3e5a7b91a163201c8cadd505426f1bee46"
+      "hash": "0x694644e56061fec0d59c672f8c0bfb36b0061f62c5489000e5a3953c7a387750",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x694644e56061fec0d59c672f8c0bfb36b0061f62c5489000e5a3953c7a387750"
     },
     {
       "action": "approve",
-      "hash": "0xba8d67e6a9d26ff3295462c7399a0df254b0ebc8701067807823374c4b317f39",
-      "explorerUrl": "https://testnet.arcscan.app/tx/0xba8d67e6a9d26ff3295462c7399a0df254b0ebc8701067807823374c4b317f39"
+      "hash": "0x8430d84c9b585045f33165b964c5820dd2e6df1025cc85bc24cd297b029da90e",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x8430d84c9b585045f33165b964c5820dd2e6df1025cc85bc24cd297b029da90e"
     },
     {
       "action": "executePayment",
-      "hash": "0xa4415362a54581faa4afb40cfe367397143aa5969e6227ce501c7e9508e02a00",
-      "explorerUrl": "https://testnet.arcscan.app/tx/0xa4415362a54581faa4afb40cfe367397143aa5969e6227ce501c7e9508e02a00"
+      "hash": "0x8e2291d6ca18f0d4fa779baf7fb52169b9d81414df9e8e89996c28bcb4925e6a",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x8e2291d6ca18f0d4fa779baf7fb52169b9d81414df9e8e89996c28bcb4925e6a"
     },
     {
-      "action": "revokeTask",
-      "hash": "0x12fbc23a88ccb864e7cca6bba1bfadcc61f9fdaad347ddef29c4df3458a31e0a",
-      "explorerUrl": "https://testnet.arcscan.app/tx/0x12fbc23a88ccb864e7cca6bba1bfadcc61f9fdaad347ddef29c4df3458a31e0a"
+      "action": "recordWorkProof",
+      "hash": "0xb21cc6cb14f70afa45d7789b610adc392eb63238f4b0a480a97828c05572ab16",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xb21cc6cb14f70afa45d7789b610adc392eb63238f4b0a480a97828c05572ab16"
+    },
+    {
+      "action": "promoteAgent",
+      "hash": "0x24f0ac2b190518140442740c97626a088305c4b1a6047556ae7c5b7368fdde86",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x24f0ac2b190518140442740c97626a088305c4b1a6047556ae7c5b7368fdde86"
+    },
+    {
+      "action": "executeLargerPayment",
+      "hash": "0xc4e898ae5539ceca80f3cba5e5df561aec57c4e98cc8db41db75579b861f70f5",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0xc4e898ae5539ceca80f3cba5e5df561aec57c4e98cc8db41db75579b861f70f5"
+    },
+    {
+      "action": "demoteAgent",
+      "hash": "0x049278adf0f620d96cb4f71f0c19693fbbe6d55a0a50d623ea0cd438876f992a",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x049278adf0f620d96cb4f71f0c19693fbbe6d55a0a50d623ea0cd438876f992a"
+    },
+    {
+      "action": "reinstateAgent",
+      "hash": "0x3d47b27c32112ed9f6b9a5cc079a5725d062c9cc69afb163d2ba2cdd758a0cce",
+      "explorerUrl": "https://testnet.arcscan.app/tx/0x3d47b27c32112ed9f6b9a5cc079a5725d062c9cc69afb163d2ba2cdd758a0cce"
     }
   ],
-  "caveat": "The recipient is the sender address, so this 0.01 USDC transfer is a self-transfer rehearsal. It demonstrates the task-bound payment path and revocation/retry rejection on Arc Testnet; it is not evidence of independent vendor payment or service delivery."
+  "capExceededRejected": true,
+  "verification": {
+    "allTransactionReceiptsSuccessful": true,
+    "transactionCount": 12,
+    "runtimeCodeBytes": 12154,
+    "career": "Trainee",
+    "authorityCapBaseUnits": "25000",
+    "completedWorks": 1,
+    "violations": 1,
+    "stopped": false,
+    "promotionEligible": false,
+    "taskSpentBaseUnits": "30000",
+    "childAuthorizedAfterRemediation": true,
+    "capRejectionError": "AuthorityCapExceeded",
+    "capRejectionSelector": "0xe5bbd38c"
+  }
 }

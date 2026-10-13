@@ -1,0 +1,768 @@
+{
+  "version": 1,
+  "status": "pass",
+  "startedAt": "2026-10-04T16:02:37.918Z",
+  "gitHead": "d4456b4042b6e8d56cfcbd966032b725e0cf9dd1",
+  "network": {
+    "name": "Arc Mainnet",
+    "chainId": 5042,
+    "rpcUrl": "https://rpc.mainnet.arc.io",
+    "explorerUrl": "https://explorer.arc.io"
+  },
+  "safety": {
+    "transactionsSent": true,
+    "privateKeyRead": false,
+    "passwordRequested": true,
+    "contractDeployment": false,
+    "paymentBaseUnits": "25000",
+    "paymentUsdc": "0.025",
+    "maximumLifecycleFeeWei": "120000000000000000",
+    "maximumLifecycleFeeNative": "0.12",
+    "maximumGasPriceWei": "25000000000",
+    "failedTransactionsBroadcast": 0,
+    "passwordHandledByLocalFoundryPromptOnly": true,
+    "finalAllowanceBaseUnits": "0",
+    "crossUserWrites": 0,
+    "contractRedeployed": false
+  },
+  "addresses": {
+    "contract": "0x015099f831c247460b467154c73028804Ea38a10",
+    "sender": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+    "recipient": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+    "isolationWallet": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+    "agentId": "1395",
+    "usdc": "0x3600000000000000000000000000000000000000",
+    "identityRegistry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
+  },
+  "artifact": {
+    "path": "out/MandateGraphV2.sol/MandateGraphV2.json",
+    "creationHash": "0x5dec88089cacd7ab0e0f03eceb35c28e11c4895efc9ae12125fadb9c468df75f",
+    "normalizedRuntimeHash": "0xc546ab56c555c9d661c10795752f51457e7226fde6af9d1c3bbd7ce1395e2689"
+  },
+  "sourceVerification": {
+    "provider": "Sourcify",
+    "status": "exact_match",
+    "creationMatch": "exact_match",
+    "runtimeMatch": "exact_match",
+    "matchId": "54611987",
+    "verifiedAt": "2026-10-04T15:44:47Z",
+    "apiUrl": "https://sourcify.dev/server/v2/contract/5042/0x015099f831c247460b467154c73028804ea38a10",
+    "jobUrl": "https://sourcify.dev/server/verify-ui/jobs/897518d7-6bf7-4cbf-92c2-0d59fbb848ae"
+  },
+  "initialState": {
+    "checkedAt": "2026-10-04T16:02:36.017Z",
+    "chainId": 5042,
+    "latestBlock": "24245382",
+    "latestBlockTimestamp": "1791129754",
+    "sender": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+    "recipient": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+    "agentId": "1395",
+    "nonce": "40",
+    "nativeBalanceWei": "3316812676658448138",
+    "nativeBalance": "3.316812676658448138",
+    "usdcBalanceBaseUnits": "3316812",
+    "usdcBalance": "3.316812",
+    "allowanceBaseUnits": "0",
+    "agent": {
+      "operationalAgent": "0x0000000000000000000000000000000000000000",
+      "career": 0,
+      "authorityCapBaseUnits": "0",
+      "completedWorks": 0,
+      "violations": 0,
+      "registered": false,
+      "stopped": false,
+      "promotionEligible": false
+    },
+    "nextMandateId": "1",
+    "contracts": {
+      "usdc": {
+        "address": "0x3600000000000000000000000000000000000000",
+        "bytes": 1798,
+        "hash": "0xc9987bd3af6b26a030951faa7eacc017b68343aeedf3ce5fe68f821c4b93939d"
+      },
+      "identityRegistry": {
+        "address": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+        "bytes": 130,
+        "hash": "0xd0e45b1d89fa9b6cc7e97c1f155d64180e5c232aaccf9900ef9d4fd738c02b41"
+      },
+      "mandateGraphV2": {
+        "address": "0x015099f831c247460b467154c73028804Ea38a10",
+        "bytes": 12377,
+        "normalizedHash": "0xc546ab56c555c9d661c10795752f51457e7226fde6af9d1c3bbd7ce1395e2689",
+        "matchesLocalArtifact": true
+      }
+    },
+    "sourceVerification": {
+      "provider": "Sourcify",
+      "status": "exact_match",
+      "creationMatch": "exact_match",
+      "runtimeMatch": "exact_match",
+      "matchId": "54611987",
+      "verifiedAt": "2026-10-04T15:44:47Z",
+      "apiUrl": "https://sourcify.dev/server/v2/contract/5042/0x015099f831c247460b467154c73028804ea38a10",
+      "jobUrl": "https://sourcify.dev/server/verify-ui/jobs/897518d7-6bf7-4cbf-92c2-0d59fbb848ae"
+    }
+  },
+  "lifecycle": {
+    "taskSalt": "0x824fade1ea4967c8707df476ea7d8dfcb7c76e30ab4bf438e17ada33b5cf5571",
+    "taskHash": "0x07fc62f40e082ae551383028e973e730492887af3da26d49f972e7b2feaa37d8",
+    "deadline": "1791734554",
+    "taskBudgetBaseUnits": "100000",
+    "rootServiceScope": "3",
+    "childServiceScope": "1",
+    "initialAuthorityBaseUnits": "10000",
+    "promotedAuthorityBaseUnits": "50000",
+    "reducedAuthorityBaseUnits": "25000",
+    "exactAllowanceBaseUnits": "25000",
+    "smallPaymentBaseUnits": "5000",
+    "largerPaymentBaseUnits": "20000",
+    "totalPaymentBaseUnits": "25000",
+    "overCapAmountBaseUnits": "26000",
+    "resourceOneHash": "0xc5a63eba262b144b69faa137d6da7380db9845e81cae5c83bebc9054b3747a95",
+    "outcomeOneHash": "0x672b297289f4483ea608cf626317c0bdbf04feb2f8d2fdf3477e1a3a47150e59",
+    "resourceTwoHash": "0x96d6437208c7b37805605d9dd8a61834f7714b0520ffa073cc76ce050913bd00",
+    "outcomeTwoHash": "0x142767c1da70883dac70643616f6704bc7569cd0794990f5362e32b32c990c63",
+    "violationReasonHash": "0x9ead4322b3aaffddc9aec3331cd8d938b982ade0d1ade11b815905f3e93006f0",
+    "remediationHash": "0x57e937ecd40c5dab45e0740d8ed5f4ffc0740bdbcebc58b50c5fa8e046b45500",
+    "overCapResourceHash": "0xb28c06f173e0a9d1f5ab9879291a17b105a6b78faab04cbd507674fc949326ae",
+    "overCapOutcomeHash": "0x9f4c553404359c226e79e946311bde45c8bd2ad61e42d7bb4d40d9ec0693d82d",
+    "payments": [
+      {
+        "paymentId": "0x80f1d4aa7bfff729127b0d8f393a5521770740d480465284f5813a3ea698a016",
+        "amountBaseUnits": "5000",
+        "transactionHash": "0x785ea926de8b7addcb5443ce2b2354bb681c0aea72b0ed330e17d030ffdb8f20"
+      },
+      {
+        "paymentId": "0xa098db2e56ffb41cf4211c4a245c2d3084efc4971062aca53f3352922858068a",
+        "amountBaseUnits": "20000",
+        "transactionHash": "0xb62b204513d6fb83046e51b9de84d2d216f732599c0a798b2f4ebb51cf3280f0"
+      }
+    ],
+    "taskId": "0xa7e10b4663b342c684674d3f1608ce5be2657cf7fd3e81165633cbba0255456c",
+    "rootMandateId": "1",
+    "childMandateId": "2",
+    "paymentOneId": "0x80f1d4aa7bfff729127b0d8f393a5521770740d480465284f5813a3ea698a016",
+    "paymentTwoId": "0xa098db2e56ffb41cf4211c4a245c2d3084efc4971062aca53f3352922858068a"
+  },
+  "authorityTransitions": [
+    {
+      "label": "registered-trainee",
+      "operationalAgent": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "career": 0,
+      "authorityCapBaseUnits": "10000",
+      "completedWorks": 0,
+      "violations": 0,
+      "registered": true,
+      "stopped": false,
+      "promotionEligible": false,
+      "observedAt": "2026-10-04T16:02:58.830Z"
+    },
+    {
+      "label": "owner-signed-promotion",
+      "operationalAgent": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "career": 1,
+      "authorityCapBaseUnits": "50000",
+      "completedWorks": 1,
+      "violations": 0,
+      "registered": true,
+      "stopped": false,
+      "promotionEligible": false,
+      "observedAt": "2026-10-04T16:03:58.852Z"
+    },
+    {
+      "label": "stop-demotion",
+      "operationalAgent": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "career": 0,
+      "authorityCapBaseUnits": "25000",
+      "completedWorks": 1,
+      "violations": 1,
+      "registered": true,
+      "stopped": true,
+      "promotionEligible": false,
+      "observedAt": "2026-10-04T16:04:19.579Z"
+    },
+    {
+      "label": "reinstated-reduced-cap",
+      "operationalAgent": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "career": 0,
+      "authorityCapBaseUnits": "25000",
+      "completedWorks": 1,
+      "violations": 1,
+      "registered": true,
+      "stopped": false,
+      "promotionEligible": false,
+      "observedAt": "2026-10-04T16:04:29.744Z"
+    }
+  ],
+  "steps": {
+    "registerAgent": {
+      "status": "success",
+      "signer": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "account": "agentledger-testnet",
+      "target": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "registerAgent(uint256,address,uint128)",
+      "values": [
+        "1395",
+        "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+        "10000"
+      ],
+      "calldata": "0x5943a244000000000000000000000000000000000000000000000000000000000000057300000000000000000000000003607de69c487bcc460ead7c4bdfd25805658b750000000000000000000000000000000000000000000000000000000000002710",
+      "simulationResult": "0x",
+      "nonce": "40",
+      "estimatedGas": "105616",
+      "gasLimit": "158424",
+      "gasPriceWei": "20000010000",
+      "worstCaseFeeWei": "3168481584240000",
+      "preparedAt": "2026-10-04T16:02:49.109Z",
+      "hash": "0x3d888ca1482d1f592ebf9faf29edc29c15e03cabf6f890761e67719ed65b1369",
+      "explorerUrl": "https://explorer.arc.io/tx/0x3d888ca1482d1f592ebf9faf29edc29c15e03cabf6f890761e67719ed65b1369",
+      "receipt": {
+        "blockNumber": "24245427",
+        "transactionIndex": "9",
+        "gasUsed": "83236",
+        "effectiveGasPriceWei": "20000010000",
+        "feeWei": "1664720832360000",
+        "feeNative": "0.00166472083236",
+        "status": "1"
+      }
+    },
+    "createTask": {
+      "status": "success",
+      "signer": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "account": "agentledger-testnet",
+      "target": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "createTask(bytes32,bytes32,uint128,uint64,uint256,uint256,address,uint8)",
+      "values": [
+        "0x824fade1ea4967c8707df476ea7d8dfcb7c76e30ab4bf438e17ada33b5cf5571",
+        "0x07fc62f40e082ae551383028e973e730492887af3da26d49f972e7b2feaa37d8",
+        "100000",
+        "1791734554",
+        "3",
+        "1395",
+        "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+        "1"
+      ],
+      "calldata": "0x99ca7600824fade1ea4967c8707df476ea7d8dfcb7c76e30ab4bf438e17ada33b5cf557107fc62f40e082ae551383028e973e730492887af3da26d49f972e7b2feaa37d800000000000000000000000000000000000000000000000000000000000186a0000000000000000000000000000000000000000000000000000000006acbb31a0000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000000000000000057300000000000000000000000089a4ef745831cfe8957391ad2e3cf55dc3a6e5020000000000000000000000000000000000000000000000000000000000000001",
+      "simulationResult": "0xa7e10b4663b342c684674d3f1608ce5be2657cf7fd3e81165633cbba0255456c0000000000000000000000000000000000000000000000000000000000000001",
+      "nonce": "41",
+      "estimatedGas": "329128",
+      "gasLimit": "493692",
+      "gasPriceWei": "20000010000",
+      "worstCaseFeeWei": "9873844936920000",
+      "preparedAt": "2026-10-04T16:02:59.826Z",
+      "hash": "0xba222a896744a8609e0c6be202e51e69984c5cfbb9930a11e9337076a10564b6",
+      "explorerUrl": "https://explorer.arc.io/tx/0xba222a896744a8609e0c6be202e51e69984c5cfbb9930a11e9337076a10564b6",
+      "receipt": {
+        "blockNumber": "24245449",
+        "transactionIndex": "5",
+        "gasUsed": "305157",
+        "effectiveGasPriceWei": "20000010000",
+        "feeWei": "6103143051570000",
+        "feeNative": "0.00610314305157",
+        "status": "1"
+      }
+    },
+    "delegate": {
+      "status": "success",
+      "signer": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "account": "agentledger-testnet",
+      "target": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "delegate(uint256,uint256,uint128,uint64,uint256,address)",
+      "values": [
+        "1",
+        "1395",
+        "100000",
+        "1791734554",
+        "1",
+        "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502"
+      ],
+      "calldata": "0xedf24a1c0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000057300000000000000000000000000000000000000000000000000000000000186a0000000000000000000000000000000000000000000000000000000006acbb31a000000000000000000000000000000000000000000000000000000000000000100000000000000000000000089a4ef745831cfe8957391ad2e3cf55dc3a6e502",
+      "simulationResult": "0x0000000000000000000000000000000000000000000000000000000000000002",
+      "nonce": "42",
+      "estimatedGas": "283705",
+      "gasLimit": "425558",
+      "gasPriceWei": "20000010000",
+      "worstCaseFeeWei": "8511164255580000",
+      "preparedAt": "2026-10-04T16:03:09.527Z",
+      "hash": "0x3245b0cb7ae47b2b6e44fcde852f7976166db41765aefb222d893ad0d5c83d50",
+      "explorerUrl": "https://explorer.arc.io/tx/0x3245b0cb7ae47b2b6e44fcde852f7976166db41765aefb222d893ad0d5c83d50",
+      "receipt": {
+        "blockNumber": "24245465",
+        "transactionIndex": "19",
+        "gasUsed": "260356",
+        "effectiveGasPriceWei": "20000010000",
+        "feeWei": "5207122603560000",
+        "feeNative": "0.00520712260356",
+        "status": "1"
+      }
+    },
+    "approveExactUsdc": {
+      "status": "success",
+      "signer": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "account": "agentledger-testnet",
+      "target": "0x3600000000000000000000000000000000000000",
+      "signature": "approve(address,uint256)",
+      "values": [
+        "0x015099f831c247460b467154c73028804Ea38a10",
+        "25000"
+      ],
+      "calldata": "0x095ea7b3000000000000000000000000015099f831c247460b467154c73028804ea38a1000000000000000000000000000000000000000000000000000000000000061a8",
+      "simulationResult": "0x0000000000000000000000000000000000000000000000000000000000000001",
+      "nonce": "43",
+      "estimatedGas": "56229",
+      "gasLimit": "84344",
+      "gasPriceWei": "20000010000",
+      "worstCaseFeeWei": "1686880843440000",
+      "preparedAt": "2026-10-04T16:03:17.195Z",
+      "hash": "0xb1802ab90945e0210bcdf3cdd982cb081ac4e71de2dc3ceb8e93410c4e24e665",
+      "explorerUrl": "https://explorer.arc.io/tx/0xb1802ab90945e0210bcdf3cdd982cb081ac4e71de2dc3ceb8e93410c4e24e665",
+      "receipt": {
+        "blockNumber": "24245480",
+        "transactionIndex": "9",
+        "gasUsed": "55426",
+        "effectiveGasPriceWei": "20000010000",
+        "feeWei": "1108520554260000",
+        "feeNative": "0.00110852055426",
+        "status": "1"
+      }
+    },
+    "executeSmallPayment": {
+      "status": "success",
+      "signer": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "account": "agentledger-testnet",
+      "target": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "executePayment(uint256,bytes32,address,uint128,uint256,bytes32,uint64,uint256,bytes32)",
+      "values": [
+        "2",
+        "0x80f1d4aa7bfff729127b0d8f393a5521770740d480465284f5813a3ea698a016",
+        "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+        "5000",
+        "1",
+        "0xc5a63eba262b144b69faa137d6da7380db9845e81cae5c83bebc9054b3747a95",
+        "1791734554",
+        "1",
+        "0x672b297289f4483ea608cf626317c0bdbf04feb2f8d2fdf3477e1a3a47150e59"
+      ],
+      "calldata": "0x0a6b2239000000000000000000000000000000000000000000000000000000000000000280f1d4aa7bfff729127b0d8f393a5521770740d480465284f5813a3ea698a01600000000000000000000000089a4ef745831cfe8957391ad2e3cf55dc3a6e50200000000000000000000000000000000000000000000000000000000000013880000000000000000000000000000000000000000000000000000000000000001c5a63eba262b144b69faa137d6da7380db9845e81cae5c83bebc9054b3747a95000000000000000000000000000000000000000000000000000000006acbb31a0000000000000000000000000000000000000000000000000000000000000001672b297289f4483ea608cf626317c0bdbf04feb2f8d2fdf3477e1a3a47150e59",
+      "simulationResult": "0x",
+      "nonce": "44",
+      "estimatedGas": "234324",
+      "gasLimit": "351486",
+      "gasPriceWei": "20000010000",
+      "worstCaseFeeWei": "7029723514860000",
+      "preparedAt": "2026-10-04T16:03:26.232Z",
+      "hash": "0x785ea926de8b7addcb5443ce2b2354bb681c0aea72b0ed330e17d030ffdb8f20",
+      "explorerUrl": "https://explorer.arc.io/tx/0x785ea926de8b7addcb5443ce2b2354bb681c0aea72b0ed330e17d030ffdb8f20",
+      "receipt": {
+        "blockNumber": "24245499",
+        "transactionIndex": "8",
+        "gasUsed": "211652",
+        "effectiveGasPriceWei": "20000010000",
+        "feeWei": "4233042116520000",
+        "feeNative": "0.00423304211652",
+        "status": "1"
+      }
+    },
+    "recordWorkProof": {
+      "status": "success",
+      "signer": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "account": "agentledger-testnet",
+      "target": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "recordWorkProof(uint256,bytes32,bytes32,bytes32)",
+      "values": [
+        "1395",
+        "0xa7e10b4663b342c684674d3f1608ce5be2657cf7fd3e81165633cbba0255456c",
+        "0x80f1d4aa7bfff729127b0d8f393a5521770740d480465284f5813a3ea698a016",
+        "0x672b297289f4483ea608cf626317c0bdbf04feb2f8d2fdf3477e1a3a47150e59"
+      ],
+      "calldata": "0xf3e5efcc0000000000000000000000000000000000000000000000000000000000000573a7e10b4663b342c684674d3f1608ce5be2657cf7fd3e81165633cbba0255456c80f1d4aa7bfff729127b0d8f393a5521770740d480465284f5813a3ea698a016672b297289f4483ea608cf626317c0bdbf04feb2f8d2fdf3477e1a3a47150e59",
+      "simulationResult": "0x",
+      "nonce": "45",
+      "estimatedGas": "100489",
+      "gasLimit": "150734",
+      "gasPriceWei": "20000010000",
+      "worstCaseFeeWei": "3014681507340000",
+      "preparedAt": "2026-10-04T16:03:34.204Z",
+      "hash": "0xd1f8aa095797c7ce1c04f3fa4073aae277e6c298c2be05fb5dc69dc96ed82ce5",
+      "explorerUrl": "https://explorer.arc.io/tx/0xd1f8aa095797c7ce1c04f3fa4073aae277e6c298c2be05fb5dc69dc96ed82ce5",
+      "receipt": {
+        "blockNumber": "24245516",
+        "transactionIndex": "9",
+        "gasUsed": "78453",
+        "effectiveGasPriceWei": "20000010000",
+        "feeWei": "1569060784530000",
+        "feeNative": "0.00156906078453",
+        "status": "1"
+      }
+    },
+    "promoteAgent": {
+      "status": "success",
+      "signer": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "account": "agentledger-testnet",
+      "target": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "promoteAgent(uint256,uint8,uint128)",
+      "values": [
+        "1395",
+        "1",
+        "50000"
+      ],
+      "calldata": "0xa03648c500000000000000000000000000000000000000000000000000000000000005730000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000c350",
+      "simulationResult": "0x",
+      "nonce": "46",
+      "estimatedGas": "95375",
+      "gasLimit": "143063",
+      "gasPriceWei": "20000010000",
+      "worstCaseFeeWei": "2861261430630000",
+      "preparedAt": "2026-10-04T16:03:44.129Z",
+      "hash": "0xb4bb0d25ee84924258828debec85c8fe364a7250e7c45f646acb8615709c80db",
+      "explorerUrl": "https://explorer.arc.io/tx/0xb4bb0d25ee84924258828debec85c8fe364a7250e7c45f646acb8615709c80db",
+      "receipt": {
+        "blockNumber": "24245546",
+        "transactionIndex": "10",
+        "gasUsed": "74372",
+        "effectiveGasPriceWei": "20000010000",
+        "feeWei": "1487440743720000",
+        "feeNative": "0.00148744074372",
+        "status": "1"
+      }
+    },
+    "executeLargerPayment": {
+      "status": "success",
+      "signer": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "account": "agentledger-testnet",
+      "target": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "executePayment(uint256,bytes32,address,uint128,uint256,bytes32,uint64,uint256,bytes32)",
+      "values": [
+        "2",
+        "0xa098db2e56ffb41cf4211c4a245c2d3084efc4971062aca53f3352922858068a",
+        "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+        "20000",
+        "1",
+        "0x96d6437208c7b37805605d9dd8a61834f7714b0520ffa073cc76ce050913bd00",
+        "1791734554",
+        "2",
+        "0x142767c1da70883dac70643616f6704bc7569cd0794990f5362e32b32c990c63"
+      ],
+      "calldata": "0x0a6b22390000000000000000000000000000000000000000000000000000000000000002a098db2e56ffb41cf4211c4a245c2d3084efc4971062aca53f3352922858068a00000000000000000000000089a4ef745831cfe8957391ad2e3cf55dc3a6e5020000000000000000000000000000000000000000000000000000000000004e20000000000000000000000000000000000000000000000000000000000000000196d6437208c7b37805605d9dd8a61834f7714b0520ffa073cc76ce050913bd00000000000000000000000000000000000000000000000000000000006acbb31a0000000000000000000000000000000000000000000000000000000000000002142767c1da70883dac70643616f6704bc7569cd0794990f5362e32b32c990c63",
+      "simulationResult": "0x",
+      "nonce": "47",
+      "estimatedGas": "233712",
+      "gasLimit": "350568",
+      "gasPriceWei": "20000010000",
+      "worstCaseFeeWei": "7011363505680000",
+      "preparedAt": "2026-10-04T16:03:59.531Z",
+      "hash": "0xb62b204513d6fb83046e51b9de84d2d216f732599c0a798b2f4ebb51cf3280f0",
+      "explorerUrl": "https://explorer.arc.io/tx/0xb62b204513d6fb83046e51b9de84d2d216f732599c0a798b2f4ebb51cf3280f0",
+      "receipt": {
+        "blockNumber": "24245560",
+        "transactionIndex": "10",
+        "gasUsed": "206840",
+        "effectiveGasPriceWei": "20000010000",
+        "feeWei": "4136802068400000",
+        "feeNative": "0.0041368020684",
+        "status": "1"
+      }
+    },
+    "stopAndDemoteAgent": {
+      "status": "success",
+      "signer": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "account": "agentledger-testnet",
+      "target": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "demoteAgent(uint256,bytes32)",
+      "values": [
+        "1395",
+        "0x9ead4322b3aaffddc9aec3331cd8d938b982ade0d1ade11b815905f3e93006f0"
+      ],
+      "calldata": "0x71a71f2700000000000000000000000000000000000000000000000000000000000005739ead4322b3aaffddc9aec3331cd8d938b982ade0d1ade11b815905f3e93006f0",
+      "simulationResult": "0x",
+      "nonce": "48",
+      "estimatedGas": "96212",
+      "gasLimit": "144318",
+      "gasPriceWei": "20000010000",
+      "worstCaseFeeWei": "2886361443180000",
+      "preparedAt": "2026-10-04T16:04:06.299Z",
+      "hash": "0x1ffad00314e2714a66de6bdee35530a95d2327d2fda8bc57886835f3ae1fb433",
+      "explorerUrl": "https://explorer.arc.io/tx/0x1ffad00314e2714a66de6bdee35530a95d2327d2fda8bc57886835f3ae1fb433",
+      "receipt": {
+        "blockNumber": "24245587",
+        "transactionIndex": "5",
+        "gasUsed": "75040",
+        "effectiveGasPriceWei": "20000010000",
+        "feeWei": "1500800750400000",
+        "feeNative": "0.0015008007504",
+        "status": "1"
+      }
+    },
+    "reinstateAgent": {
+      "status": "success",
+      "signer": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "account": "agentledger-testnet",
+      "target": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "reinstateAgent(uint256,bytes32)",
+      "values": [
+        "1395",
+        "0x57e937ecd40c5dab45e0740d8ed5f4ffc0740bdbcebc58b50c5fa8e046b45500"
+      ],
+      "calldata": "0x3404d1bc000000000000000000000000000000000000000000000000000000000000057357e937ecd40c5dab45e0740d8ed5f4ffc0740bdbcebc58b50c5fa8e046b45500",
+      "simulationResult": "0x",
+      "nonce": "49",
+      "estimatedGas": "66415",
+      "gasLimit": "99623",
+      "gasPriceWei": "20000010000",
+      "worstCaseFeeWei": "1992460996230000",
+      "preparedAt": "2026-10-04T16:04:19.842Z",
+      "hash": "0x37c72e097b1e6ae1321712b8fd710120b24b26236e87b5dfec10b46e991d2e4e",
+      "explorerUrl": "https://explorer.arc.io/tx/0x37c72e097b1e6ae1321712b8fd710120b24b26236e87b5dfec10b46e991d2e4e",
+      "receipt": {
+        "blockNumber": "24245607",
+        "transactionIndex": "2",
+        "gasUsed": "51259",
+        "effectiveGasPriceWei": "20000010000",
+        "feeWei": "1025180512590000",
+        "feeNative": "0.00102518051259",
+        "status": "1"
+      }
+    }
+  },
+  "simulations": {
+    "overCapPaymentRejected": {
+      "status": "pass",
+      "from": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "to": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "executePayment(uint256,bytes32,address,uint128,uint256,bytes32,uint64,uint256,bytes32)",
+      "values": [
+        "2",
+        "0x7335d13e254315e99b88c47f07ae525d4e8d9a5627ec922806444ce5be81f07b",
+        "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+        "26000",
+        "1",
+        "0xb28c06f173e0a9d1f5ab9879291a17b105a6b78faab04cbd507674fc949326ae",
+        "1791734554",
+        "3",
+        "0x9f4c553404359c226e79e946311bde45c8bd2ad61e42d7bb4d40d9ec0693d82d"
+      ],
+      "calldata": "0x0a6b223900000000000000000000000000000000000000000000000000000000000000027335d13e254315e99b88c47f07ae525d4e8d9a5627ec922806444ce5be81f07b00000000000000000000000089a4ef745831cfe8957391ad2e3cf55dc3a6e50200000000000000000000000000000000000000000000000000000000000065900000000000000000000000000000000000000000000000000000000000000001b28c06f173e0a9d1f5ab9879291a17b105a6b78faab04cbd507674fc949326ae000000000000000000000000000000000000000000000000000000006acbb31a00000000000000000000000000000000000000000000000000000000000000039f4c553404359c226e79e946311bde45c8bd2ad61e42d7bb4d40d9ec0693d82d",
+      "revertData": "0xe5bbd38c",
+      "selector": "0xe5bbd38c",
+      "decodedError": "AuthorityCapExceeded()",
+      "expectedSelector": "0xe5bbd38c",
+      "broadcast": false
+    },
+    "walletBCannotDemoteAgentA": {
+      "status": "pass",
+      "from": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+      "to": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "demoteAgent(uint256,bytes32)",
+      "values": [
+        "1395",
+        "0x0ed6c90dbd17dc2c8fd3a4fc8c71158cef405cc1abc6adcbd80d7e438c77b8ce"
+      ],
+      "calldata": "0x71a71f2700000000000000000000000000000000000000000000000000000000000005730ed6c90dbd17dc2c8fd3a4fc8c71158cef405cc1abc6adcbd80d7e438c77b8ce",
+      "revertData": "0x390772fc",
+      "selector": "0x390772fc",
+      "decodedError": "NotAgentOwner()",
+      "expectedSelector": "0x390772fc",
+      "broadcast": false
+    },
+    "walletBCannotPromoteAgentA": {
+      "status": "pass",
+      "from": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+      "to": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "promoteAgent(uint256,uint8,uint128)",
+      "values": [
+        "1395",
+        "1",
+        "30000"
+      ],
+      "calldata": "0xa03648c5000000000000000000000000000000000000000000000000000000000000057300000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000007530",
+      "revertData": "0x390772fc",
+      "selector": "0x390772fc",
+      "decodedError": "NotAgentOwner()",
+      "expectedSelector": "0x390772fc",
+      "broadcast": false
+    },
+    "walletBCannotUpdateAgentA": {
+      "status": "pass",
+      "from": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+      "to": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "updateOperationalAgent(uint256,address)",
+      "values": [
+        "1395",
+        "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502"
+      ],
+      "calldata": "0x1ff0f1d1000000000000000000000000000000000000000000000000000000000000057300000000000000000000000089a4ef745831cfe8957391ad2e3cf55dc3a6e502",
+      "revertData": "0x390772fc",
+      "selector": "0x390772fc",
+      "decodedError": "NotAgentOwner()",
+      "expectedSelector": "0x390772fc",
+      "broadcast": false
+    },
+    "walletBCannotCreateTaskForAgentA": {
+      "status": "pass",
+      "from": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+      "to": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "createTask(bytes32,bytes32,uint128,uint64,uint256,uint256,address,uint8)",
+      "values": [
+        "0x7ca6f8040b651654055698abd31939d52ae131c797638b84a6c65d86e62c3008",
+        "0xcbc1239df2c9b1112d430d2ab557825500ba73d56e41948900e70c85923b648b",
+        "1000",
+        "1791734554",
+        "1",
+        "1395",
+        "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+        "0"
+      ],
+      "calldata": "0x99ca76007ca6f8040b651654055698abd31939d52ae131c797638b84a6c65d86e62c3008cbc1239df2c9b1112d430d2ab557825500ba73d56e41948900e70c85923b648b00000000000000000000000000000000000000000000000000000000000003e8000000000000000000000000000000000000000000000000000000006acbb31a0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000057300000000000000000000000089a4ef745831cfe8957391ad2e3cf55dc3a6e5020000000000000000000000000000000000000000000000000000000000000000",
+      "revertData": "0x390772fc",
+      "selector": "0x390772fc",
+      "decodedError": "NotAgentOwner()",
+      "expectedSelector": "0x390772fc",
+      "broadcast": false
+    },
+    "walletBCannotRevokeTaskA": {
+      "status": "pass",
+      "from": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+      "to": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "revokeTask(bytes32)",
+      "values": [
+        "0xa7e10b4663b342c684674d3f1608ce5be2657cf7fd3e81165633cbba0255456c"
+      ],
+      "calldata": "0xb6145185a7e10b4663b342c684674d3f1608ce5be2657cf7fd3e81165633cbba0255456c",
+      "revertData": "0x23d966b2",
+      "selector": "0x23d966b2",
+      "decodedError": "NotTaskOwner()",
+      "expectedSelector": "0x23d966b2",
+      "broadcast": false
+    },
+    "walletBCannotExecuteTaskAPayment": {
+      "status": "pass",
+      "from": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+      "to": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "executePayment(uint256,bytes32,address,uint128,uint256,bytes32,uint64,uint256,bytes32)",
+      "values": [
+        "2",
+        "0xcaa5c59c29b721fa470dbccacfb7ee5d61f9e54d831b8fb3000e8c51753073ca",
+        "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+        "1",
+        "1",
+        "0x03af9534e6b9d7df0f6232c0cbdd20d551a1c70e061ea789f51037e8ae38f66e",
+        "1791734554",
+        "99",
+        "0x4bc3e7ef31b8df43d8df6d88acf023cbfd405ee1f79d8698e90b2b4cc71c21d7"
+      ],
+      "calldata": "0x0a6b22390000000000000000000000000000000000000000000000000000000000000002caa5c59c29b721fa470dbccacfb7ee5d61f9e54d831b8fb3000e8c51753073ca00000000000000000000000089a4ef745831cfe8957391ad2e3cf55dc3a6e5020000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000103af9534e6b9d7df0f6232c0cbdd20d551a1c70e061ea789f51037e8ae38f66e000000000000000000000000000000000000000000000000000000006acbb31a00000000000000000000000000000000000000000000000000000000000000634bc3e7ef31b8df43d8df6d88acf023cbfd405ee1f79d8698e90b2b4cc71c21d7",
+      "revertData": "0x53b37e7f",
+      "selector": "0x53b37e7f",
+      "decodedError": "NotMandateOperator()",
+      "expectedSelector": "0x53b37e7f",
+      "broadcast": false
+    },
+    "walletBCannotRecordAgentAWork": {
+      "status": "pass",
+      "from": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+      "to": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "recordWorkProof(uint256,bytes32,bytes32,bytes32)",
+      "values": [
+        "1395",
+        "0xa7e10b4663b342c684674d3f1608ce5be2657cf7fd3e81165633cbba0255456c",
+        "0x80f1d4aa7bfff729127b0d8f393a5521770740d480465284f5813a3ea698a016",
+        "0x672b297289f4483ea608cf626317c0bdbf04feb2f8d2fdf3477e1a3a47150e59"
+      ],
+      "calldata": "0xf3e5efcc0000000000000000000000000000000000000000000000000000000000000573a7e10b4663b342c684674d3f1608ce5be2657cf7fd3e81165633cbba0255456c80f1d4aa7bfff729127b0d8f393a5521770740d480465284f5813a3ea698a016672b297289f4483ea608cf626317c0bdbf04feb2f8d2fdf3477e1a3a47150e59",
+      "revertData": "0x23d966b2",
+      "selector": "0x23d966b2",
+      "decodedError": "NotTaskOwner()",
+      "expectedSelector": "0x23d966b2",
+      "broadcast": false
+    },
+    "walletBCannotDelegateUnderTaskA": {
+      "status": "pass",
+      "from": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+      "to": "0x015099f831c247460b467154c73028804Ea38a10",
+      "signature": "delegate(uint256,uint256,uint128,uint64,uint256,address)",
+      "values": [
+        "2",
+        "1395",
+        "1",
+        "1791734554",
+        "1",
+        "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502"
+      ],
+      "calldata": "0xedf24a1c000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000005730000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000006acbb31a000000000000000000000000000000000000000000000000000000000000000100000000000000000000000089a4ef745831cfe8957391ad2e3cf55dc3a6e502",
+      "revertData": "0x53b37e7f",
+      "selector": "0x53b37e7f",
+      "decodedError": "NotMandateOperator()",
+      "expectedSelector": "0x53b37e7f",
+      "broadcast": false
+    }
+  },
+  "finalState": {
+    "observedAt": "2026-10-04T16:15:19.201Z",
+    "owner": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+    "agent": {
+      "operationalAgent": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "career": 0,
+      "authorityCapBaseUnits": "25000",
+      "completedWorks": 1,
+      "violations": 1,
+      "registered": true,
+      "stopped": false,
+      "promotionEligible": false
+    },
+    "task": {
+      "owner": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+      "rootAgentId": "1395",
+      "budgetBaseUnits": "100000",
+      "spentBaseUnits": "25000",
+      "deadline": "1791734554",
+      "taskHash": "0x07fc62f40e082ae551383028e973e730492887af3da26d49f972e7b2feaa37d8",
+      "revoked": false
+    },
+    "rootMandate": {
+      "taskId": "0xa7e10b4663b342c684674d3f1608ce5be2657cf7fd3e81165633cbba0255456c",
+      "parentId": "0",
+      "agentId": "1395",
+      "recipient": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+      "budgetBaseUnits": "100000",
+      "spentBaseUnits": "25000",
+      "allocatedBaseUnits": "75000",
+      "expiry": "1791734554",
+      "depth": 1,
+      "serviceScope": "3",
+      "revoked": false,
+      "activeChildren": "1"
+    },
+    "childMandate": {
+      "taskId": "0xa7e10b4663b342c684674d3f1608ce5be2657cf7fd3e81165633cbba0255456c",
+      "parentId": "1",
+      "agentId": "1395",
+      "recipient": "0x89A4EF745831CFe8957391Ad2e3CF55Dc3a6e502",
+      "budgetBaseUnits": "100000",
+      "spentBaseUnits": "25000",
+      "allocatedBaseUnits": "0",
+      "expiry": "1791734554",
+      "depth": 0,
+      "serviceScope": "1",
+      "revoked": false,
+      "activeChildren": "0"
+    },
+    "authorized": true,
+    "allowanceBaseUnits": "0",
+    "recipientBalanceBaseUnits": "60000",
+    "runtimeBytecode": {
+      "address": "0x015099f831c247460b467154c73028804Ea38a10",
+      "bytes": 12377,
+      "normalizedHash": "0xc546ab56c555c9d661c10795752f51457e7226fde6af9d1c3bbd7ce1395e2689",
+      "matchesLocalArtifact": true
+    }
+  },
+  "totals": {
+    "successfulTransactions": 10,
+    "failedTransactionsBroadcast": 0,
+    "executedPaymentBaseUnits": "25000",
+    "executedPaymentUsdc": "0.025",
+    "receiptFeesWei": "28035834017910000",
+    "receiptFeesNative": "0.02803583401791"
+  },
+  "completedAt": "2026-10-04T16:15:19.202Z"
+}

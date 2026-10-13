@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "status": "pass",
+  "verifiedAt": "2026-10-04T15:46:02.572Z",
+  "safety": {
+    "explicitDeployApprovalReceived": true,
+    "transactionSignedLocallyWithEncryptedKeystore": true,
+    "privateSignerMaterialStoredOrDisplayed": false,
+    "deploymentOnly": true,
+    "smokeLifecycleExecuted": false,
+    "uiWritesEnabled": false
+  },
+  "network": {
+    "name": "Arc Mainnet",
+    "chainId": "5042",
+    "rpcUrl": "https://rpc.mainnet.arc.io",
+    "explorerUrl": "https://explorer.arc.io"
+  },
+  "transaction": {
+    "hash": "0x61d7cafe6f7a09cd8a443aaabef7cac6025631ad24bd4a443a17841d069a2c2c",
+    "explorer": "https://explorer.arc.io/tx/0x61d7cafe6f7a09cd8a443aaabef7cac6025631ad24bd4a443a17841d069a2c2c",
+    "blockNumber": "24235193",
+    "blockHash": "0x07f89a1778325e66405fb00cbad7503c2408a6e9566fa4c0a0d43f4711eff92b",
+    "transactionIndex": "2",
+    "from": "0x03607de69c487bcc460ead7c4bdfd25805658b75",
+    "to": null,
+    "nonce": "39",
+    "type": "2",
+    "status": "success",
+    "gasLimit": "3341216",
+    "gasUsed": "2761264",
+    "effectiveGasPriceWei": "20000010000",
+    "receiptFeeWei": "55225307612640000",
+    "receiptFeeNative": "0.05522530761264",
+    "valueWei": "0",
+    "initCodeHash": "0x0cf680f4263bfd448532e0485a6579ca156bec0eb7e6ba19075912ef4e2cf55d"
+  },
+  "contract": {
+    "address": "0x015099f831c247460b467154c73028804ea38a10",
+    "explorer": "https://explorer.arc.io/address/0x015099f831c247460b467154c73028804ea38a10",
+    "runtimeBytes": 12377,
+    "normalizedRuntimeHash": "0xc546ab56c555c9d661c10795752f51457e7226fde6af9d1c3bbd7ce1395e2689",
+    "matchesLocalArtifact": true,
+    "creationBytecodeHash": "0x5dec88089cacd7ab0e0f03eceb35c28e11c4895efc9ae12125fadb9c468df75f",
+    "constructorArgs": {
+      "usdc": "0x3600000000000000000000000000000000000000",
+      "identityRegistry": "0x8004a169fb4a3325136eb29fa0ceb6d2e539a432"
+    },
+    "initialState": {
+      "nextMandateId": "1",
+      "registeredAgents": 0,
+      "tasks": 0,
+      "allowances": 0
+    }
+  },
+  "deployer": {
+    "address": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+    "balanceAfterWei": "3316812676658448138"
+  },
+  "sourceVerification": {
+    "provider": "Sourcify",
+    "status": "exact_match",
+    "creationMatch": "exact_match",
+    "runtimeMatch": "exact_match",
+    "matchId": "54611987",
+    "verifiedAt": "2026-10-04T15:44:47Z",
+    "apiUrl": "https://sourcify.dev/server/v2/contract/5042/0x015099f831c247460b467154c73028804ea38a10",
+    "jobId": "897518d7-6bf7-4cbf-92c2-0d59fbb848ae",
+    "jobUrl": "https://sourcify.dev/server/verify-ui/jobs/897518d7-6bf7-4cbf-92c2-0d59fbb848ae"
+  },
+  "remainingGates": [
+    "run an explicitly approved controlled Mainnet smoke lifecycle with minimal funds",
+    "verify smoke evidence and zero residual allowance",
+    "obtain separate approval before enabling the public UI contract address"
+  ]
+}

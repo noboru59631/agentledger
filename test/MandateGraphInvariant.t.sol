@@ -1,12 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
 
-import {MandateGraph} from "../contracts/MandateGraph.sol";
+import {IERC8004IdentityRegistry, MandateGraph} from "../contracts/MandateGraph.sol";
 import {MockUSDC} from "../contracts/MockUSDC.sol";
 
 interface InvariantVm {
     function prank(address) external;
     function warp(uint256) external;
+}
+
+contract InvariantIdentityRegistry is IERC8004IdentityRegistry {
+    mapping(uint256 => address) private owners;
+    function mint(address owner, uint256 agentId) external { owners[agentId] = owner; }
+    function ownerOf(uint256 agentId) external view returns (address owner) {
+        owner = owners[agentId];
+        require(owner != address(0), "unknown token");
+    }
 }
 
 contract MandateGraphHandler {
@@ -25,9 +34,13 @@ contract MandateGraphHandler {
 
     constructor() {
         token = new MockUSDC();
-        graph = new MandateGraph(token);
+        InvariantIdentityRegistry identity = new InvariantIdentityRegistry();
+        graph = new MandateGraph(token, identity);
         taskId = keccak256("invariant-task");
         deadline = uint64(block.timestamp + 30 days);
+        identity.mint(OWNER, 1);
+        vm.prank(OWNER);
+        graph.registerAgent(AGENT, 1, 1_000_000);
         vm.prank(OWNER);
         graph.createTask(taskId, keccak256("metadata"), 1_000_000, deadline, 3, AGENT, address(0), 8);
         mandateIds.push(1);
@@ -45,10 +58,15 @@ contract MandateGraphHandler {
         address parentAgent = agents[parentId];
         uint128 amount = uint128(uint256(rawAmount) % 100_001 + 1);
         if (action % 4 == 0 && mandateIds.length < 40) {
+            address childAgent = address(uint160(0x1000 + actions));
+            uint256 agentId = actions + 1;
+            InvariantIdentityRegistry(address(graph.identityRegistry())).mint(OWNER, agentId);
+            vm.prank(OWNER);
+            graph.registerAgent(childAgent, agentId, 1_000_000);
             vm.prank(parentAgent);
-            try graph.delegate(parentId, address(uint160(0x1000 + mandateIds.length)), amount, deadline, 1, address(0)) returns (uint256 childId) {
+            try graph.delegate(parentId, childAgent, amount, deadline, 1, address(0)) returns (uint256 childId) {
                 mandateIds.push(childId);
-                agents[childId] = address(uint160(0x1000 + mandateIds.length - 1));
+                agents[childId] = childAgent;
                 token.mint(agents[childId], 1_000_000_000);
                 vm.prank(agents[childId]); token.approve(address(graph), type(uint256).max);
             } catch {}

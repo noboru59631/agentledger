@@ -1,101 +1,201 @@
-# AgentLedger
+# AgentLedger — Task-Native Financial Governance for AI Agents on Arc
 
-> Give AI a budget for the job, not a wallet full of money.
+> **Give AI a budget for the job, not a wallet full of money.**
 
-[![CI](https://github.com/noboru59631/agentledger/actions/workflows/ci.yml/badge.svg)](https://github.com/noboru59631/agentledger/actions/workflows/ci.yml)
+**AI proposes. AgentLedger decides.**
 
-AgentLedger is a task-native financial governance prototype for multi-agent systems. It connects human intent to bounded mandates, delegated budgets, payment requests, and outcome lineage.
+AgentLedger lets a human give AI a task budget while keeping control of the money. For example: **research competing projects on Arc with a 5 USDC cap**. AI proposes a payment; policy checks whether it is permitted. **Available / Reserved / Spent** shows where the budget stands. A request above the available amount pauses for a human decision.
 
-**AI proposes. AgentLedger decides.** Gemini may propose a plan, but deterministic policy checks decide whether budgets, service scope, delegation, expiry, recipient restrictions, replay protection, and revocation rules are satisfied.
+The current Mainnet dApp is self-custodial and wallet-signed. The AI planner proposes only; it is not connected to autonomous vendor purchasing or Mainnet settlement. Payment-bound proof can support an owner-approved authority increase; STOP/demotion reduces authority.
 
-## Public links
+[**Open the public Arc Mainnet dApp**](https://agentledger-livid.vercel.app/) · [V2 contract](https://explorer.arc.io/address/0x015099f831c247460b467154c73028804Ea38a10) · [Sourcify exact match](https://sourcify.dev/server/v2/contract/5042/0x015099f831c247460b467154c73028804ea38a10)
 
-- Live app: <https://agentledger-livid.vercel.app/>
-- Demo video: <https://youtu.be/aXnjAd3mFsE>
-- Repository: <https://github.com/noboru59631/agentledger>
-- Builder profile: <https://x.com/noboru59631>
+**Public interactive Mainnet dApp: READY.** The dApp is experimental and unaudited, accepts only wallet-signed actions, and is intended for small demo amounts. **Production custody: NO-GO.**
 
-## Current status
+## Understand it in 30 seconds — no wallet needed
 
-The repository includes an experimental, unaudited Solidity contract, a public live app, a real Gemini-backed orchestration route, a wallet-connected Arc Mainnet Demo Mode, and documented Arc Mainnet lifecycle evidence. The mainnet lifecycle used a separately controlled demo wallet; it is not evidence of an independent vendor relationship or service delivery.
+1. Open the [5 USDC research example](https://agentledger-livid.vercel.app/#demo). A human assigns competitor research; 1 USDC is reserved for a helper. Available / Reserved / Spent starts at **4.00 / 1.00 / 0.00 USDC**.
+2. Click **Simulate permitted payment**. A permitted 0.20 USDC helper request converts Reserved into Spent: **4.00 / 0.80 / 0.20 USDC**. The task cap still totals 5 USDC.
+3. Try the **4.80 USDC parent request**. Only 4 USDC is available; the helper reservation cannot be spent twice. The request is blocked, spending stays unchanged, and the task pauses.
+4. A human chooses **Keep paused** or **End simulated task**. A larger budget requires an explicit new task; AI cannot increase it automatically. STOP blocks further requests.
 
-The three product surfaces are intentionally separate:
+This is a **scripted local simulation**, not an AI research run, vendor purchase, payment receipt, or Mainnet transaction. Reset starts a fresh illustrative example.
 
-| Surface | What it demonstrates | What it does not do |
-| --- | --- | --- |
-| Illustrative Simulation | Local fixture state for task, mandate, payment lineage, and revoke/blocked retry | Does not read from Arc or use a wallet |
-| AI Orchestrated Demo | Real Gemini proposal when configured, followed by deterministic budget/scope/STOP checks; shows `GEMINI PLAN · POLICY APPROVED` for an accepted live plan | Simulates service costs and never authorizes, settles, or writes to Arc |
-| Arc Mainnet Demo Mode | Injected-wallet connection, live balance/read checks, and explicit user-confirmed `createTask`, `delegate`, `approve`, `executePayment`, and `revokeTask` writes | Does not verify vendors, service delivery, or outcome quality |
+| Status | What it does today | Boundary |
+|---|---|---|
+| Implemented — Arc Mainnet V2 | Wallet-signed task/payment controls, exact approvals, budget accounting, owner permissions, STOP, payment-bound proof, owner-approved promotion | Experimental and unaudited; existing controlled lifecycle paid **0.025 USDC**, not 5 USDC |
+| Explanation — local simulation | The 5 USDC competitor research journey, permitted payment, over-budget pause, human decision | Scripted non-AI fixtures; no wallet, vendor call, Arc read, or settlement |
+| Optional AI proposal demo | Gemini proposes when configured; deterministic checks; clearly labeled non-AI fallback | Simulated service costs and illustrative report preview; no researched report or chain write |
+| Future — not implemented | AI-to-vendor autonomous execution, independent delivery evidence, durable indexing, production hardening | Roadmap, not a current product claim |
 
-The Arc Mainnet Demo Mode is experimental, unaudited, can spend real USDC, requires chain ID `5042`, and caps demo payments in the UI at `0.01 USDC`. Every write requires a separate wallet confirmation; no transaction is sent automatically.
+## Demo video status
 
-## AI Orchestrated Demo
+The new V2 Mainnet demo has been completed from the verified public dApp and lifecycle evidence and is awaiting publication. The [previous demo](https://youtu.be/aXnjAd3mFsE) is retained only as a **legacy/reference video** and does not represent the current V2 self-custodial product.
 
-The public app sends a natural-language goal to `/api/orchestrate`. The server asks Gemini for a strict JSON plan, and the browser validates that plan with deterministic policy rules before displaying agent allocations and simulated service decisions. An invalid proposal is blocked, and `STOP / kill switch` propagates the revoked state to queued descendants.
+## Why it exists
 
-The default model is `gemini-2.5-flash-lite` through Gemini API `v1beta`. Set `GEMINI_API_KEY` in the Vercel environment to enable live Gemini responses; `GEMINI_MODEL` can override the model. Missing keys, quota failures, malformed responses, and timeouts use a clearly labeled deterministic fallback. Neither Gemini nor this demo can authorize or settle spend.
+AI agents increasingly need economic authority to buy data, call paid APIs, coordinate specialists, and complete real work. The two common choices are both poor:
 
-## Arc Mainnet evidence
+- Unlimited wallet access gives a new agent too much authority too early.
+- Requiring a human signature for every action removes the autonomy that makes an agent useful.
 
-**Status: deployed; documented lifecycle rehearsal completed successfully.** Contract: [`0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da`](https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da) on Arc Mainnet, chain ID `5042`, using USDC at `0x3600000000000000000000000000000000000000`.
+AgentLedger provides a third option: **Work → Proof → Authority.** A human bounds the task and initial authority. The contract enforces the cap. Completed, payment-bound work can make the agent promotion-eligible, but only the ERC-8004 Agent owner can approve a larger cap. Violations reduce authority and activate STOP.
 
-- Deployment: [transaction](https://explorer.arc.io/tx/0x7f1287234e0b9049b45aa5ea67857c358ac95fda7b2e1e9ac2516070157d80b8)
-- Task creation: [transaction](https://explorer.arc.io/tx/0x17602976ae236cd73f0c2fb9e0d34e82e8f841a82f7d8c1ff2b33abad9ccb731)
-- Delegation: [transaction](https://explorer.arc.io/tx/0xe8bb539e56eaa8e94321326870f89d5acc8f2c616cd746ab40566373f8b1eb8b)
-- Payment approval: [transaction](https://explorer.arc.io/tx/0x099e17ef1c9ed66450ebb9390bf3653925d3cdf71bbe7c8dc3b2a7800b4f7be3)
-- Payment execution: [transaction](https://explorer.arc.io/tx/0xba0064e2a6cb13daeffafe90e79fc53c94d25ea7ae0a205e58bbee53c46eec6e)
-- Task revocation: [transaction](https://explorer.arc.io/tx/0x7a694807ac98d25f6e4145fd2fc7f715838269544155309ac69602b66c8f65ba)
-- Retry after revocation: `retryBlocked: true`, verified with a read-only check.
+It is designed for individuals and companies delegating real economic work to AI agents while retaining wallet custody and policy control.
 
-The recipient was a separately controlled demo wallet, not a verified vendor. The evidence demonstrates deployment, task-bound payment execution, delegation, revocation, and blocked retry behavior. It does not prove service delivery or output quality. Outcome hashes are caller-supplied lineage data, not independent proof of service delivery. Full parameters are in [`docs/MAINNET_EVIDENCE.json`](docs/MAINNET_EVIDENCE.json).
+## Explore the separate Mainnet dApp
 
-## Implemented contract behavior
+The wallet-free example above is the recommended first visit. The following controls are for intentional, user-confirmed Mainnet interaction with small demo amounts; they are not required to understand the product.
 
-- Task-rooted mandates with deadline, service bitmap, and bounded delegation depth.
-- Delegation with reserved child budgets and non-widening scope, expiry, recipient, and depth.
-- Payment IDs bound to task, mandate, recipient, amount, service class, resource hash, expiry, and nonce.
-- One-use payment IDs, ancestor revocation/expiry checks, ancestor budget accounting, USDC `transferFrom`, and emitted outcome hash.
-- Reentrancy protection around token transfer.
+1. Open the [public dApp](https://agentledger-livid.vercel.app/) and connect an injected EVM wallet.
+2. Switch or add **Arc Mainnet (chain ID 5042)** when prompted.
+3. Enter an ERC-8004 Agent ID owned by the connected wallet; `ownerOf` must match before it appears under **My Agents**.
+4. Register the Agent if needed, create a bounded task, approve only the exact payment amount, and simulate before signing.
+5. Execute a small payment, record work proof, then inspect promotion, STOP/demotion, reinstatement, allowance revoke, and the read-only over-cap test.
 
-These are code properties, not an independent audit or proof that a deployed system is safe.
+Every write is simulated first and then confirmed in the connected wallet. AgentLedger never receives a private key or seed phrase.
+
+## Live deployments
+
+| Network | Chain ID | Contract | Role |
+|---|---:|---|---|
+| Arc Mainnet | `5042` | [`MandateGraphV2` `0x015099…38a10`](https://explorer.arc.io/address/0x015099f831c247460b467154c73028804Ea38a10) | Current public self-custodial contract |
+| Arc Testnet | `5042002` | [`MandateGraphV2` `0x3757…72101`](https://testnet.arcscan.app/address/0x3757ac538e8416388be609c0ca5543abe6072101) | Two-wallet lifecycle and ownership-transfer verification |
+| Arc Mainnet | `5042` | [`MandateGraph` V1 `0xdC321…969A9e`](https://explorer.arc.io/address/0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e) | Legacy Agent `#1395` Authority reference; read-only in the UI |
+| Arc Mainnet | `5042` | [`MandateGraph` predecessor `0x235d…CE0Da`](https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da) | Archived pre-Authority lifecycle evidence; not used by V2 |
+
+Pinned Arc Mainnet dependencies:
+
+- USDC: [`0x3600000000000000000000000000000000000000`](https://explorer.arc.io/address/0x3600000000000000000000000000000000000000)
+- ERC-8004 Identity Registry: [`0x8004A169FB4a3325136EB29fA0ceB6D2e539a432`](https://explorer.arc.io/address/0x8004A169FB4a3325136EB29fA0ceB6D2e539a432)
+- ERC-8004 Reputation Registry: [`0x8004BAa17C55a88189AE136b182e5fdA19dE9b63`](https://explorer.arc.io/address/0x8004BAa17C55a88189AE136b182e5fdA19dE9b63)
+- ERC-8004 Validation Registry: [`0x8004Cc8439f36fd5F9F049D9fF86523Df6dAAB58`](https://explorer.arc.io/address/0x8004Cc8439f36fd5F9F049D9fF86523Df6dAAB58)
+
+## Verified Arc Mainnet lifecycle
+
+The V2 smoke lifecycle ran on Arc Mainnet on October 5, 2026 JST using ERC-8004 Agent `#1395`. It sent 10 successful transactions, broadcast no failed transactions, paid exactly `0.025` USDC, spent `0.02803583401791` native USDC on receipt-derived fees, and ended with allowance `0`.
+
+| Step | Result | Transaction |
+|---|---|---|
+| Register Agent #1395 at 0.01 USDC Authority | PASS | [`0x3d888c…b1369`](https://explorer.arc.io/tx/0x3d888ca1482d1f592ebf9faf29edc29c15e03cabf6f890761e67719ed65b1369) |
+| Create wallet-owned task | PASS | [`0xba222a…564b6`](https://explorer.arc.io/tx/0xba222a896744a8609e0c6be202e51e69984c5cfbb9930a11e9337076a10564b6) |
+| Delegate a narrower child mandate | PASS | [`0x3245b0…83d50`](https://explorer.arc.io/tx/0x3245b0cb7ae47b2b6e44fcde852f7976166db41765aefb222d893ad0d5c83d50) |
+| Approve exactly 0.025 USDC | PASS | [`0xb1802a…4e665`](https://explorer.arc.io/tx/0xb1802ab90945e0210bcdf3cdd982cb081ac4e71de2dc3ceb8e93410c4e24e665) |
+| Execute 0.005 USDC payment | PASS | [`0x785ea9…b8f20`](https://explorer.arc.io/tx/0x785ea926de8b7addcb5443ce2b2354bb681c0aea72b0ed330e17d030ffdb8f20) |
+| Record payment-bound work proof | PASS | [`0xd1f8aa…82ce5`](https://explorer.arc.io/tx/0xd1f8aa095797c7ce1c04f3fa4073aae277e6c298c2be05fb5dc69dc96ed82ce5) |
+| Owner-approved promotion, Authority 0.01 → 0.05 USDC | PASS | [`0xb4bb0d…c80db`](https://explorer.arc.io/tx/0xb4bb0d25ee84924258828debec85c8fe364a7250e7c45f646acb8615709c80db) |
+| Execute 0.020 USDC payment | PASS | [`0xb62b20…280f0`](https://explorer.arc.io/tx/0xb62b204513d6fb83046e51b9de84d2d216f732599c0a798b2f4ebb51cf3280f0) |
+| STOP/demotion, Authority 0.05 → 0.025 USDC | PASS | [`0x1ffad0…fb433`](https://explorer.arc.io/tx/0x1ffad00314e2714a66de6bdee35530a95d2327d2fda8bc57886835f3ae1fb433) |
+| Reinstate at the reduced cap | PASS | [`0x37c72e…d2e4e`](https://explorer.arc.io/tx/0x37c72e097b1e6ae1321712b8fd710120b24b26236e87b5dfec10b46e991d2e4e) |
+
+The final onchain Agent state is Trainee, Authority `0.025` USDC per payment, completed works `1`, violations `1`, STOP cleared after remediation, and allowance `0`. A `0.026` USDC request was rejected with `AuthorityCapExceeded()` through `eth_call`; no failing transaction was sent.
+
+Full calldata, receipts, transaction hashes, fee calculations, Authority transitions, read-only isolation reverts, and final state are in [`docs/MAINNET_V2_SELF_CUSTODY_EVIDENCE.json`](docs/MAINNET_V2_SELF_CUSTODY_EVIDENCE.json).
+
+## Self-custody and multi-user isolation
+
+`MandateGraphV2` binds every registered Agent to the current owner of its official ERC-8004 Identity NFT:
+
+- Only `ownerOf(agentId)` can register, promote, demote, reinstate, or change the operational Agent.
+- A task is owned by the wallet that creates it and is namespaced by that wallet.
+- Payments pull USDC from the task owner, never from a shared backend or protocol wallet.
+- The connected wallet approves the exact payment amount and can revoke any remainder to zero.
+- An operational Agent may act only inside the task owner’s existing mandate and cap.
+- ERC-8004 ownership transfer immediately freezes tasks created by the former owner.
+
+Mainnet read-only simulations proved that Wallet B cannot administer Agent #1395, create a task for it, revoke Wallet A’s task, execute its payment, record its work proof, or delegate under its mandate. Each call reverted with the expected owner or operator error and no Wallet B transaction was broadcast.
+
+## Architecture
+
+```text
+Owner wallet
+   │ owns
+   ▼
+ERC-8004 Agent NFT ── identity / ownership / reputation input
+   │
+   ▼
+MandateGraphV2 ── task budget ── mandate / delegation ── Authority cap
+   │                                                        │
+   └──────── contract-enforced checks ──────────────────────┘
+                            │
+                            ▼
+                   owner-funded USDC payment
+```
+
+The owner defines policy and signs promotion or policy changes. The smart contract enforces task ownership, narrowing delegation, budget reservations, expiry, recipient and scope constraints, payment replay protection, Authority caps, STOP, and ownership-transfer invalidation.
+
+ERC-8004 provides portable Agent identity plus reputation and validation inputs. ERC-8004 itself does **not** block payments. AgentLedger is the enforcement and economic-authority layer.
+
+## Security properties and tests
+
+- Foundry contract tests and V1/V2 stateful invariants run with fuzz runs `>=256`; use the CI result for the submitted commit for the current count.
+- V1 invariant suite: **8,192 calls, 0 reverts**.
+- V2 invariant suite: **8,192 calls, 0 reverts**.
+- Node tests cover the existing policies and lifecycle tooling plus the research example's reservation accounting, blocked retries, and STOP behavior.
+- Coverage includes reentrancy, replay, transfer failure rollback, reservation conservation, nested delegation, scope/recipient/expiry attenuation, exact approvals, ownership transfer, payment-bound proof, promotion, STOP/demotion, reinstatement, and Wallet A/B isolation.
+- V2 deployment runtime matches the local artifact after compiler-reported immutable normalization.
+- Sourcify reports exact creation and runtime matches, match ID `54611987`.
+
+The browser imports no signer material. Every write uses an injected wallet, checks Arc Mainnet, validates ERC-8004 ownership, runs `simulateContract`, waits for the receipt, and links the result to Arc Explorer.
 
 ## Local development
 
-Requirements: Node.js 20+ and Foundry for Solidity tests.
+Prerequisites: Node.js 20+ and Foundry with Solidity `0.8.28`.
 
-```powershell
-npm install
-npm start
-# Open http://localhost:4173
+```bash
+npm ci
+forge build
+forge test -vvv --fuzz-runs 256
 npm test
-forge test -vv
+npm start
 ```
 
-## Differentiation
+Open `http://localhost:4173`.
 
-Circle/Arc wallets and other wallet products are complementary wallet and settlement rails. AgentLedger does not claim to replace them. Its narrower focus is task-native financial governance for multi-agent systems: tying proposed work to delegated authority, reserved budgets, scope, lineage, and revocation.
+Read-only V2 Mainnet smoke verification:
 
-## Limitations and caveats
+```bash
+npm run smoke:arc-mainnet:v2:verify
+```
 
-- The deployed contract is experimental and unaudited.
-- Mainnet writes require explicit wallet confirmation and can spend real USDC.
-- AI demo service costs are simulated; the AI route never writes to the chain.
-- The mainnet recipient was a controlled demo wallet, not a verified vendor.
-- Outcome hashes are caller-supplied lineage, not independent proof of service delivery.
-- The live app separates fixture simulation, AI orchestration, and wallet-confirmed Mainnet actions; they are not presented as one end-to-end automated settlement system.
+The deployment compiler input is pinned in `foundry.toml`: Solidity `0.8.28`, optimizer runs `200`, Prague EVM, `via_ir = false`, IPFS/CBOR metadata, literal content disabled, and the two remappings recorded by Sourcify. The remappings do not affect this import-free contract's executable instructions, but they are part of Solidity metadata and therefore its appended metadata hash. Keeping them explicit makes a clean checkout reproduce the exact-match creation and normalized runtime hashes instead of depending on Foundry's environment-sensitive auto-detection.
 
-## Remaining hardening / Roadmap
+The Mainnet smoke runner is hard-pinned to chain `5042`, the deployed V2 address, official USDC and Identity Registry addresses, a `0.025` USDC payment total, a gas-price ceiling, and a lifecycle fee ceiling. It cannot deploy a contract and refuses duplicate broadcasts.
 
-- Independent contract review, broader adversarial/fuzz testing, and formal verification where appropriate.
-- Verified source publication and production-grade signer/account abstraction.
-- Durable event indexing and independently obtained service evidence.
-- Canonical request signing, vendor identity/dispute flows, refunds, and safer production wallet architecture.
-- Confirm current Arc program eligibility and submit through the official Arc Microgrants form.
+## External builder feedback
 
-## Primary references
+The public dApp now separates every task budget into **Available / Reserved / Spent**, and surfaces pending payment requests and child-mandate commitments so reserved authority is never presented as unused capacity. When a budget is exhausted or a request exceeds the available amount, payment controls pause by default and the owner must explicitly choose to prepare a newly signed successor task, end the current task, or keep it paused. Reputation can inform a future recommendation, but never grants additional funds automatically.
 
-- [Arc documentation index](https://docs.arc.io/llms.txt)
-- [Arc: Connect to Arc](https://docs.arc.io/arc/references/connect-to-arc)
-- [Arc: Contract addresses](https://docs.arc.io/arc/references/contract-addresses)
-- [Circle Arc mainnet announcement](https://www.circle.com/pressroom/circle-launches-arc-mainnet-an-economic-operating-system-for-the-internet)
-- [Arc Microgrants requirements](https://community.arc.io/public/events/arc-microgrants-f8tijfhyq)
+This improvement is derived entirely from the existing V2 `Task` and `Mandate` state. It does not replace the verified Mainnet V2 contract or introduce a new Mainnet write path; task termination uses the existing owner-only `revokeTask`, while any larger budget requires a separate owner-signed task creation.
+
+## Evidence
+
+- [`docs/MAINNET_V2_DEPLOYMENT_EVIDENCE.json`](docs/MAINNET_V2_DEPLOYMENT_EVIDENCE.json) — deployment receipt, constructor configuration, runtime match, and Sourcify result.
+- [`docs/MAINNET_V2_SMOKE_PREFLIGHT.json`](docs/MAINNET_V2_SMOKE_PREFLIGHT.json) — read-only chain, signer, balance, allowance, initial-state, bytecode, and source-verification checks.
+- [`docs/MAINNET_V2_SELF_CUSTODY_EVIDENCE.json`](docs/MAINNET_V2_SELF_CUSTODY_EVIDENCE.json) — complete Mainnet V2 lifecycle, isolation simulations, receipts, fees, and final state.
+- [`docs/TESTNET_V2_SELF_CUSTODY_EVIDENCE.json`](docs/TESTNET_V2_SELF_CUSTODY_EVIDENCE.json) — two-wallet Testnet lifecycle and ERC-8004 ownership-transfer recovery.
+- [`docs/MAINNET_AUTHORITY_EVIDENCE.json`](docs/MAINNET_AUTHORITY_EVIDENCE.json) — legacy V1 controlled reference lifecycle.
+
+## Limitations and safety warning
+
+AgentLedger is an unaudited experimental proof of concept. Use only small demo amounts. It is not production custody software, does not attest to the quality of offchain work, and does not replace independent security review, operational controls, monitoring, or legal/compliance analysis.
+
+The Mainnet recipient is a separately controlled demo wallet, not an independent vendor. Outcome hashes are caller-supplied lineage data, not independent proof that an offchain service was delivered correctly.
+
+**Public interactive demo: READY. Production Mainnet custody: NO-GO.**
+
+## Legacy V1 reference
+
+The V1 Arc Mainnet contract at [`0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e`](https://explorer.arc.io/address/0xdC321eB50cFf0239a2c43532ecC8B0c41d969A9e) and Agent `#1395` remain visible as a read-only reference. That controlled PoC proved the Authority story but used an operational-agent/payer model that is not appropriate for public multi-user self-custody. The earlier contract at [`0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da`](https://explorer.arc.io/address/0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da) is older pre-Authority lifecycle evidence. Neither V1 address is the current public write contract.
+
+## Arc Microgrants story
+
+AgentLedger gives AI a task budget under human control. The wallet-free 5 USDC research simulation explains the product in 30 seconds. Separately, the verified Arc Mainnet V2 deployment records a controlled, wallet-signed **0.025 USDC** lifecycle with payment-bound proof, owner-approved promotion, STOP/demotion, and read-only over-cap rejection. It does not demonstrate end-to-end autonomous AI research or vendor purchasing. Copy-ready English form text is in [SUBMISSION.md](SUBMISSION.md).
+
+## Links
+
+- Live app: <https://agentledger-livid.vercel.app/>
+- GitHub: <https://github.com/noboru59631/agentledger>
+- Current Arc Mainnet V2 contract: <https://explorer.arc.io/address/0x015099f831c247460b467154c73028804Ea38a10>
+- Sourcify exact match: <https://sourcify.dev/server/v2/contract/5042/0x015099f831c247460b467154c73028804ea38a10>
+- Previous demo — legacy/reference only: <https://youtu.be/aXnjAd3mFsE>

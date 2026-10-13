@@ -1,20 +1,18 @@
+import { V2_DEPLOYMENT_STATUS } from './deployment-status.mjs';
+
 export const ARC_CHAIN_ID = 5042n;
 export const ARC_CHAIN_HEX = '0x13b2';
 export const ARC_RPC_URL = 'https://rpc.mainnet.arc.io';
 export const ARC_EXPLORER_URL = 'https://explorer.arc.io';
-export const CONTRACT_ADDRESS = '0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da';
+export const IDENTITY_REGISTRY_ADDRESS = '0x8004A169FB4a3325136EB29fA0ceB6D2e539a432';
+export const PUBLIC_CONTRACT_ADDRESS = '0x015099f831c247460b467154c73028804Ea38a10';
+export const PUBLIC_DEPLOYMENT_STATUS = V2_DEPLOYMENT_STATUS;
+export const REFERENCE_CONTRACT_ADDRESS = '0xdc321eb50cff0239a2c43532ecc8b0c41d969a9e';
+export const REFERENCE_AGENT_ID = 1395n;
+export const REFERENCE_OPERATIONAL_AGENT = '0x03607de69C487BcC460eaD7C4Bdfd25805658b75';
+export const CONTRACT_ADDRESS = REFERENCE_CONTRACT_ADDRESS;
 export const USDC_ADDRESS = '0x3600000000000000000000000000000000000000';
 export const USDC_DECIMALS = 6;
-export const DEMO_PAYMENT_CAP = 10_000n;
-
-export function validateTaskPermissions({ budget, deadline, serviceScope, recipient, delegationDepth }) {
-  if (!budget || Number(budget) <= 0) throw new Error('Task budget must be greater than zero.');
-  if (!deadline || Number(deadline) <= Math.floor(Date.now() / 1000)) throw new Error('Task deadline must be in the future.');
-  if (!serviceScope) throw new Error('Choose a service scope for this task.');
-  if (!recipient) throw new Error('Set a recipient restriction before creating the task.');
-  if (!Number.isInteger(Number(delegationDepth)) || Number(delegationDepth) < 0 || Number(delegationDepth) > 8) throw new Error('Delegation depth must be between 0 and 8.');
-  return true;
-}
 
 export function assertArcChain(chainId) {
   if (BigInt(chainId) !== ARC_CHAIN_ID) {
@@ -23,21 +21,50 @@ export function assertArcChain(chainId) {
   return true;
 }
 
-export function assertDistinctRecipient(sender, recipient) {
-  if (!sender || !recipient || sender.toLowerCase() === recipient.toLowerCase()) {
-    throw new Error('Recipient must be a separate wallet address from the connected sender.');
+export function assertOwnedAgent(owner, account) {
+  if (!owner || !account || owner.toLowerCase() !== account.toLowerCase()) {
+    throw new Error('The connected wallet does not own this ERC-8004 Agent.');
   }
   return true;
 }
 
-export function assertDemoPaymentAmount(amount) {
-  const value = BigInt(amount);
-  if (value <= 0n || value > DEMO_PAYMENT_CAP) {
-    throw new Error('Arc Mainnet Demo Mode payments are capped at 0.01 USDC.');
+export function assertWriteReady({ chainId, account, contractAddress = PUBLIC_CONTRACT_ADDRESS }) {
+  assertArcChain(chainId);
+  if (!account) throw new Error('Connect a wallet before submitting a transaction.');
+  if (!/^0x[\da-fA-F]{40}$/.test(contractAddress ?? '')) {
+    throw new Error('The verified public Mainnet contract is unavailable. Writes remain disabled.');
   }
-  return value;
+  return true;
 }
 
-export function buildConfirmationPayload(action, args) {
-  return Object.freeze({ action, chainId: ARC_CHAIN_ID.toString(), contract: CONTRACT_ADDRESS, args });
+export function exactApprovalAmount(value) {
+  const amount = BigInt(value);
+  if (amount <= 0n) throw new Error('Approval amount must be greater than zero.');
+  return amount;
+}
+
+export function taskBudgetBreakdown({ budget, spent, reserved }) {
+  const total = BigInt(budget);
+  const used = BigInt(spent);
+  const committed = BigInt(reserved);
+  if (total < 0n || used < 0n || committed < 0n || used > total || committed > total - used) {
+    throw new Error('Invalid task budget accounting.');
+  }
+  const available = total - used - committed;
+  const status = used === total ? 'exhausted' : available === 0n ? 'fully-committed' : 'active';
+  return { budget: total, available, reserved: committed, spent: used, status };
+}
+
+export function taskBudgetDecision(accounting, requested = 0n) {
+  const breakdown = taskBudgetBreakdown(accounting);
+  const request = BigInt(requested);
+  if (request < 0n) throw new Error('Requested payment cannot be negative.');
+  const requestBlocked = request > breakdown.available;
+  return {
+    ...breakdown,
+    requested: request,
+    requestBlocked,
+    paymentAllowed: request > 0n && !requestBlocked && breakdown.status === 'active',
+    humanApprovalRequired: breakdown.status === 'exhausted' || requestBlocked,
+  };
 }

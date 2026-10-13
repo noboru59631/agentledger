@@ -1,13 +1,24 @@
 # AgentLedger Demo Video Package
 
-Target length: 75–90 seconds. The public recording should show the three product surfaces in order: AI proposal and deterministic policy, illustrative fixture simulation, and Arc Mainnet evidence/live controls. Keep each mode label visible.
+Target length: 75–90 seconds. Show the Authority thesis, the public self-custodial V2 controls, and verified Arc Mainnet evidence. Keep the experimental/unaudited label visible.
+
+## First 30 seconds for judges
+
+1. **0–8s:** Hold on the hero: competitor research with a 5 USDC cap. Click **Try the 30-second example**. Keep the non-AI simulation label visible.
+2. **8–15s:** Show Available / Reserved / Spent at **4.00 / 1.00 / 0.00 USDC**, then click **Simulate permitted payment**. The helper spends 0.20 USDC from its reservation: **4.00 / 0.80 / 0.20 USDC**.
+3. **15–23s:** Click **Try a 4.80 USDC parent request**. Only 4 USDC is available. Show the blocked request, unchanged spend, and pause for a human decision.
+4. **23–30s:** Choose **Keep paused** or **End simulated task**, then point to the separate Mainnet evidence. The 5 USDC example is illustrative; the existing controlled Mainnet lifecycle paid 0.025 USDC.
+
+Suggested narration: “A human asks AI to research competitors with a five-USDC budget. Only permitted payments can proceed. Available, Reserved, and Spent keep commitments visible. An over-budget request stops for a human decision. This example is simulated; the separate Mainnet controls are wallet-signed.”
+
+The earlier extended shot list and SRT below are reference material for the Authority lifecycle video. Use the revised first-30-second sequence for the current submission; update captions if recording a new video.
 
 ## Recording setup
 
 1. Open the public app at <https://agentledger-livid.vercel.app/> at readable zoom in a clean Chromium window.
-2. Open the Arc Explorer contract page, payment execution transaction, task revocation transaction, and `docs/MAINNET_EVIDENCE.json` in separate tabs.
+2. Open the V2 Arc Explorer contract, Promotion, STOP/Demotion, and `docs/MAINNET_V2_SELF_CUSTODY_EVIDENCE.json` in separate tabs.
 3. Use a 1920×1080 capture if possible. Hide bookmarks and keep the browser address bar visible for Explorer shots.
-4. Do not send a transaction during recording unless the recording is explicitly intended to demonstrate a user-confirmed Mainnet write. The published video should use the evidence already recorded.
+4. Do not send a large or automated write during recording. Use the completed lifecycle evidence; wallet connection and read-only Agent verification are sufficient.
 
 ## Timed shot list and narration
 
@@ -17,19 +28,19 @@ Target length: 75–90 seconds. The public recording should show the three produ
 | 0:08–0:17 | Scroll through **From human intent to accountable outcome**. Pause on the full flow: Human Intent → Task → Mandate → Agent → Sub-Agent → Payment → Service → Outcome. | “A human starts with a task. Authority moves through agents only when budget, scope, recipient, expiry, and depth stay within the parent boundary.” |
 | 0:17–0:31 | Open **AI Orchestrated Demo**, submit the default goal, and show `GEMINI PLAN · POLICY APPROVED` when the live provider is configured. | “Gemini proposes a structured multi-agent plan. AgentLedger checks the budget and scope deterministically; service costs are simulated and no chain write occurs.” |
 | 0:31–0:40 | Click **Inject invalid proposal**, then **STOP / kill switch**. | “An invalid proposal is blocked, and STOP propagates revocation to queued descendants.” |
-| 0:40–0:51 | Show **Illustrative Simulation**, keep the fixture labels visible, and click **Revoke task authority**. | “The local fixture view makes the same lineage legible: a bounded child request becomes blocked after root revocation.” |
-| 0:51–1:04 | Scroll to **Arc Mainnet Demo Mode**, show wallet connection and explicit confirmation language, then switch to the Arc Explorer contract page. | “The separate live mode connects a wallet and asks for confirmation one action at a time. The deployed contract is on Arc Mainnet, chain ID 5042.” |
-| 1:04–1:15 | Show the payment execution transaction with Explorer domain and status legible. | “This page records the 0.01 USDC payment execution. The recipient was a separately controlled demo wallet, not a verified vendor.” |
-| 1:15–1:26 | Show the revocation transaction, then `retryBlocked: true` in `docs/MAINNET_EVIDENCE.json`. | “Task revocation is also recorded onchain. The evidence file records a retry blocked by a read-only check; no retry transaction was sent.” |
+| 0:40–0:51 | Show the **5 USDC Research Simulation**, keep the non-AI fixture label visible, and click **STOP simulated task**. | “This local example keeps Available, Reserved, and Spent visible. STOP blocks further simulated requests without erasing the spending history.” |
+| 0:51–1:04 | Scroll to **Public Self-Custodial Mainnet dApp**, show Connect Wallet, My Agents, Current Authority, exact approval, and STOP controls. | “The public V2 dApp verifies ERC-8004 ownership and uses only the connected wallet’s Agent and USDC.” |
+| 1:04–1:15 | Show the V2 payment and Promotion transactions with Explorer status legible. | “The verified lifecycle paid 0.025 USDC and raised Authority from 0.01 to 0.05 only after payment-bound proof and an owner signature.” |
+| 1:15–1:26 | Show STOP/Demotion and the evidence file’s `AuthorityCapExceeded` simulation plus allowance zero. | “A violation cut Authority to 0.025. A 0.026 request was rejected by eth_call, and no failed transaction was broadcast.” |
 | 1:26–1:35 | Return to limitations, public links, and the GitHub CTA. | “The contract is experimental and unaudited. AI costs are simulated, the recipient was a controlled demo wallet, and outcome hashes do not independently prove service delivery.” |
 
 ## Accuracy checklist
 
 - Say “simulated,” “fixture,” or “illustrative” for local and AI service-cost states.
 - Say “real Gemini proposal” only when the UI shows the Gemini source label; mention that deterministic policy still decides approval.
-- Say “Arc Mainnet lifecycle rehearsal” for the real evidence; do not imply the browser executed it.
+- Say “verified Arc Mainnet V2 lifecycle” for the real evidence; distinguish it from any current recording session.
 - Say “separately controlled demo wallet,” never “vendor,” “customer,” or “service provider.”
-- Describe `retryBlocked: true` as a read-only verification; there is no retry transaction.
+- Describe over-cap and Wallet B isolation as read-only simulations; no failing transaction was sent.
 - Do not claim service delivery, output quality, a security audit, or an outcome hash attestation.
 
 ## Captions

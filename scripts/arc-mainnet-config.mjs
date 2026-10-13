@@ -3,13 +3,31 @@ export const arcMainnet = Object.freeze({
   rpcUrl: 'https://rpc.mainnet.arc.io',
   explorerUrl: 'https://explorer.arc.io',
   usdcAddress: '0x3600000000000000000000000000000000000000',
+  identityRegistry: '0x8004A169FB4a3325136EB29fA0ceB6D2e539a432',
+  reputationRegistry: '0x8004BAa17C55a88189AE136b182e5fdA19dE9b63',
+  validationRegistry: '0x8004Cc8439f36fd5F9F049D9fF86523Df6dAAB58',
+  legacyContract: '0x235dC11cD709542C42eb81c8F341C8F1A2bCE0Da',
   erc20Decimals: 6,
   nativeDecimals: 18,
-  paymentAmountBaseUnits: 10_000n,
-  lifecycleGasReserve: 1_000_000n,
+  initialAuthorityCapBaseUnits: 10_000n,
+  smallPaymentBaseUnits: 5_000n,
+  promotedAuthorityCapBaseUnits: 50_000n,
+  largerPaymentBaseUnits: 20_000n,
+  demotedAuthorityCapBaseUnits: 25_000n,
+  rejectedPaymentBaseUnits: 26_000n,
+  totalPaymentBaseUnits: 25_000n,
+  lifecycleGasReserve: 2_000_000n,
   gasSafetyNumerator: 3n,
   gasSafetyDenominator: 2n,
   fallbackGasPrice: 20_000_000_000n,
+});
+
+export const arcTestnetCandidate = Object.freeze({
+  rpcUrl: 'https://rpc.testnet.arc.io',
+  chainId: 5042002n,
+  contractAddress: '0x8135c6E750E240FB352ee6701F2976fF8BA63ea3',
+  identityRegistry: '0x8004A818BFB912233c491871b3d84c89A494BD9e',
+  agentId: 897002n,
 });
 
 export function validateMainnetRpc(value) {
@@ -39,9 +57,16 @@ export function estimateFunding({ deploymentGas, gasPrice }) {
   const bufferedGas = (rawGas * arcMainnet.gasSafetyNumerator + arcMainnet.gasSafetyDenominator - 1n)
     / arcMainnet.gasSafetyDenominator;
   const gasCostWei = bufferedGas * price;
-  const paymentCostBaseUnits = arcMainnet.paymentAmountBaseUnits;
+  const paymentCostBaseUnits = arcMainnet.totalPaymentBaseUnits;
   const totalFundingWei = gasCostWei + paymentCostBaseUnits * 10n ** 12n;
   return { price, rawGas, bufferedGas, gasCostWei, paymentCostBaseUnits, totalFundingWei };
+}
+
+export function estimateWriteCost(gas, gasPrice) {
+  const price = gasPrice > arcMainnet.fallbackGasPrice ? gasPrice : arcMainnet.fallbackGasPrice;
+  const gasLimit = (gas * arcMainnet.gasSafetyNumerator + arcMainnet.gasSafetyDenominator - 1n)
+    / arcMainnet.gasSafetyDenominator;
+  return { estimatedGas: gas, gasLimit, gasPrice: price, worstCaseFeeWei: gasLimit * price };
 }
 
 export function formatUsdc18(value) {

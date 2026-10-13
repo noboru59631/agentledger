@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "status": "ready-for-explicit-approval",
+  "generatedAt": "2026-10-04T14:36:03.004Z",
+  "safety": {
+    "readOnly": true,
+    "transactionSigned": false,
+    "transactionBroadcast": false,
+    "mainnetWriteLockChanged": false
+  },
+  "network": {
+    "name": "Arc Mainnet",
+    "chainId": "5042",
+    "rpcUrl": "https://rpc.mainnet.arc.io",
+    "observedBlock": "24235147"
+  },
+  "deployment": {
+    "contract": "MandateGraphV2",
+    "deployer": "0x03607de69C487BcC460eaD7C4Bdfd25805658b75",
+    "deployerNonce": "39",
+    "deployerNativeBalanceWei": "3372037984271088138",
+    "creationBytecodeBytes": 12697,
+    "creationBytecodeHash": "0x5dec88089cacd7ab0e0f03eceb35c28e11c4895efc9ae12125fadb9c468df75f",
+    "initCodeHash": "0x0cf680f4263bfd448532e0485a6579ca156bec0eb7e6ba19075912ef4e2cf55d",
+    "constructorArgs": {
+      "usdc": "0x3600000000000000000000000000000000000000",
+      "identityRegistry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
+    },
+    "gas": {
+      "estimatedGas": "2784346",
+      "proposedGasLimit": "3341216",
+      "gasPriceWei": "20000010000",
+      "estimatedFeeWei": "55686947843460000",
+      "bufferedMaximumFeeWei": "66824353412160000",
+      "estimatedFeeNative": "0.05568694784346",
+      "bufferedMaximumFeeNative": "0.06682435341216"
+    },
+    "initialSettings": {
+      "agentsRegistered": 0,
+      "tasksCreated": 0,
+      "allowancesGranted": 0,
+      "ownerSignedRegistrationRequiredPerAgent": true
+    }
+  },
+  "verificationRequiredBeforeUiUnlock": [
+    "receipt status is success and deployed address is recorded",
+    "deployed normalized runtime hash matches the reviewed local MandateGraphV2 artifact",
+    "constructor USDC and Identity Registry configuration matches this plan",
+    "explorer or Sourcify verification succeeds",
+    "controlled Mainnet smoke lifecycle passes with minimal funds",
+    "a separate explicit approval enables the public UI contract address"
+  ],
+  "v1ToV2Changes": [
+    "authorization follows ERC-8004 ownerOf for each agentId",
+    "task ownership and USDC payment custody remain with each task owner",
+    "task identifiers are owner-namespaced to prevent cross-wallet collision",
+    "ownership transfer freezes stale-owner administration and stale tasks",
+    "cross-user administration, task, payment, proof, and delegation paths revert"
+  ]
+}
